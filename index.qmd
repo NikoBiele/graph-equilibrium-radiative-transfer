@@ -1,0 +1,42 @@
+# Preface {.unnumbered}
+
+This book presents a novel approach to solving radiative transfer equations using graph equilibrium methods. The work develops analytical solutions through a groundbreaking graph-based framework that extends beyond traditional radiative transfer applications.
+
+## Overview
+
+Radiative transfer problems have traditionally been approached through numerical methods or simplified analytical solutions. This book introduces a fundamentally different perspective: treating radiative transfer as a graph equilibrium problem. This approach not only provides new analytical insights but also opens pathways to solving previously intractable problems.
+
+The methods presented here are implemented in Julia, with all code available in the companion package `RayTraceHeatTransfer.jl`.
+
+## Who This Book Is For
+
+This book is intended for:
+
+- Researchers in radiative transfer and heat transfer
+- Computational physicists working with transport phenomena  
+- Applied mathematicians interested in graph theory applications
+- Graduate students in physics, engineering, or applied mathematics
+- Anyone interested in novel analytical approaches to complex physical systems
+
+## Prerequisites
+
+Readers should have:
+
+- Undergraduate-level physics and mathematics
+- Familiarity with differential equations
+- Basic knowledge of radiative transfer concepts (helpful but not required)
+- Some programming experience (Julia examples are provided)
+
+## How to Use This Book
+
+Each chapter builds upon previous concepts, but experienced readers may skip to specific topics of interest. All mathematical derivations are presented in full, and computational examples accompany theoretical developments.
+
+Code examples can be run interactively, and the complete source for this book is available at: [github.com/NikoBiele/graph-equilibrium-radiative-transfer](https://github.com/NikoBiele/graph-equilibrium-radiative-transfer)
+
+## Acknowledgments
+
+*[Add your acknowledgments here]*
+
+---
+
+*This book represents years of research into analytical methods for radiative transfer. The graph equilibrium approach presented here opens new avenues for understanding and solving complex transport phenomena.*

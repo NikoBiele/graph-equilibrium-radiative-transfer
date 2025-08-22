@@ -1,0 +1,45 @@
+project:
+  type: book
+  output-dir: _book
+
+book:
+  title: "Graph Equilibrium Radiative Transfer"
+  subtitle: "Analytic Solutions and Computational Methods"
+  author: "Niko Biele"
+  date: today
+  chapters:
+    - index.qmd
+    - chapters/01-introduction.qmd
+    - references.qmd
+  
+  navbar:
+    search: true
+    
+  sidebar:
+    style: "docked"
+    search: true
+    collapse-level: 1
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+    toc-depth: 3
+    code-fold: false
+    code-tools: true
+    html-math-method: katex
+    number-sections: true
+    number-depth: 3
+    crossref:
+      chapters: true
+      eq-prefix: "Eq."
+      fig-prefix: "Fig."
+      tbl-prefix: "Table"
+      thm-prefix: "Theorem"
+    
+bibliography: references.bib
+
+execute:
+  freeze: auto
+  cache: true

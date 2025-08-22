@@ -1,0 +1,82 @@
+/* Custom styles for Graph Equilibrium Radiative Transfer book */
+
+/* Theorem environments */
+.theorem {
+  border-left: 4px solid #007acc;
+  background-color: #f8f9fa;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 0 4px 4px 0;
+}
+
+.theorem h2 {
+  color: #007acc;
+  margin-top: 0;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.proof {
+  border-left: 4px solid #28a745;
+  background-color: #f8fff9;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 0 4px 4px 0;
+}
+
+.proof::before {
+  content: "Proof: ";
+  font-weight: bold;
+  color: #28a745;
+}
+
+.proof::after {
+  content: " □";
+  float: right;
+  font-weight: bold;
+}
+
+/* Definition boxes */
+.definition {
+  border-left: 4px solid #6f42c1;
+  background-color: #faf8ff;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 0 4px 4px 0;
+}
+
+/* Example boxes */
+.example {
+  border-left: 4px solid #fd7e14;
+  background-color: #fff8f0;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 0 4px 4px 0;
+}
+
+/* Code styling */
+.sourceCode {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+}
+
+/* Equation numbering */
+.eq-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Table styling */
+.table {
+  margin: 1rem 0;
+}
+
+/* Figure captions */
+.figure-caption {
+  font-style: italic;
+  color: #6c757d;
+  text-align: center;
+  margin-top: 0.5rem;
+}
