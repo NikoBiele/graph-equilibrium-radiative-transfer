@@ -40,7 +40,7 @@ jobs:
           to: html
 
       - name: Upload to GitHub Pages
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3
         if: contains(github.ref, 'main')
         with:
           path: _book
@@ -48,4 +48,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         if: contains(github.ref, 'main')
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v4
