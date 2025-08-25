@@ -1,5 +1,20 @@
 /* Custom styles for Graph Equilibrium Radiative Transfer book */
 
+/* Quote box styling */
+.quote-box {
+  border-left: 4px solid #007acc;
+  background-color: #f8f9fa;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 0 4px 4px 0;
+  font-style: italic;
+}
+
+.quote-box strong {
+  font-style: normal;
+  color: #007acc;
+}
+
 /* Theorem environments */
 .theorem {
   border-left: 4px solid #007acc;

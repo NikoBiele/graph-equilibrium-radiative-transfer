@@ -5,7 +5,7 @@ project:
 book:
   title: "Graph Equilibrium Radiative Transfer"
   subtitle: "Analytic Solutions and Computational Methods"
-  author: "Niko Biele"
+  author: "Nikolaj Maack Bielefeld"
   date: today
   chapters:
     - index.qmd

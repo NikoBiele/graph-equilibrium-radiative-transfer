@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Graph Equilibrium Radiative Transfer",
     "section": "",
-    "text": "Preface\nThis book presents a novel approach to solving radiative transfer equations using graph equilibrium methods. The work develops analytical solutions through a groundbreaking graph-based framework that extends beyond traditional radiative transfer applications.",
+    "text": "Preface\nThis book presents a novel approach to solving the radiative transfer equation (RTE) using novel graph equilibrium methods. The work develops analytical solutions through a graph-based framework that extends beyond traditional radiative transfer applications.",
     "crumbs": [
       "Preface"
     ]
@@ -14,7 +14,7 @@
     "href": "index.html#overview",
     "title": "Graph Equilibrium Radiative Transfer",
     "section": "Overview",
-    "text": "Overview\nRadiative transfer problems have traditionally been approached through numerical methods or simplified analytical solutions. This book introduces a fundamentally different perspective: treating radiative transfer as a graph equilibrium problem. This approach not only provides new analytical insights but also opens pathways to solving previously intractable problems.\nThe methods presented here are implemented in Julia, with all code available in the companion package RayTraceHeatTransfer.jl.",
+    "text": "Overview\nRadiative transfer problems have traditionally been approached through numerical methods or simplified analytical solutions. This book introduces a fundamentally different perspective: treating radiative transfer as a graph equilibrium problem. This approach not only provides new analytical insights but also opens pathways to solving previously intractable problems with analytical accuracy.\nThe methods presented here are implemented in Julia, where all code will be made available in the companion registered package RayTraceHeatTransfer.jl.",
     "crumbs": [
       "Preface"
     ]
@@ -34,7 +34,7 @@
     "href": "index.html#prerequisites",
     "title": "Graph Equilibrium Radiative Transfer",
     "section": "Prerequisites",
-    "text": "Prerequisites\nReaders should have:\n\nUndergraduate-level physics and mathematics\nFamiliarity with differential equations\nBasic knowledge of radiative transfer concepts (helpful but not required)\nSome programming experience (Julia examples are provided)",
+    "text": "Prerequisites\nReaders should have:\n\nUndergraduate-level physics and mathematics\nFamiliarity with linear algebra\nBasic knowledge of radiative transfer concepts\nSome programming experience (Julia examples are provided)",
     "crumbs": [
       "Preface"
     ]
@@ -44,7 +44,7 @@
     "href": "index.html#how-to-use-this-book",
     "title": "Graph Equilibrium Radiative Transfer",
     "section": "How to Use This Book",
-    "text": "How to Use This Book\nEach chapter builds upon previous concepts, but experienced readers may skip to specific topics of interest. All mathematical derivations are presented in full, and computational examples accompany theoretical developments.\nCode examples can be run interactively, and the complete source for this book is available at: github.com/NikoBiele/graph-equilibrium-radiative-transfer",
+    "text": "How to Use This Book\nThe first part of this book will function as a high level tutorial for the companion registered Julia package RayTraceHeatTransfer.jl.\nThe latter part of this book will present background mathematical derivations, theorems and proofs in full, to support and validate the computational examples from the first part of the book.\nCode examples are called directly from the companion registered Julia package RayTraceHeatTransfer.jl.\nThe complete source for this book is available at: github.com/NikoBiele/graph-equilibrium-radiative-transfer",
     "crumbs": [
       "Preface"
     ]
@@ -54,7 +54,7 @@
     "href": "index.html#acknowledgments",
     "title": "Graph Equilibrium Radiative Transfer",
     "section": "Acknowledgments",
-    "text": "Acknowledgments\n[Add your acknowledgments here]\n\nThis book represents years of research into analytical methods for radiative transfer. The graph equilibrium approach presented here opens new avenues for understanding and solving complex transport phenomena.",
+    "text": "Acknowledgments\nI would like to acknowledge all of my great teachers, tutors and sources of inspiration throughout my life.\n\nThis book represents years of research into analytical methods for radiative transfer. The graph equilibrium approach presented here opens new avenues for understanding and solving complex transport phenomena.",
     "crumbs": [
       "Preface"
     ]
@@ -64,7 +64,17 @@
     "href": "chapters/01-introduction.html",
     "title": "1  Introduction",
     "section": "",
-    "text": "1.1 The Traditional Challenge\nRadiative transfer governs the propagation of electromagnetic radiation through participating media, playing a crucial role in fields ranging from atmospheric physics to industrial heat transfer. Traditional approaches to solving the radiative transfer equation (RTE) have relied heavily on numerical methods or simplified analytical solutions for specific geometries and boundary conditions.\nThis book introduces a revolutionary perspective: graph equilibrium methods for radiative transfer. By recasting radiative transfer problems as equilibrium problems on directed graphs, we unlock new analytical pathways and computational efficiencies previously unavailable.\nThe radiative transfer equation in its general form (Modest 2013; Howell, Mengüç, and Siegel 2010):\n\\frac{1}{c}\\frac{\\partial I}{\\partial t} + \\mathbf{\\Omega} \\cdot \\nabla I + (\\kappa + \\sigma_s) I = \\kappa I_b + \\frac{\\sigma_s}{4\\pi} \\int_{4\\pi} I(\\mathbf{r}, \\mathbf{\\Omega}', t) \\Phi(\\mathbf{\\Omega}', \\mathbf{\\Omega}) d\\Omega' {#eq-rte}\npresents significant analytical challenges due to its integro-differential nature and the coupling between spatial, angular, and temporal variables. Classical approaches, as outlined in Chandrasekhar (1960), have relied heavily on numerical approximations or simplified geometries.",
+    "text": "1.1 The Traditional Challenge\nRadiative transfer, the propagation of electromagnetic radiation through transparent or participating media, plays a crucial role in fields ranging from atmospheric physics to industrial heat transfer. Traditional approaches to solving the radiative transfer equation (RTE) have relied heavily on numerical methods or simplified analytical solutions for specific geometries and boundary conditions.\nThis book introduces a novel perspective: graph equilibrium methods for radiative transfer. By recasting radiative transfer problems as equilibrium problems on graphs, new analytical pathways are unlocked and computational accuracies previously infeasible become readily available.\nRadiative transfer in participating media is a fundamental process in many natural and engineered systems, from stellar atmospheres to thermal engineering. The theoretical foundation for radiative transfer was established in the 19th century by Gustav Kirchhoff, who formulated the fundamental relationship between emission and absorption of thermal radiation and introduced the concept of blackbody radiation (Kirchhoff 1860). Building upon this work, Karl Schwarzschild developed early formulations for radiative transfer in stellar atmospheres in the early 1900s (Schwarzschild 1906). The modern mathematical framework of the radiative transfer equation (RTE) was systematically developed by Subrahmanyan Chandrasekhar in his seminal 1950 treatise “Radiative Transfer,” (Chandrasekhar 1950) which provided rigorous analytical methods and established the equation as the cornerstone of radiation transport theory across diverse fields from astrophysics to engineering applications.\nDespite this rich theoretical heritage, the fundamental governing equation remains a challenging integro-differential equation in seven independent variables: Three spatial coordinates (x, y, z), two directional angles (\\theta, \\phi), one spectral wavelength (\\lambda) and one temporal time (t). Under steady-state and grey media assumptions, the temporal (t) and spectral (\\lambda) dependencies are eliminated, reducing the RTE from seven to five independent variables, which yields the differential form shown in equation (Howell et al. 2021):\n\\frac{\\partial i(S,\\Omega)}{\\partial S} = \\; \\kappa i_\\mathrm{b}(S) - \\kappa i(S,\\Omega) - \\sigma_\\mathrm{s} i(S,\\Omega) + \\frac{\\sigma_\\mathrm{s}}{4 \\pi} \\int_{\\Omega_i=4 \\pi}i(S,\\Omega_i) \\Phi(\\Omega_i,\\Omega) d\\Omega_i  \\tag{1.1}\nwhere i(S,\\Omega) is the intensity along a ray trajectory, as a function of position S and direction \\Omega\\equiv\\Omega(\\theta,\\phi), \\kappa is the absorption coefficient of the medium, i_\\mathrm{b}(S) is the blackbody intensity, \\sigma_\\mathrm{s} is the scattering coefficient and \\Phi is the scattering phase function and the integral is over all solid angles.\nThe RTE of equation (Eq. 1.1) is a differential energy balance along the trajectory S of a single ray. To solve it one could, in principle, simply integrate along the ray trajectory. What makes the RTE particularly challenging to solve for general geometries is that all possible ray trajectories in the domain are coupled through two mechanisms: (1) The state of the participating medium, i.e. the temperature of the intervening gas, which depends on the local radiative heating rate and governs both the rate of emission (through blackbody emission laws) and temperature-dependent absorption properties, and (2) the in-scattering term, which requires integration over all incoming directions (4\\pi steradians) to account for radiation scattered from every direction into the direction of S. Therefore, for general geometries, to determine the equilibrium state, all possible ray trajectories must be solved simultaneously, which explains why the RTE has historically resisted general analytical treatment, and is most commonly solved numerically, or through analytical solutions for special simplified cases (Howell et al. 2021).\nThe RTE does not directly account for surface reflections, and therefore the exchange factor transformation presented here may be thought of as a generalized analytical solution of the RTE.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01-introduction.html#the-traditional-challenge",
+    "href": "chapters/01-introduction.html#the-traditional-challenge",
+    "title": "1  Introduction",
+    "section": "",
+    "text": "As noted by Modest and Mazumder (Modest and Mazumder 2022) in their most recent textbook:\n\nModest and Mazumder (2022): “… to this day no truly satisfactory RTE solution method has emerged.”",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
     ]
@@ -114,7 +124,7 @@
     "href": "chapters/01-introduction.html#looking-ahead",
     "title": "1  Introduction",
     "section": "1.6 Looking Ahead",
-    "text": "1.6 Looking Ahead\nThe graph equilibrium approach represents more than just a new computational method—it provides fundamental insights into the nature of radiative transfer itself. As we’ll see in subsequent chapters, this perspective reveals hidden symmetries, enables new approximation schemes, and opens pathways to solving problems that have remained analytically intractable for decades.\n\nThe journey from traditional radiative transfer to graph equilibrium methods requires careful mathematical development. We begin this journey in the next chapter with the essential mathematical foundations.\n\n\n\n\n\n\nBezanson, Jeff, Alan Edelman, Stefan Karpinski, and Viral B Shah. 2017. “Julia: A Fresh Approach to Numerical Computing.” SIAM Review 59 (1): 65–98.\n\n\nChandrasekhar, Subrahmanyan. 1960. “Radiative Transfer.”\n\n\nHowell, John R, M Pinar Mengüç, and Robert Siegel. 2010. Thermal Radiation Heat Transfer. CRC press.\n\n\nModest, Michael F. 2013. Radiative Heat Transfer. Academic press.",
+    "text": "1.6 Looking Ahead\nThe graph equilibrium approach represents more than just a new computational method—it provides fundamental insights into the nature of radiative transfer itself. As we’ll see in subsequent chapters, this perspective reveals hidden symmetries, enables new approximation schemes, and opens pathways to solving problems that have remained analytically intractable for decades.\n\nThe journey from traditional radiative transfer to graph equilibrium methods requires careful mathematical development. We begin this journey in the next chapter with the essential mathematical foundations.\n\n\n\n\n\n\nBezanson, Jeff, Alan Edelman, Stefan Karpinski, and Viral B Shah. 2017. “Julia: A Fresh Approach to Numerical Computing.” SIAM Review 59 (1): 65–98.\n\n\nChandrasekhar, S. 1950. “Radiative Transfer,” International series of monographs on physics,.\n\n\nHowell, J. R., M. P. Mengüç, K. J. Daun, and R. Siegel. 2021. Thermal Radiation Heat Transfer. 7th ed. CRC Press, Taylor & Francis Group.\n\n\nKirchhoff, G. 1860. “Ueber Das Verhältniss Zwischen Dem Emissionsvermögen Und Dem Absorptionsvermögen Der Körper Für Wärme Und Licht.” Annalen Der Physik Und Chemie 109: 275–301.\n\n\nModest, M. F., and S. Mazumder. 2022. Radiative Heat Transfer. 4th ed. Academic press.\n\n\nSchwarzschild, K. 1906. “Ueber Das Gleichgewicht Der Sonnenatmosphäre.” Nachrichten von Der Gesellschaft Der Wissenschaften Zu Göttingen, Mathematisch-Physikalische Klasse, 41–53.",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
     ]
@@ -124,7 +134,7 @@
     "href": "references.html",
     "title": "References",
     "section": "",
-    "text": "Bezanson, Jeff, Alan Edelman, Stefan Karpinski, and Viral B Shah. 2017.\n“Julia: A Fresh Approach to Numerical Computing.” SIAM\nReview 59 (1): 65–98.\n\n\nChandrasekhar, Subrahmanyan. 1960. “Radiative Transfer.”\n\n\nHowell, John R, M Pinar Mengüç, and Robert Siegel. 2010. Thermal\nRadiation Heat Transfer. CRC press.\n\n\nModest, Michael F. 2013. Radiative Heat Transfer. Academic\npress.",
+    "text": "Bezanson, Jeff, Alan Edelman, Stefan Karpinski, and Viral B Shah. 2017.\n“Julia: A Fresh Approach to Numerical Computing.” SIAM\nReview 59 (1): 65–98.\n\n\nChandrasekhar, S. 1950. “Radiative Transfer,” International\nseries of monographs on physics,.\n\n\nHowell, J. R., M. P. Mengüç, K. J. Daun, and R. Siegel. 2021.\nThermal Radiation Heat Transfer. 7th ed. CRC Press, Taylor\n& Francis Group.\n\n\nKirchhoff, G. 1860. “Ueber Das Verhältniss Zwischen Dem\nEmissionsvermögen Und Dem Absorptionsvermögen Der Körper Für Wärme Und\nLicht.” Annalen Der Physik Und Chemie 109: 275–301.\n\n\nModest, M. F., and S. Mazumder. 2022. Radiative Heat Transfer.\n4th ed. Academic press.\n\n\nSchwarzschild, K. 1906. “Ueber Das Gleichgewicht Der\nSonnenatmosphäre.” Nachrichten von Der Gesellschaft Der\nWissenschaften Zu Göttingen, Mathematisch-Physikalische Klasse,\n41–53.",
     "crumbs": [
       "References"
     ]

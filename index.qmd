@@ -1,12 +1,18 @@
 # Preface {.unnumbered}
 
-This book presents a novel approach to solving radiative transfer equations using graph equilibrium methods. The work develops analytical solutions through a groundbreaking graph-based framework that extends beyond traditional radiative transfer applications.
+::: {.callout-note}
+## 🚧 Book Under Development
+
+This book is currently being written and expanded. New chapters are added regularly as the content is developed and refined. The complete version will be available at **radiative-transfer.org** upon completion.
+:::
+
+This book presents a novel approach to solving the radiative transfer equation (RTE) using novel graph equilibrium methods. The work develops analytical solutions through a graph-based framework that extends beyond traditional radiative transfer applications.
 
 ## Overview
 
-Radiative transfer problems have traditionally been approached through numerical methods or simplified analytical solutions. This book introduces a fundamentally different perspective: treating radiative transfer as a graph equilibrium problem. This approach not only provides new analytical insights but also opens pathways to solving previously intractable problems.
+Radiative transfer problems have traditionally been approached through numerical methods or simplified analytical solutions. This book introduces a fundamentally different perspective: treating radiative transfer as a graph equilibrium problem. This approach not only provides new analytical insights but also opens pathways to solving previously intractable problems with analytical accuracy.
 
-The methods presented here are implemented in Julia, with all code available in the companion package `RayTraceHeatTransfer.jl`.
+The methods presented here are implemented in Julia, where all code will be made available in the companion registered package `RayTraceHeatTransfer.jl`.
 
 ## Who This Book Is For
 
@@ -23,19 +29,23 @@ This book is intended for:
 Readers should have:
 
 - Undergraduate-level physics and mathematics
-- Familiarity with differential equations
-- Basic knowledge of radiative transfer concepts (helpful but not required)
+- Familiarity with linear algebra
+- Basic knowledge of radiative transfer concepts
 - Some programming experience (Julia examples are provided)
 
 ## How to Use This Book
 
-Each chapter builds upon previous concepts, but experienced readers may skip to specific topics of interest. All mathematical derivations are presented in full, and computational examples accompany theoretical developments.
+The first part of this book will function as a high level tutorial for the companion registered Julia package `RayTraceHeatTransfer.jl`.
 
-Code examples can be run interactively, and the complete source for this book is available at: [github.com/NikoBiele/graph-equilibrium-radiative-transfer](https://github.com/NikoBiele/graph-equilibrium-radiative-transfer)
+The latter part of this book will present background mathematical derivations, theorems and proofs in full, to support and validate the computational examples from the first part of the book.
+
+Code examples are called directly from the companion registered Julia package `RayTraceHeatTransfer.jl`.
+
+The complete source for this book is available at: [github.com/NikoBiele/graph-equilibrium-radiative-transfer](https://github.com/NikoBiele/graph-equilibrium-radiative-transfer)
 
 ## Acknowledgments
 
-*[Add your acknowledgments here]*
+I would like to acknowledge all of my great teachers, tutors and sources of inspiration throughout my life.
 
 ---
 
