@@ -6,8 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Niko Biele">
-<meta name="dcterms.date" content="2025-08-25">
+<meta name="author" content="Nikolaj Maack Bielefeld">
+<meta name="dcterms.date" content="2025-08-26">
 
 <title>Graph Equilibrium Radiative Transfer</title>
 <style>
@@ -160,7 +160,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./chapters/01-introduction.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Radiation Introduction</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -206,14 +206,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>Niko Biele </p>
+             <p>Nikolaj Maack Bielefeld </p>
           </div>
   </div>
     
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">August 25, 2025</p>
+      <p class="date">August 26, 2025</p>
     </div>
   </div>
   
@@ -240,11 +240,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>This book is currently being written and expanded. New chapters are added regularly as the content is developed and refined. The complete version will be available at <strong>radiative-transfer.org</strong> upon completion.</p>
 </div>
 </div>
-<p>This book presents a novel approach to solving the radiative transfer equation (RTE) using novel graph equilibrium methods. The work develops analytical solutions through a graph-based framework that extends beyond traditional radiative transfer applications.</p>
+<p>This book presents novel analytic algorithms for solving general graph equilibrium problems exactly, including those on directed graphs. To thoroughly validate these novel approaches, they are applied to the special case of solving the notoriously difficult radiative transfer equation (RTE), which describe physical radiation transport in absorbing, emitting and scattering media. The work develops analytical solutions to the RTE through the graph-based framework which extends beyond traditional radiative transfer applications.</p>
 <section id="overview" class="level2">
 <h2 class="anchored" data-anchor-id="overview">Overview</h2>
-<p>Radiative transfer problems have traditionally been approached through numerical methods or simplified analytical solutions. This book introduces a fundamentally different perspective: treating radiative transfer as a graph equilibrium problem. This approach not only provides new analytical insights but also opens pathways to solving previously intractable problems with analytical accuracy.</p>
-<p>The methods presented here are implemented in Julia, where all code will be made available in the companion registered package <code>RayTraceHeatTransfer.jl</code>.</p>
+<p>Radiative transfer problems have traditionally been approached through numerical, hybrid or simplified analytical methods. This book presents a novel approach, which is analytic at its core, allowing its correctness to be mathematically proven. While this novel approach is analytic, it requires as an input the geometric visibility of the domain. In the case of a convex domain with a transparent medium, the visibility matrix of the domain can be obtained analytically, producing an entirely analytical solution. For non-convex domains with non-transparent media yielding non-zero attenuation, the visibility matrix can in general not be obtained analytically. For this case, the visibility matrix is found numerically through ray tracing, which in total results in a hybrid approach to solving the RTE. The methods presented here are implemented in Julia, and all code will be made available in the companion registered package <code>RayTraceHeatTransfer.jl</code>.</p>
 </section>
 <section id="who-this-book-is-for" class="level2">
 <h2 class="anchored" data-anchor-id="who-this-book-is-for">Who This Book Is For</h2>
@@ -271,7 +270,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="how-to-use-this-book" class="level2">
 <h2 class="anchored" data-anchor-id="how-to-use-this-book">How to Use This Book</h2>
 <p>The first part of this book will function as a high level tutorial for the companion registered Julia package <code>RayTraceHeatTransfer.jl</code>.</p>
-<p>The latter part of this book will present background mathematical derivations, theorems and proofs in full, to support and validate the computational examples from the first part of the book.</p>
+<p>The second part of this book will present background mathematical derivations, theorems and proofs in full, to support and validate the computational examples from the first part of the book.</p>
+<p>The third part of this book will expand on the more general applications, beyond the special case of radiative transfer.</p>
 <p>Code examples are called directly from the companion registered Julia package <code>RayTraceHeatTransfer.jl</code>.</p>
 <p>The complete source for this book is available at: <a href="https://github.com/NikoBiele/graph-equilibrium-radiative-transfer">github.com/NikoBiele/graph-equilibrium-radiative-transfer</a></p>
 </section>
@@ -742,8 +742,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="nav-page nav-page-previous">
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./chapters/01-introduction.html" class="pagination-link" aria-label="Introduction">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./chapters/01-introduction.html" class="pagination-link" aria-label="Radiation Introduction">
+        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Radiation Introduction</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
@@ -752,53 +752,62 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>::: {.callout-note}</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">## 🚧 Book Under Development</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>This book is currently being written and expanded. New chapters are added regularly as the content is developed and refined. The complete version will be available at **radiative-transfer.org** upon completion.</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>This book presents a novel approach to solving the radiative transfer equation (RTE) using novel graph equilibrium methods. The work develops analytical solutions through a graph-based framework that extends beyond traditional radiative transfer applications.</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">## Overview</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>Radiative transfer problems have traditionally been approached through numerical methods or simplified analytical solutions. This book introduces a fundamentally different perspective: treating radiative transfer as a graph equilibrium problem. This approach not only provides new analytical insights but also opens pathways to solving previously intractable problems with analytical accuracy.</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>The methods presented here are implemented in Julia, where all code will be made available in the companion registered package <span class="in">`RayTraceHeatTransfer.jl`</span>.</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">## Who This Book Is For</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>This book is intended for:</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Researchers in radiative transfer and heat transfer</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Computational physicists working with transport phenomena  </span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Applied mathematicians interested in graph theory applications</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Graduate students in physics, engineering, or applied mathematics</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Anyone interested in novel analytical approaches to complex physical systems</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="fu">## Prerequisites</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>Readers should have:</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Undergraduate-level physics and mathematics</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Familiarity with linear algebra</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Basic knowledge of radiative transfer concepts</span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Some programming experience (Julia examples are provided)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>This book is currently being written and expanded. New chapters are added regularly as the content is developed and refined.</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>The complete version will be available at **radiative-transfer.org** upon completion.</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>This book presents novel analytic algorithms for solving general graph equilibrium problems exactly, including those on directed graphs.</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>To thoroughly validate these novel approaches, they are applied to the special case of solving the notoriously difficult radiative transfer equation (RTE), which describe physical radiation transport in absorbing, emitting and scattering media.</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>The work develops analytical solutions to the RTE through the graph-based framework which extends beyond traditional radiative transfer applications.</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">## Overview</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>Radiative transfer problems have traditionally been approached through numerical, hybrid or simplified analytical methods.</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>This book presents a novel approach, which is analytic at its core, allowing its correctness to be mathematically proven.</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>While this novel approach is analytic, it requires as an input the geometric visibility of the domain.</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>In the case of a convex domain with a transparent medium, the visibility matrix of the domain can be obtained analytically, producing an entirely analytical solution.</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>For non-convex domains with non-transparent media yielding non-zero attenuation, the visibility matrix can in general not be obtained analytically.</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>For this case, the visibility matrix is found numerically through ray tracing, which in total results in a hybrid approach to solving the RTE.</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>The methods presented here are implemented in Julia, and all code will be made available in the companion registered package <span class="in">`RayTraceHeatTransfer.jl`</span>.</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="fu">## Who This Book Is For</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>This book is intended for:</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Researchers in radiative transfer and heat transfer</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Computational physicists working with transport phenomena  </span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Applied mathematicians interested in graph theory applications</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Graduate students in physics, engineering, or applied mathematics</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Anyone interested in novel analytical approaches to complex physical systems</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="fu">## Prerequisites</span></span>
 <span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="fu">## How to Use This Book</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>Readers should have:</span>
 <span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>The first part of this book will function as a high level tutorial for the companion registered Julia package <span class="in">`RayTraceHeatTransfer.jl`</span>.</span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>The latter part of this book will present background mathematical derivations, theorems and proofs in full, to support and validate the computational examples from the first part of the book.</span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>Code examples are called directly from the companion registered Julia package <span class="in">`RayTraceHeatTransfer.jl`</span>.</span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>The complete source for this book is available at: <span class="co">[</span><span class="ot">github.com/NikoBiele/graph-equilibrium-radiative-transfer</span><span class="co">](https://github.com/NikoBiele/graph-equilibrium-radiative-transfer)</span></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="fu">## Acknowledgments</span></span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>I would like to acknowledge all of my great teachers, tutors and sources of inspiration throughout my life.</span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>*This book represents years of research into analytical methods for radiative transfer. The graph equilibrium approach presented here opens new avenues for understanding and solving complex transport phenomena.*</span></code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Undergraduate-level physics and mathematics</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Familiarity with linear algebra</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Basic knowledge of radiative transfer concepts</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Some programming experience (Julia examples are provided)</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="fu">## How to Use This Book</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>The first part of this book will function as a high level tutorial for the companion registered Julia package <span class="in">`RayTraceHeatTransfer.jl`</span>.</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>The second part of this book will present background mathematical derivations, theorems and proofs in full, to support and validate the computational examples from the first part of the book.</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>The third part of this book will expand on the more general applications, beyond the special case of radiative transfer.</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>Code examples are called directly from the companion registered Julia package <span class="in">`RayTraceHeatTransfer.jl`</span>.</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>The complete source for this book is available at: <span class="co">[</span><span class="ot">github.com/NikoBiele/graph-equilibrium-radiative-transfer</span><span class="co">](https://github.com/NikoBiele/graph-equilibrium-radiative-transfer)</span></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="fu">## Acknowledgments</span></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>I would like to acknowledge all of my great teachers, tutors and sources of inspiration throughout my life.</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>*This book represents years of research into analytical methods for radiative transfer. The graph equilibrium approach presented here opens new avenues for understanding and solving complex transport phenomena.*</span></code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 

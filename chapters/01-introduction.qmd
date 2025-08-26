@@ -1,4 +1,4 @@
-# Introduction {#sec-introduction}
+# Radiation Introduction {#sec-introduction}
 
 Radiative transfer, the propagation of electromagnetic radiation through transparent or participating media, plays a crucial role in fields ranging from atmospheric physics to industrial heat transfer.
 Traditional approaches to solving the radiative transfer equation (RTE) have relied heavily on numerical methods or simplified analytical solutions for specific geometries and boundary conditions.
@@ -35,24 +35,14 @@ The RTE does not directly account for surface reflections, and therefore the exc
 
 ## The Graph Equilibrium Breakthrough
 
-Our key insight is recognizing that steady-state radiative transfer can be formulated as a graph equilibrium problem where:
+The key insight is recognizing that steady-state radiative transfer can be formulated as a graph equilibrium problem where:
 
-- **Nodes** represent spatial locations or control volumes
+- **Nodes** represent spatial control volumes
 - **Edges** represent radiative exchange pathways  
-- **Edge weights** encode geometric and optical properties
+- **Edge weights** encode geometric and optical visibility
 - **Equilibrium conditions** replace the traditional RTE
 
 This reformulation transforms the continuous integro-differential equation into a discrete algebraic system with remarkable analytical properties.
-
-:::{#thm-graph-rte .theorem}
-## Graph-RTE Equivalence Theorem
-
-For a discrete radiative transfer system with $N$ control volumes, the steady-state RTE is equivalent to finding the equilibrium of a weighted directed graph $G = (V, E, W)$ where the radiative intensity vector $\mathbf{I}$ satisfies:
-
-$$\mathbf{A} \mathbf{I} = \mathbf{b}$$
-
-where $\mathbf{A}$ is the graph Laplacian modified by optical properties and $\mathbf{b}$ represents boundary conditions and emission terms.
-:::
 
 ## Novel Contributions
 
@@ -60,18 +50,16 @@ This work makes several groundbreaking contributions:
 
 1. **Analytical Framework**: A complete mathematical framework connecting graph theory to radiative transfer
 2. **Computational Efficiency**: Graph algorithms that outperform traditional methods for many problem classes  
-3. **New Solution Classes**: Analytical solutions for previously intractable geometries
+3. **New Solution Classes**: Analytical solutions for general domains, assuming geometric visibility is given
 4. **Extensibility**: The framework extends to other transport phenomena beyond radiative transfer
 
 ## Book Structure
 
 The remainder of this book develops these ideas systematically:
 
-- **Chapters 2-3**: Mathematical foundations and graph theory essentials
-- **Chapters 4-5**: Development of the graph equilibrium framework and its application to the RTE
-- **Chapter 6**: Complete Julia implementation with the `RayTraceHeatTransfer.jl` package
-- **Chapters 7-8**: Validation examples and advanced applications
-- **Chapter 9**: Future directions and extensions beyond radiative transfer
+- **Chapters 2-5**: Part (1) Tutorial and validation of the Julia package `RayTraceHeatTransfer.jl`, with one chapter per algorithmic advance
+- **Chapters 6-9**: Part (2) Mathematical foundations, theorems and proofs, with one chapter per algorithmic advance
+- **Chapters 10-12**: Part (3) Demonstration of the graph equilibrium framework to more general problems, including directed graphs
 
 ## Julia Implementation
 
@@ -79,7 +67,7 @@ All methods in this book are implemented in Julia [@bezanson2017julia], chosen f
 
 - Mathematical notation that closely mirrors the theoretical development
 - High-performance numerical capabilities
-- Excellent ecosystem for scientific computing
+- Excellent ecosystem for scientific computing, including linear algebra
 - Open-source accessibility
 
 ```julia
@@ -92,8 +80,8 @@ The complete source code accompanies each theoretical development, ensuring repr
 
 ## Looking Ahead
 
-The graph equilibrium approach represents more than just a new computational method—it provides fundamental insights into the nature of radiative transfer itself. As we'll see in subsequent chapters, this perspective reveals hidden symmetries, enables new approximation schemes, and opens pathways to solving problems that have remained analytically intractable for decades.
+The graph equilibrium approach represents more than just a new computational method - it provides fundamental insights into the nature of radiative transfer itself.
 
 ---
 
-*The journey from traditional radiative transfer to graph equilibrium methods requires careful mathematical development. We begin this journey in the next chapter with the essential mathematical foundations.*
+*The journey begins with learning how to apply RayTraceHeatTransfer.jl to solve the RTE.*

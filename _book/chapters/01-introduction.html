@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>1&nbsp; Introduction – Graph Equilibrium Radiative Transfer</title>
+<title>1&nbsp; Radiation Introduction – Graph Equilibrium Radiative Transfer</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -193,7 +193,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/01-introduction.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/01-introduction.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Radiation Introduction</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -222,7 +222,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../chapters/01-introduction.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Radiation Introduction</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -255,7 +255,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title"><span id="sec-introduction" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title"><span id="sec-introduction" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Radiation Introduction</span></span></h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -289,20 +289,15 @@ As noted by Modest and Mazumder <span class="citation" data-cites="modest2022">(
 </section>
 <section id="the-graph-equilibrium-breakthrough" class="level2" data-number="1.2">
 <h2 data-number="1.2" class="anchored" data-anchor-id="the-graph-equilibrium-breakthrough"><span class="header-section-number">1.2</span> The Graph Equilibrium Breakthrough</h2>
-<p>Our key insight is recognizing that steady-state radiative transfer can be formulated as a graph equilibrium problem where:</p>
+<p>The key insight is recognizing that steady-state radiative transfer can be formulated as a graph equilibrium problem where:</p>
 <ul>
-<li><strong>Nodes</strong> represent spatial locations or control volumes</li>
+<li><strong>Nodes</strong> represent spatial control volumes</li>
 <li><strong>Edges</strong> represent radiative exchange pathways<br>
 </li>
-<li><strong>Edge weights</strong> encode geometric and optical properties</li>
+<li><strong>Edge weights</strong> encode geometric and optical visibility</li>
 <li><strong>Equilibrium conditions</strong> replace the traditional RTE</li>
 </ul>
 <p>This reformulation transforms the continuous integro-differential equation into a discrete algebraic system with remarkable analytical properties.</p>
-<div id="thm-graph-rte" class="theorem">
-<p><span class="theorem-title"><strong>Theorem 1.1 (Graph-RTE Equivalence Theorem)</strong></span> For a discrete radiative transfer system with <span class="math inline">N</span> control volumes, the steady-state RTE is equivalent to finding the equilibrium of a weighted directed graph <span class="math inline">G = (V, E, W)</span> where the radiative intensity vector <span class="math inline">\mathbf{I}</span> satisfies:</p>
-<p><span class="math display">\mathbf{A} \mathbf{I} = \mathbf{b}</span></p>
-<p>where <span class="math inline">\mathbf{A}</span> is the graph Laplacian modified by optical properties and <span class="math inline">\mathbf{b}</span> represents boundary conditions and emission terms.</p>
-</div>
 </section>
 <section id="novel-contributions" class="level2" data-number="1.3">
 <h2 data-number="1.3" class="anchored" data-anchor-id="novel-contributions"><span class="header-section-number">1.3</span> Novel Contributions</h2>
@@ -311,7 +306,7 @@ As noted by Modest and Mazumder <span class="citation" data-cites="modest2022">(
 <li><strong>Analytical Framework</strong>: A complete mathematical framework connecting graph theory to radiative transfer</li>
 <li><strong>Computational Efficiency</strong>: Graph algorithms that outperform traditional methods for many problem classes<br>
 </li>
-<li><strong>New Solution Classes</strong>: Analytical solutions for previously intractable geometries</li>
+<li><strong>New Solution Classes</strong>: Analytical solutions for general domains, assuming geometric visibility is given</li>
 <li><strong>Extensibility</strong>: The framework extends to other transport phenomena beyond radiative transfer</li>
 </ol>
 </section>
@@ -319,11 +314,9 @@ As noted by Modest and Mazumder <span class="citation" data-cites="modest2022">(
 <h2 data-number="1.4" class="anchored" data-anchor-id="book-structure"><span class="header-section-number">1.4</span> Book Structure</h2>
 <p>The remainder of this book develops these ideas systematically:</p>
 <ul>
-<li><strong>Chapters 2-3</strong>: Mathematical foundations and graph theory essentials</li>
-<li><strong>Chapters 4-5</strong>: Development of the graph equilibrium framework and its application to the RTE</li>
-<li><strong>Chapter 6</strong>: Complete Julia implementation with the <code>RayTraceHeatTransfer.jl</code> package</li>
-<li><strong>Chapters 7-8</strong>: Validation examples and advanced applications</li>
-<li><strong>Chapter 9</strong>: Future directions and extensions beyond radiative transfer</li>
+<li><strong>Chapters 2-5</strong>: Part (1) Tutorial and validation of the Julia package <code>RayTraceHeatTransfer.jl</code>, with one chapter per algorithmic advance</li>
+<li><strong>Chapters 6-9</strong>: Part (2) Mathematical foundations, theorems and proofs, with one chapter per algorithmic advance</li>
+<li><strong>Chapters 10-12</strong>: Part (3) Demonstration of the graph equilibrium framework to more general problems, including directed graphs</li>
 </ul>
 </section>
 <section id="julia-implementation" class="level2" data-number="1.5">
@@ -332,7 +325,7 @@ As noted by Modest and Mazumder <span class="citation" data-cites="modest2022">(
 <ul>
 <li>Mathematical notation that closely mirrors the theoretical development</li>
 <li>High-performance numerical capabilities</li>
-<li>Excellent ecosystem for scientific computing</li>
+<li>Excellent ecosystem for scientific computing, including linear algebra</li>
 <li>Open-source accessibility</li>
 </ul>
 <div class="sourceCode" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This will be where we import your package</span></span>
@@ -342,9 +335,9 @@ As noted by Modest and Mazumder <span class="citation" data-cites="modest2022">(
 </section>
 <section id="looking-ahead" class="level2" data-number="1.6">
 <h2 data-number="1.6" class="anchored" data-anchor-id="looking-ahead"><span class="header-section-number">1.6</span> Looking Ahead</h2>
-<p>The graph equilibrium approach represents more than just a new computational method—it provides fundamental insights into the nature of radiative transfer itself. As we’ll see in subsequent chapters, this perspective reveals hidden symmetries, enables new approximation schemes, and opens pathways to solving problems that have remained analytically intractable for decades.</p>
+<p>The graph equilibrium approach represents more than just a new computational method - it provides fundamental insights into the nature of radiative transfer itself.</p>
 <hr>
-<p><em>The journey from traditional radiative transfer to graph equilibrium methods requires careful mathematical development. We begin this journey in the next chapter with the essential mathematical foundations.</em></p>
+<p><em>The journey begins with learning how to apply RayTraceHeatTransfer.jl to solve the RTE.</em></p>
 
 
 <!-- -->
@@ -354,7 +347,7 @@ As noted by Modest and Mazumder <span class="citation" data-cites="modest2022">(
 Bezanson, Jeff, Alan Edelman, Stefan Karpinski, and Viral B Shah. 2017. <span>“Julia: A Fresh Approach to Numerical Computing.”</span> <em>SIAM Review</em> 59 (1): 65–98.
 </div>
 <div id="ref-chandrasekhar1950" class="csl-entry" role="listitem">
-Chandrasekhar, S. 1950. <span>“Radiative Transfer,”</span> International series of monographs on physics,.
+Chandrasekhar, S. 1950. <em>Radiative Transfer</em>. International Series of Monographs on Physics. Clarendon Press, Oxford.
 </div>
 <div id="ref-howell2021" class="csl-entry" role="listitem">
 Howell, J. R., M. P. Mengüç, K. J. Daun, and R. Siegel. 2021. <em>Thermal Radiation Heat Transfer</em>. 7th ed. CRC Press, Taylor &amp; Francis Group.
@@ -834,7 +827,7 @@ Schwarzschild, K. 1906. <span>“Ueber Das Gleichgewicht Der Sonnenatmosphäre.�
       </a>
   </div>
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb2" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Introduction {#sec-introduction}</span></span>
+<div class="sourceCode" id="cb2" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Radiation Introduction {#sec-introduction}</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>Radiative transfer, the propagation of electromagnetic radiation through transparent or participating media, plays a crucial role in fields ranging from atmospheric physics to industrial heat transfer.</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>Traditional approaches to solving the radiative transfer equation (RTE) have relied heavily on numerical methods or simplified analytical solutions for specific geometries and boundary conditions.</span>
@@ -871,68 +864,56 @@ Schwarzschild, K. 1906. <span>“Ueber Das Gleichgewicht Der Sonnenatmosphäre.�
 <span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="fu">## The Graph Equilibrium Breakthrough</span></span>
 <span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>Our key insight is recognizing that steady-state radiative transfer can be formulated as a graph equilibrium problem where:</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>The key insight is recognizing that steady-state radiative transfer can be formulated as a graph equilibrium problem where:</span>
 <span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Nodes** represent spatial locations or control volumes</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Nodes** represent spatial control volumes</span>
 <span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Edges** represent radiative exchange pathways  </span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Edge weights** encode geometric and optical properties</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Edge weights** encode geometric and optical visibility</span>
 <span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Equilibrium conditions** replace the traditional RTE</span>
 <span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>This reformulation transforms the continuous integro-differential equation into a discrete algebraic system with remarkable analytical properties.</span>
 <span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>:::{#thm-graph-rte .theorem}</span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a><span class="fu">## Graph-RTE Equivalence Theorem</span></span>
-<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>For a discrete radiative transfer system with $N$ control volumes, the steady-state RTE is equivalent to finding the equilibrium of a weighted directed graph $G = (V, E, W)$ where the radiative intensity vector $\mathbf{I}$ satisfies:</span>
-<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>$$\mathbf{A} \mathbf{I} = \mathbf{b}$$</span>
-<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>where $\mathbf{A}$ is the graph Laplacian modified by optical properties and $\mathbf{b}$ represents boundary conditions and emission terms.</span>
-<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a><span class="fu">## Novel Contributions</span></span>
-<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>This work makes several groundbreaking contributions:</span>
-<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Analytical Framework**: A complete mathematical framework connecting graph theory to radiative transfer</span>
-<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Computational Efficiency**: Graph algorithms that outperform traditional methods for many problem classes  </span>
-<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**New Solution Classes**: Analytical solutions for previously intractable geometries</span>
-<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Extensibility**: The framework extends to other transport phenomena beyond radiative transfer</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a><span class="fu">## Novel Contributions</span></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>This work makes several groundbreaking contributions:</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Analytical Framework**: A complete mathematical framework connecting graph theory to radiative transfer</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Computational Efficiency**: Graph algorithms that outperform traditional methods for many problem classes  </span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**New Solution Classes**: Analytical solutions for general domains, assuming geometric visibility is given</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Extensibility**: The framework extends to other transport phenomena beyond radiative transfer</span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a><span class="fu">## Book Structure</span></span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>The remainder of this book develops these ideas systematically:</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Chapters 2-5**: Part (1) Tutorial and validation of the Julia package <span class="in">`RayTraceHeatTransfer.jl`</span>, with one chapter per algorithmic advance</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Chapters 6-9**: Part (2) Mathematical foundations, theorems and proofs, with one chapter per algorithmic advance</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Chapters 10-12**: Part (3) Demonstration of the graph equilibrium framework to more general problems, including directed graphs</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a><span class="fu">## Julia Implementation</span></span>
 <span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a><span class="fu">## Book Structure</span></span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>All methods in this book are implemented in Julia <span class="co">[</span><span class="ot">@bezanson2017julia</span><span class="co">]</span>, chosen for its:</span>
 <span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>The remainder of this book develops these ideas systematically:</span>
-<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Chapters 2-3**: Mathematical foundations and graph theory essentials</span>
-<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Chapters 4-5**: Development of the graph equilibrium framework and its application to the RTE</span>
-<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Chapter 6**: Complete Julia implementation with the <span class="in">`RayTraceHeatTransfer.jl`</span> package</span>
-<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Chapters 7-8**: Validation examples and advanced applications</span>
-<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Chapter 9**: Future directions and extensions beyond radiative transfer</span>
-<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a><span class="fu">## Julia Implementation</span></span>
-<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>All methods in this book are implemented in Julia <span class="co">[</span><span class="ot">@bezanson2017julia</span><span class="co">]</span>, chosen for its:</span>
-<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Mathematical notation that closely mirrors the theoretical development</span>
-<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>High-performance numerical capabilities</span>
-<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Excellent ecosystem for scientific computing</span>
-<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Open-source accessibility</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Mathematical notation that closely mirrors the theoretical development</span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>High-performance numerical capabilities</span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Excellent ecosystem for scientific computing, including linear algebra</span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Open-source accessibility</span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a><span class="in">```julia</span></span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a><span class="co"># This will be where we import your package</span></span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a><span class="co"># using RayTraceHeatTransfer</span></span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Graph Equilibrium Radiative Transfer - Julia Implementation"</span>)</span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>The complete source code accompanies each theoretical development, ensuring reproducibility and practical applicability.</span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a><span class="fu">## Looking Ahead</span></span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>The graph equilibrium approach represents more than just a new computational method - it provides fundamental insights into the nature of radiative transfer itself.</span>
 <span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a><span class="in">```julia</span></span>
-<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a><span class="co"># This will be where we import your package</span></span>
-<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a><span class="co"># using RayTraceHeatTransfer</span></span>
-<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a><span class="fu">println</span>(<span class="st">"Graph Equilibrium Radiative Transfer - Julia Implementation"</span>)</span>
-<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>The complete source code accompanies each theoretical development, ensuring reproducibility and practical applicability.</span>
-<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a><span class="fu">## Looking Ahead</span></span>
-<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a>The graph equilibrium approach represents more than just a new computational method—it provides fundamental insights into the nature of radiative transfer itself. As we'll see in subsequent chapters, this perspective reveals hidden symmetries, enables new approximation schemes, and opens pathways to solving problems that have remained analytically intractable for decades.</span>
-<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a>---</span>
-<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>*The journey from traditional radiative transfer to graph equilibrium methods requires careful mathematical development. We begin this journey in the next chapter with the essential mathematical foundations.*</span></code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a>*The journey begins with learning how to apply RayTraceHeatTransfer.jl to solve the RTE.*</span></code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 
