@@ -60,6 +60,7 @@ This work makes several groundbreaking contributions:
 
 Each chapter follows a concepts → examples → validation → proofs structure, with working code examples executed directly from `RayTraceHeatTransfer.jl`.
 The remainder of this book develops these ideas systematically:
+
 **2D Applications**:
 
 - **Chapter 2**: Building and visualizing 2D geometry
