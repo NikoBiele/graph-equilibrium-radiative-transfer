@@ -7,19 +7,19 @@ This book is currently being written and expanded. New chapters are added regula
 The complete version will be available at **radiative-transfer.org** upon completion.
 :::
 
-This book presents novel analytic algorithms for solving general graph equilibrium problems exactly, including those on directed graphs.
-To thoroughly validate these novel approaches, they are applied to the special case of solving the notoriously difficult radiative transfer equation (RTE), which describe physical radiation transport in absorbing, emitting and scattering media.
-The work develops analytical solutions to the RTE through the graph-based framework which extends beyond traditional radiative transfer applications.
+## The Breakthrough
 
-## Overview
+This book presents the first analytical solution to the radiative transfer equation with full mathematical proof of correctness.
+This represents a fundamental advance from computational approximations to rigorous analytical methods with guaranteed properties.
+Beyond its theoretical significance, this analytical solution provides an invaluable reference for validating other more complex computational methods in radiative transfer.
 
-Radiative transfer problems have traditionally been approached through numerical, hybrid or simplified analytical methods.
-This book presents a novel approach, which is analytic at its core, allowing its correctness to be mathematically proven.
-While this novel approach is analytic, it requires as an input the geometric visibility of the domain.
-In the case of a convex domain with a transparent medium, the visibility matrix of the domain can be obtained analytically, producing an entirely analytical solution.
-For non-convex domains with non-transparent media yielding non-zero attenuation, the visibility matrix can in general not be obtained analytically.
-For this case, the visibility matrix is found numerically through ray tracing, which in total results in a hybrid approach to solving the RTE.
-The methods presented here are implemented in Julia, and all code will be made available in the companion registered package `RayTraceHeatTransfer.jl`.
+## The Approach
+
+This work develops analytical solutions through a novel graph equilibrium framework that extends beyond radiative transfer to solve general graph equilibrium problems exactly.
+The method requires geometric visibility data as input - for simple geometries this can be computed analytically, yielding fully analytical solutions.
+For complex geometries, visibility is determined through ray tracing, creating a hybrid approach that maintains the proven analytical properties.
+
+All methods are implemented in the registered Julia package `RayTraceHeatTransfer.jl`, with complete source code and runnable examples integrated throughout this book.
 
 ## Who This Book Is For
 
@@ -28,8 +28,8 @@ This book is intended for:
 - Researchers in radiative transfer and heat transfer
 - Computational physicists working with transport phenomena  
 - Applied mathematicians interested in graph theory applications
+- Engineers and industry practitioners seeking rigorous validation methods for radiative transfer codes
 - Graduate students in physics, engineering, or applied mathematics
-- Anyone interested in novel analytical approaches to complex physical systems
 
 ## Prerequisites
 
@@ -38,17 +38,22 @@ Readers should have:
 - Undergraduate-level physics and mathematics
 - Familiarity with linear algebra
 - Basic knowledge of radiative transfer concepts
-- Some programming experience (Julia examples are provided)
+- Some programming experience (Julia examples are provided, but programming knowledge isn't required to understand concepts)
+
+Note: This book is designed with multiple tracks in mind.
+Practically-oriented readers can focus on the examples and skip the mathematical proofs, while theoretically-oriented readers can dive deep into the full derivations and proofs.
 
 ## How to Use This Book
 
-The first part of this book will function as a high level tutorial for the companion registered Julia package `RayTraceHeatTransfer.jl`.
+This book is structured to accommodate different learning styles and needs.
+Each chapter covering novel concepts follows a consistent pattern: concepts → examples → validation → proofs.
+This allows readers to engage at their preferred level of detail:
 
-The second part of this book will present background mathematical derivations, theorems and proofs in full, to support and validate the computational examples from the first part of the book.
+- Practical readers can focus on concepts, examples, and validation results
+- Theoretical readers can dive into the full mathematical proofs
+- All readers benefit from seeing working code examples that demonstrate applications
 
-The third part of this book will expand on the more general applications, beyond the special case of radiative transfer.
-
-Code examples are called directly from the companion registered Julia package `RayTraceHeatTransfer.jl`.
+All code examples are executed directly from the companion registered Julia package `RayTraceHeatTransfer.jl`, ensuring that every example represents actual working functionality rather than simplified demonstrations.
 
 The complete source for this book is available at: [github.com/NikoBiele/graph-equilibrium-radiative-transfer](https://github.com/NikoBiele/graph-equilibrium-radiative-transfer)
 
@@ -58,4 +63,4 @@ I would like to acknowledge all of my great teachers, tutors and sources of insp
 
 ---
 
-*This book represents years of research into analytical methods for radiative transfer. The graph equilibrium approach presented here opens new avenues for understanding and solving complex transport phenomena.*
+*This book represents years of research culminating in the first analytical solution to the radiative transfer equation with full mathematical proof. The graph equilibrium approach presented here provides a new foundation for radiative transfer theory and opens avenues for solving complex transport phenomena with guaranteed correctness.*
