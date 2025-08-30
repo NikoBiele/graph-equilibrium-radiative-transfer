@@ -33,9 +33,13 @@ jobs:
         shell: julia --project=. {0}
         run: |
           using Pkg
-          isfile("Manifest.toml") && Pkg.update("RayTraceHeatTransfer")
           Pkg.instantiate()
+          Pkg.update("RayTraceHeatTransfer")
+          Pkg.add("IJulia")
           Pkg.precompile()
+          using IJulia
+          kernel_name = "julia-$(VERSION.major).$(VERSION.minor)"
+          IJulia.installkernel(kernel_name)  # e.g. "julia-1.10"
 
       - name: Render Quarto Project
         uses: quarto-dev/quarto-actions/render@v2
