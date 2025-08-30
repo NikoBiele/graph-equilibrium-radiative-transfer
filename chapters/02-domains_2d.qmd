@@ -129,7 +129,6 @@ mesh1 = RayTraceHeatTransfer.RayTracingMeshOptim(faces_1, [(Ndim,Ndim)]);
 Finally, the domain is displayed using Makie:
 
 ```{julia}
-#| label: fig-mesh
 #| fig-cap: "2D quadrilateral mesh"
 
 using CairoMakie
@@ -234,7 +233,6 @@ mesh2 = RayTraceHeatTransfer.RayTracingMeshOptim(faces_2, [(Ndim,Ndim)]);
 Finally, the domain is displayed using Makie:
 
 ```{julia}
-#| label: fig-mesh
 #| fig-cap: "2D L-shaped mesh"
 
 using CairoMakie
