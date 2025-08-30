@@ -214,11 +214,11 @@ solidWall3 = SVector(true, true, true, false) # two walls are open
 face3 = RayTraceHeatTransfer.PolyFace2D{Float64,Float64}(vertices3, solidWall3)
 
 # set the physical properties and state
-face2.T_in_w = [0.0, 0.0, 0.0, 0.0] # known wall temperatures
-face2.q_in_w = [0.0, 0.0, 0.0, 0.0] # wall fluxes not used when temperature is specified
-face2.T_in_g = -1.0 # unknown gas temperature
-face2.q_in_g = 0.0 # known gas flux (radiative equilibrium)
-face2.epsilon = [1.0, 1.0, 1.0, 1.0] # wall emissivities
+face3.T_in_w = [0.0, 0.0, 0.0, 0.0] # known wall temperatures
+face3.q_in_w = [0.0, 0.0, 0.0, 0.0] # wall fluxes not used when temperature is specified
+face3.T_in_g = -1.0 # unknown gas temperature
+face3.q_in_g = 0.0 # known gas flux (radiative equilibrium)
+face3.epsilon = [1.0, 1.0, 1.0, 1.0] # wall emissivities
 
 push!(faces_2, face3) # push the second part into the vector for meshing
 ```
@@ -226,8 +226,8 @@ push!(faces_2, face3) # push the second part into the vector for meshing
 Next, the domain is meshed into a desired resolution:
 
 ```{julia}
-Ndim = 11 # splits in (x,y) directions
-mesh2 = RayTraceHeatTransfer.RayTracingMeshOptim(faces_2, [(Ndim,Ndim)]);
+Ndim = 11 # splits in 3 (x,y) directions
+mesh2 = RayTraceHeatTransfer.RayTracingMeshOptim(faces_2, [(Ndim,Ndim),(Ndim,Ndim),(Ndim,Ndim)]);
 ```
 
 Finally, the domain is displayed using Makie:
