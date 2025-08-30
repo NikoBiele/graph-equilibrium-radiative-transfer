@@ -310,19 +310,11 @@ for i in 1:5
     )
     solidWalls = SVector(true, true, false)
     face = PolyFace2D{Float64,Float64}(vertices, solidWalls)
-    if i == 2 || i == 4
-        face.T_in_w = [0.0, 0.0, 0.0]
-        face.q_in_w = [0.0, 0.0, 0.0]
-        face.T_in_g = -1.0
-        face.q_in_g = 1000.0
-        face.epsilon = [1.0, 1.0, 1.0]
-    else
-        face.T_in_w = [0.0, 0.0, 0.0]
-        face.q_in_w = [0.0, 0.0, 0.0]
-        face.T_in_g = -1.0
-        face.q_in_g = 1000.0
-        face.epsilon = [1.0, 1.0, 1.0]
-    end
+    face.T_in_w = [0.0, 0.0, 0.0]
+    face.q_in_w = [0.0, 0.0, 0.0]
+    face.T_in_g = -1.0
+    face.q_in_g = 1000.0
+    face.epsilon = [1.0, 1.0, 1.0]
     push!(faces_1, face)
 end
 ```

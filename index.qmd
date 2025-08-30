@@ -61,6 +61,11 @@ The complete source for this book is available at: [github.com/NikoBiele/graph-e
 
 I would like to acknowledge all of my great teachers, tutors and sources of inspiration throughout my life.
 
+## Independent Research Notice
+
+This work was conducted independently outside of regular employment and without institutional support.
+The analytical methods, conclusions, and software presented here represent the author's personal research and do not reflect the views or positions of any current or former employers.
+
 ---
 
 *This book represents years of research culminating in the first analytical solution to the radiative transfer equation with full mathematical proof. The graph equilibrium approach presented here provides a new foundation for radiative transfer theory and opens avenues for solving complex transport phenomena with guaranteed correctness.*
