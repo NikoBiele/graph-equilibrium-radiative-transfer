@@ -18,6 +18,16 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install Jupyter
+        run: |
+          python -m pip install --upgrade pip
+          pip install jupyter
+
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
@@ -29,7 +39,7 @@ jobs:
       - name: Cache Julia
         uses: julia-actions/cache@v1
 
-      - name: Install Julia dependencies (CI = releases)
+      - name: Install Julia dependencies and kernel
         shell: julia --project=. {0}
         run: |
           using Pkg
@@ -38,8 +48,12 @@ jobs:
           Pkg.add("IJulia")
           Pkg.precompile()
           using IJulia
-          kernel_name = "julia-$(VERSION.major).$(VERSION.minor)"
-          IJulia.installkernel(kernel_name)  # e.g. "julia-1.10"
+          IJulia.installkernel("julia-1.10")
+
+      - name: Verify Julia kernel installation
+        run: |
+          jupyter kernelspec list
+          quarto check jupyter
 
       - name: Render Quarto Project
         uses: quarto-dev/quarto-actions/render@v2
