@@ -2,7 +2,7 @@
 
 julia_version = "1.11.6"
 manifest_format = "2.0"
-project_hash = "6a8e27e864f5a162b09b83cae19938de1a287fb9"
+project_hash = "c2052c025edbbab4e9e3efb51bae71feee2c619d"
 
 [[deps.AbstractFFTs]]
 deps = ["LinearAlgebra"]
@@ -1261,11 +1261,9 @@ weakdeps = ["FixedPointNumbers"]
 
 [[deps.RayTraceHeatTransfer]]
 deps = ["GeometryBasics", "LinearAlgebra", "Measurements", "ProgressMeter", "Random", "StaticArrays", "StatsBase"]
-git-tree-sha1 = "30f57d254468f38c8426126f4f1bcbf9f9e606db"
-repo-rev = "main"
-repo-url = "https://github.com/NikoBiele/RayTraceHeatTransfer.jl"
+git-tree-sha1 = "249bc02a30820d8d1cab351a1a3caba5e146df42"
 uuid = "7cf1493d-886e-405c-b582-53b49fa147b6"
-version = "0.3.3"
+version = "0.3.4"
 weakdeps = ["Makie", "Plots"]
 
     [deps.RayTraceHeatTransfer.extensions]
