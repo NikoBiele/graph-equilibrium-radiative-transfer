@@ -2,7 +2,7 @@ project:
   type: book
   output-dir: _book
 
-jupyter: julia-1.11
+jupyter: julia-1.10
 
 book:
   title: "Graph Equilibrium Radiative Transfer"
