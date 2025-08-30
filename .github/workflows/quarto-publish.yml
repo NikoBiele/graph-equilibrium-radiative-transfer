@@ -13,6 +13,7 @@ jobs:
       contents: read
       pages: write
       id-token: write
+
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -23,16 +24,18 @@ jobs:
       - name: Install Julia
         uses: julia-actions/setup-julia@v1
         with:
-          version: '1.10'
-          
+          version: '1.11'
+
       - name: Cache Julia
         uses: julia-actions/cache@v1
 
-      - name: Install Julia dependencies
+      - name: Install Julia dependencies (CI = releases)
         shell: julia --project=. {0}
         run: |
           using Pkg
+          isfile("Manifest.toml") && Pkg.update("RayTraceHeatTransfer")
           Pkg.instantiate()
+          Pkg.precompile()
 
       - name: Render Quarto Project
         uses: quarto-dev/quarto-actions/render@v2

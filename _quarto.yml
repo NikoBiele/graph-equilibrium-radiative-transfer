@@ -2,6 +2,8 @@ project:
   type: book
   output-dir: _book
 
+jupyter: julia-1.11
+
 book:
   title: "Graph Equilibrium Radiative Transfer"
   subtitle: "Analytic Solutions and Computational Methods"
@@ -10,6 +12,7 @@ book:
   chapters:
     - index.qmd
     - chapters/01-introduction.qmd
+    - chapters/02-domains_2d.qmd
     - references.qmd
   
   navbar:
@@ -43,3 +46,5 @@ bibliography: references.bib
 execute:
   freeze: auto
   cache: true
+  echo: true
+  output: true

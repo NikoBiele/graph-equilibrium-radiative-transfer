@@ -1,0 +1,145 @@
+# Building and Visualizing 2D Geometry
+
+```{julia}
+#| label: env
+#| include: false
+
+import Pkg
+
+# Activate the book project
+Pkg.activate(abspath(joinpath(@__DIR__, "..")))  # adjust if your cell lives deeper
+
+if get(ENV, "CI", "false") == "true"
+    # --- CI on GitHub Pages: use newest *registered* version within [compat] ---
+    # Keep RayTraceHeatTransfer in [deps] with a [compat] like: RayTraceHeatTransfer = "0.3"
+    Pkg.instantiate()
+    Pkg.update("RayTraceHeatTransfer")   # float to latest allowed version
+else
+    # --- Local dev: always track the latest main branch ---
+    url = "https://github.com/NikoBiele/RayTraceHeatTransfer.jl"
+    try
+        Pkg.rm("RayTraceHeatTransfer"; force=true)
+    catch
+    end
+    Pkg.add(Pkg.PackageSpec(name="RayTraceHeatTransfer", url=url, rev="main"))
+    Pkg.instantiate()
+end
+
+using CairoMakie
+CairoMakie.activate!()
+Makie.inline!(true)
+
+using RayTraceHeatTransfer
+
+
+```
+
+## Overview
+
+This chapter introduces the foundation of the approach: creating accurate physical representations of 2D domains.
+You'll learn how to build and visualize 2D geometries using RayTraceHeatTransfer.jl, establishing the geometric framework that the analytical methods will operate on.
+The chapter progresses systematically through increasingly complex geometries:
+
+- **Rectangle**: The fundamental building block, essential for later validation against analytical solutions
+- **L-shape**: Introduces non-convex geometries and demonstrates geometric complexity
+- **Star shape**: Showcases the flexibility of the approach with intricate boundaries
+
+Each geometry demonstrates how to construct physical domain representations that serve as the foundation for radiative transfer calculations in subsequent chapters.
+
+## What You'll Learn
+
+- Building accurate physical representations of 2D domains
+- Visualizing geometries with working Julia code
+- Understanding how geometric complexity affects domain representation
+- Preparing geometric foundations for exchange factor calculations and heat transfer solutions
+
+## Concepts
+
+The graph equilibrium approach builds 2D domains from fundamental radiative transfer elements: **control volumes** and **walls (boundaries)**.
+Understanding how these elements are constructed and connected forms the foundation for all subsequent radiative transfer calculations.
+
+**Domain Elements**
+
+- **Control volumes**: Represent participating media regions with size given by 4βV (m²), where β is the extinction coefficient and V is the volume
+- **Walls/boundaries**: Represent surfaces with area A (m²) that can emit, absorb, and reflect radiation
+- Each element receives a unique incremental number for exchange factor indexing
+
+**Radiative Connectivity**
+
+Visibility between elements determines radiative exchange and will be calculated through ray tracing in later chapters.
+Since this method uses Monte Carlo ray tracing rather than angular discretization, it achieves accurate visibility knowledge without directional approximations, enabling analytical solutions that closely represent the true physical domain.
+
+**Geometric Construction**
+
+Domains are built from convex blocks - either triangles or quadrilaterals - that can be efficiently ray traced.
+The meshing and ray tracing algorithms handle both geometric primitives seamlessly.
+Blocks are combined by specifying which walls are 'solid' (opaque boundaries) versus 'penetrable' (allowing radiation passage between blocks).
+This modular approach enables complex geometries while maintaining computational efficiency.
+
+**Property Assignment**
+
+Material properties (known temperature/flux, emissivity, albedo) are assigned during geometry construction using nested inheritance - each mesh element inherits properties from its parent 'superpiece'.
+This simplifies property specification compared to defining properties for individual sub-elements while maintaining flexibility through multiple superpieces with different properties.
+
+**Visualization and Access**
+
+The visualization system displays element numbers, allowing easy identification of specific walls and volumes for result analysis and validation.
+
+## Examples
+
+Now we'll build three increasingly complex 2D geometries using RayTraceHeatTransfer.jl, starting with the fundamental rectangle that will serve as our validation benchmark.
+
+**Ractangle Domain**
+
+The rectangle is the most basic geometry and provides an essential validation case since analytical solutions exist for rectangular enclosures.
+Let's construct a simple rectangular domain:
+
+```{julia}
+using RayTraceHeatTransfer
+using StaticArrays
+using GeometryBasics
+# build the geometric quadrilateral face (4 points)
+faces_1 = RayTraceHeatTransfer.PolyFace2D{Float64,Float64}[]
+vertices1 = SVector(
+    Point2(0.0, 0.0),
+    Point2(1.0, 0.0),
+    Point2(1.0, 1.0),
+    Point2(0.0, 1.0),
+)
+```
+
+```{julia}
+solidWall1 = SVector(true, true, true, true) # all walls are impenetrable
+face1 = RayTraceHeatTransfer.PolyFace2D{Float64,Float64}(vertices1, solidWall1)
+
+# set the physical properties and state
+face1.T_in_w = [1000.0, 0.0, 0.0, 0.0] # known wall temperatures
+face1.q_in_w = [0.0, 0.0, 0.0, 0.0] # wall fluxes not used when temperature is specified
+face1.T_in_g = -1.0 # unknown gas temperature
+face1.q_in_g = 0.0 # known gas flux (radiative equilibrium)
+face1.epsilon = [1.0, 1.0, 1.0, 1.0] # wall emissivities
+push!(faces_1, face1)
+```
+
+Next, the domain is meshed into a desired resolution:
+
+```{julia}
+Ndim = 15 # splits in (x,y) directions
+mesh1 = RayTraceHeatTransfer.RayTracingMeshOptim(faces_1, [(Ndim,Ndim)]);
+```
+
+Finally, the domain is displayed using Makie:
+
+```{julia}
+#| label: fig-mesh
+#| fig-cap: "2D quadrilateral mesh"
+
+using CairoMakie
+CairoMakie.activate!()
+Makie.inline!(true)
+fig = Figure()
+ax = Axis(fig[1, 1], aspect=AxisAspect(1))
+RayTraceHeatTransfer.plotMesh2D(ax, mesh1) # plot the mesh
+# save("rectangle_mesh.png", fig) # Save the figure
+fig
+```

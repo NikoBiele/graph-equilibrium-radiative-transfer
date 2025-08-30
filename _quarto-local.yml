@@ -1,0 +1,4 @@
+# Local-only overrides (used when QUARTO_PROFILE=local)
+execute:
+  cache: false      # don't write *_files/execute-results
+freeze: false       # don't manage .quarto/_freeze or _freeze
