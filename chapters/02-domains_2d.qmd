@@ -87,7 +87,7 @@ The visualization system displays element numbers, allowing easy identification 
 
 Now we'll build three increasingly complex 2D geometries using RayTraceHeatTransfer.jl, starting with the fundamental rectangle that will serve as our validation benchmark.
 
-### Ractangle Domain
+### Rectangle Domain
 
 The rectangle is the most basic geometry and provides an essential validation case since analytical solutions exist for rectangular enclosures.
 Let's construct a simple rectangular domain:
@@ -134,7 +134,7 @@ Finally, the domain is displayed using Makie:
 using CairoMakie
 CairoMakie.activate!()
 Makie.inline!(true)
-fig = Figure()
+fig = Figure(size = (800, 600))
 ax = Axis(fig[1, 1], aspect=AxisAspect(1))
 RayTraceHeatTransfer.plotMesh2D(ax, mesh1) # plot the mesh
 # save("rectangle_mesh.png", fig) # Save the figure
@@ -238,9 +238,112 @@ Finally, the domain is displayed using Makie:
 using CairoMakie
 CairoMakie.activate!()
 Makie.inline!(true)
-fig = Figure()
+fig = Figure(size = (800, 600))
 ax = Axis(fig[1, 1], aspect=AxisAspect(1))
 RayTraceHeatTransfer.plotMesh2D(ax, mesh2) # plot the mesh
 # save("L-shaped_mesh.png", fig) # Save the figure
+fig
+```
+
+### Star-shaped Domain
+
+The star-shaped domain is the first non-convex, complex enclosure we'll mesh programmatically.
+We'll build it from 10 triangles. First, let's calculate the points of the star:
+
+```{julia}
+using RayTraceHeatTransfer
+using GeometryBasics
+using StaticArrays
+
+# Inner pentagon radius and outer star point radius
+inner_radius = 0.3
+outer_radius = 1.0
+
+# Generate 5 points for pentagon (72° between points)
+inner_points = Vector{Point2{Float64}}()
+for i in 1:5
+    angle = 2π/5 * (i-1) - π/2  # Start from top (-π/2)
+    x = inner_radius * cos(angle)
+    y = inner_radius * sin(angle)
+    push!(inner_points, Point2(x, y))
+end
+
+# Generate 5 outer star points
+outer_points = Vector{Point2{Float64}}()
+for i in 1:5
+    angle = 2π/5 * (i-1) - π/2 + π/5  # Offset by half pentagon angle
+    x = outer_radius * cos(angle)
+    y = outer_radius * sin(angle)
+    push!(outer_points, Point2(x, y))
+end
+```
+
+Next, let's create the faces:
+
+```{julia}
+# Create faces
+faces_1 = PolyFace2D{Float64,Float64}[]
+
+# Central pentagon (can be divided into triangles)
+for i in 1:5
+    vertices = SVector(
+        Point2(0.0, 0.0),  # Center
+        inner_points[i],
+        inner_points[mod1(i+1, 5)]
+    )
+    solidWalls = SVector(false, false, false)
+    face = PolyFace2D{Float64,Float64}(vertices, solidWalls)
+    face.T_in_w = [0.0, 0.0, 0.0]
+    face.q_in_w = [0.0, 0.0, 0.0]
+    face.T_in_g = -1.0
+    face.q_in_g = 1000.0
+    face.epsilon = [1.0, 1.0, 1.0]
+    push!(faces_1, face)
+end
+
+# Star points (triangles)
+for i in 1:5
+    vertices = SVector(
+        inner_points[i],
+        outer_points[i],
+        inner_points[mod1(i+1, 5)]
+    )
+    solidWalls = SVector(true, true, false)
+    face = PolyFace2D{Float64,Float64}(vertices, solidWalls)
+    if i == 2 || i == 4
+        face.T_in_w = [0.0, 0.0, 0.0]
+        face.q_in_w = [0.0, 0.0, 0.0]
+        face.T_in_g = -1.0
+        face.q_in_g = 1000.0
+        face.epsilon = [1.0, 1.0, 1.0]
+    else
+        face.T_in_w = [0.0, 0.0, 0.0]
+        face.q_in_w = [0.0, 0.0, 0.0]
+        face.T_in_g = -1.0
+        face.q_in_g = 1000.0
+        face.epsilon = [1.0, 1.0, 1.0]
+    end
+    push!(faces_1, face)
+end
+```
+
+Finally, let's mesh and plot the geometry:
+
+```{julia}
+Ndim = 11
+mesh1 = RayTracingMeshOptim(faces_1, [(Ndim,Ndim),(Ndim,Ndim),(Ndim,Ndim),(Ndim,Ndim),(Ndim,Ndim),
+                                (Ndim,Ndim),(Ndim,Ndim),(Ndim,Ndim),(Ndim,Ndim),(Ndim,Ndim)]);
+```
+
+```{julia}
+#| fig-cap: "2D star-shaped mesh"
+
+using CairoMakie
+CairoMakie.activate!()
+Makie.inline!(true)
+fig = Figure(size = (800, 600))
+ax = Axis(fig[1, 1], aspect=AxisAspect(1))
+RayTraceHeatTransfer.plotMesh2D(ax, mesh1) # plot the mesh
+# save("Star-shaped_mesh.png", fig) # Save the figure
 fig
 ```
