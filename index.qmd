@@ -1,4 +1,4 @@
-# Preface {.unnumbered}
+# Contents {.unnumbered}
 
 ::: {.callout-note}
 ## 🚧 Book Under Development
@@ -13,58 +13,69 @@ This book presents the first analytical solution to the radiative transfer equat
 This represents a fundamental advance from computational approximations to rigorous analytical methods with guaranteed properties.
 Beyond its theoretical significance, this analytical solution provides an invaluable reference for validating other more complex computational methods in radiative transfer.
 
-## The Approach
+## Resources
 
-This work develops analytical solutions through a novel graph equilibrium framework that extends beyond radiative transfer to solve general graph equilibrium problems exactly.
-The method requires geometric visibility data as input - for simple geometries this can be computed analytically, yielding fully analytical solutions.
-For complex geometries, visibility is determined through ray tracing, creating a hybrid approach that maintains the proven analytical properties.
+**Book Source Code:** Complete source for this book is available at [github.com/NikoBiele/graph-equilibrium-radiative-transfer](https://github.com/NikoBiele/graph-equilibrium-radiative-transfer)
 
-All methods are implemented in the registered Julia package `RayTraceHeatTransfer.jl`, with complete source code and runnable examples integrated throughout this book.
+**Julia Package:** All methods are implemented in the registered package [RayTraceHeatTransfer.jl](https://github.com/NikoBiele/RayTraceHeatTransfer.jl)
 
-## Who This Book Is For
+## Contents
 
-This book is intended for:
+::: {.column-margin}
+Navigate through the book using the sidebar, or jump directly to any part:
+:::
 
-- Researchers in radiative transfer and heat transfer
-- Computational physicists working with transport phenomena  
-- Applied mathematicians interested in graph theory applications
-- Engineers and industry practitioners seeking rigorous validation methods for radiative transfer codes
-- Graduate students in physics, engineering, or applied mathematics
+**[Part I: Introduction and Overview](chapters/p1-ch1-introduction.qmd)**  
+Background, motivation, and roadmap
 
-## Prerequisites
+- [Literature Review](chapters/p1-ch1-literature-review.qmd)
+- [Methodology Overview](chapters/p1-ch2-methodology-overview.qmd)
+- [Roadmap](chapters/p1-ch3-roadmap.qmd)
 
-Readers should have:
+**[Part II: Domain and Geometry Setup](chapters/p2-ch1-geometry-concepts.qmd)**  
+Building 2D and 3D geometries with RayTraceHeatTransfer.jl
 
-- Undergraduate-level physics and mathematics
-- Familiarity with linear algebra
-- Basic knowledge of radiative transfer concepts
-- Some programming experience (Julia examples are provided, but programming knowledge isn't required to understand concepts)
+- [Geometry Concepts](chapters/p2-ch1-geometry-concepts.qmd)
+- [2D Geometry Setup](chapters/p2-ch2-2d-geometry-setup.qmd)
+- [3D Geometry Setup](chapters/p2-ch3-3d-geometry-setup.qmd)
 
-Note: This book is designed with multiple tracks in mind.
-Practically-oriented readers can focus on the examples and skip the mathematical proofs, while theoretically-oriented readers can dive deep into the full derivations and proofs.
+**[Part III: Exchange Factor Transformation](chapters/p3-ch1-exchange-factor-concepts.qmd)**  
+The foundational analytical method
 
-## How to Use This Book
+- [Exchange Factor Concepts](chapters/p3-ch1-exchange-factor-concepts.qmd)
+- [2D Applications](chapters/p3-ch2-exchange-factor-2d-applications.qmd)
+- [3D Applications](chapters/p3-ch3-exchange-factor-3d-applications.qmd)
+- [Theory and Proofs](chapters/p3-ch4-exchange-factor-theory-proofs.qmd)
 
-This book is structured to accommodate different learning styles and needs.
-Each chapter covering novel concepts follows a consistent pattern: concepts → examples → validation → proofs.
-This allows readers to engage at their preferred level of detail:
+**[Part IV: Exchange Factor Smoothing](chapters/p4-ch1-smoothing-concepts.qmd)**  
+Enhanced accuracy through smoothing techniques
 
-- Practical readers can focus on concepts, examples, and validation results
-- Theoretical readers can dive into the full mathematical proofs
-- All readers benefit from seeing working code examples that demonstrate applications
+- [Smoothing Concepts](chapters/p4-ch1-smoothing-concepts.qmd)
+- [Smoothing Demonstrations](chapters/p4-ch2-smoothing-demonstrations.qmd)
+- [Theory and Proofs](chapters/p4-ch3-smoothing-theory-proofs.qmd)
 
-All code examples are executed directly from the companion registered Julia package `RayTraceHeatTransfer.jl`, ensuring that every example represents actual working functionality rather than simplified demonstrations.
+**[Part V: Anisotropic Extension](chapters/p5-ch1-anisotropic-concepts.qmd)**  
+Handling directionally dependent properties
 
-The complete source for this book is available at: [github.com/NikoBiele/graph-equilibrium-radiative-transfer](https://github.com/NikoBiele/graph-equilibrium-radiative-transfer)
+- [Anisotropic Concepts](chapters/p5-ch1-anisotropic-concepts.qmd)
+- [2D Applications](chapters/p5-ch2-anisotropic-2d-applications.qmd)
+- [3D Applications](chapters/p5-ch3-anisotropic-3d-applications.qmd)
+- [Theory and Proofs](chapters/p5-ch4-anisotropic-theory-proofs.qmd)
 
-## Acknowledgments
+**[Part VI: Spectral Extension](chapters/p6-ch1-spectral-concepts.qmd)**  
+Wavelength-dependent analytical solutions
 
-I would like to acknowledge all of my great teachers, tutors and sources of inspiration throughout my life.
+- [Spectral Concepts](chapters/p6-ch1-spectral-concepts.qmd)
+- [2D Applications](chapters/p6-ch2-spectral-2d-applications.qmd)
+- [3D Applications](chapters/p6-ch3-spectral-3d-applications.qmd)
+- [Theory and Proofs](chapters/p6-ch4-spectral-theory-proofs.qmd)
 
-## Independent Research Notice
+**[Part VII: Beyond Radiative Transfer](chapters/p7-ch1-directed-graphs.qmd)**  
+General graph equilibrium applications
 
-This work was conducted independently outside of regular employment and without institutional support.
-The analytical methods, conclusions, and software presented here represent the author's personal research and do not reflect the views or positions of any current or former employers.
+- [Directed Graphs](chapters/p7-ch1-directed-graphs.qmd)
+- [General Applications](chapters/p7-ch2-general-applications.qmd)
+- [Future Directions](chapters/p7-ch3-future-directions.qmd)
 
 ---
 

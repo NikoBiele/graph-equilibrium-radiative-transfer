@@ -1,0 +1,28 @@
+# Methodology
+
+This work develops analytical solutions through a novel graph equilibrium framework that extends beyond radiative transfer to solve general graph equilibrium problems exactly.
+The method requires geometric visibility data as input - for simple geometries this can be computed analytically, yielding fully analytical solutions.
+For complex geometries, visibility is determined through ray tracing, creating a hybrid approach that maintains the proven analytical properties.
+
+## The Graph Equilibrium Breakthrough
+
+The key insight is recognizing that steady-state radiative transfer can be formulated as a graph equilibrium problem where:
+
+- **Nodes** represent spatial control volumes
+- **Edges** represent radiative exchange pathways  
+- **Edge weights** encode geometric and optical visibility
+- **Equilibrium conditions** replace the traditional RTE
+
+This reformulation transforms the continuous integro-differential equation into a discrete algebraic system with mathematically proven correctness and guaranteed convergence properties.
+Unlike traditional numerical methods that provide approximate solutions with uncertain error bounds, this analytical approach delivers exact solutions with rigorous mathematical validation.
+
+The graph equilibrium framework represents the first analytical solution to the RTE that can be proven correct for general geometries, providing an invaluable reference standard for validating other computational methods in radiative transfer.
+
+## Novel Contributions
+
+This work makes several groundbreaking contributions:
+
+1. **Proven Analytical Solutions**: The first analytical solution to the RTE with full mathematical proof of correctness and guaranteed convergence conditions
+2. **Validation Standard**: Provides a rigorous reference for validating other computational methods in radiative transfer, addressing a critical need in the field
+3. **General Analytical Framework**: A complete mathematical framework connecting graph theory to radiative transfer that extends to general domains
+4. **Broader Applications**: The graph equilibrium approach extends beyond radiative transfer to solve other transport phenomena and general graph equilibrium problems

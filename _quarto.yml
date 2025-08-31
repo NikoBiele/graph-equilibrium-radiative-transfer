@@ -11,13 +11,13 @@ book:
   date: today
   chapters:
     - index.qmd
+    - preface.qmd
     
     - part: "Part I: Introduction and Overview"
       chapters:
-        - chapters/p1-ch1-introduction.qmd
-        - chapters/p1-ch2-literature-review.qmd
-        - chapters/p1-ch3-methodology-overview.qmd
-        - chapters/p1-ch4-roadmap.qmd
+        - chapters/p1-ch1-literature-review.qmd
+        - chapters/p1-ch2-methodology-overview.qmd
+        - chapters/p1-ch3-roadmap.qmd
     
     - part: "Part II: Domain and Geometry Setup"
       chapters:
@@ -52,7 +52,7 @@ book:
         - chapters/p6-ch3-spectral-3d-applications.qmd
         - chapters/p6-ch4-spectral-theory-proofs.qmd
     
-    - part: "Part VII: Extensions Beyond Radiative Transfer"
+    - part: "Part VII: Beyond Radiative Transfer"
       chapters:
         - chapters/p7-ch1-directed-graphs.qmd
         - chapters/p7-ch2-general-applications.qmd

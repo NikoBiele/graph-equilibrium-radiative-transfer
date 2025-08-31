@@ -1,0 +1,57 @@
+# Preface {.unnumbered}
+
+## Who This Book Is For
+
+This book is intended for:
+
+- Researchers in radiative transfer and heat transfer
+- Computational physicists working with transport phenomena  
+- Applied mathematicians interested in graph theory applications
+- Engineers and industry practitioners seeking rigorous validation methods for radiative transfer codes
+- Graduate students in physics, engineering, or applied mathematics
+
+## Prerequisites
+
+Readers should have:
+
+- Undergraduate-level physics and mathematics
+- Familiarity with linear algebra
+- Basic knowledge of radiative transfer concepts
+- Some programming experience (Julia examples are provided, but programming knowledge isn't required to understand concepts)
+
+Note: This book is designed with multiple tracks in mind.
+Practically-oriented readers can focus on the examples and skip the mathematical proofs, while theoretically-oriented readers can dive deep into the full derivations and proofs.
+
+## How to Use This Book
+
+This book is structured to accommodate different learning styles and needs.
+Each part covering novel concepts follows a consistent pattern: concepts → examples → validation → proofs.
+This allows readers to engage at their preferred level of detail:
+
+- Practical readers can focus on concepts, examples, and validation results
+- Theoretical readers can dive into the full mathematical proofs
+- All readers benefit from seeing working code examples that demonstrate applications
+
+## Julia Implementation
+
+All methods are implemented in Julia [@bezanson2017julia], chosen for its mathematical notation that mirrors theoretical development, high-performance capabilities, and excellent scientific computing ecosystem.
+
+To get started:
+```julia
+using Pkg
+Pkg.add("RayTraceHeatTransfer")
+using RayTraceHeatTransfer
+```
+
+## Acknowledgments
+
+I would like to acknowledge all of my great teachers, tutors and sources of inspiration throughout my life.
+
+## Independent Research Notice
+
+This work was conducted independently outside of regular employment and without institutional support.
+The analytical methods, conclusions, and software presented here represent the author's personal research and do not reflect the views or positions of any current or former employers.
+
+---
+
+*This preface provides the roadmap for your journey through analytical radiative transfer. Part I begins with establishing the theoretical foundations.*
