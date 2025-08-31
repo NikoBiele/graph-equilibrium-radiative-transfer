@@ -35,7 +35,7 @@ The RTE does not directly account for surface reflections, and therefore the exc
 
 ## Existing Matrix-based Methods
 
-Seeking to quantify combustion heat transfer, Hottel and co-workers [@HottelCohen1958][@HottelSarofim1967][@Noble1975] pioneered solutions to the RTE using a discretized integral approach. Fundamentally, this integral approach produces matrices of *exchange areas*, which describe the radiative connectivity of the discretized domain. The integrals for the exchange areas are:
+Seeking to quantify combustion heat transfer, Hottel and co-workers [@HottelCohen1958; @HottelSarofim1967; @Noble1975] pioneered solutions to the RTE using a discretized integral approach. Fundamentally, this integral approach produces matrices of *exchange areas*, which describe the radiative connectivity of the discretized domain. The integrals for the exchange areas are:
 
 Surface-surface:
 $$ \overline{s_j s_k} = \frac{1}{\pi}\int_{A_j}\int_{A_k} \frac{\overline{t}(S_{j-k})\mathrm{cos}(\theta_j)\mathrm{cos}(\theta_k)}{S^2_{j-k}}dA_k dA_j $$ {#eq-excfact_ss}
