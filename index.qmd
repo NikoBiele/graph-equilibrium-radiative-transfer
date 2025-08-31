@@ -21,11 +21,9 @@ Beyond its theoretical significance, this analytical solution provides an invalu
 
 ## Contents
 
-::: {.column-margin}
-Navigate through the book using the sidebar, or jump directly to any part:
-:::
+Navigate through the book using the sidebars, or jump directly to any part:
 
-**[Part I: Introduction and Overview](chapters/p1-ch1-introduction.qmd)**  
+**[Part I: Introduction and Overview](chapters/p1-ch1-literature-review.qmd)**  
 Background, motivation, and roadmap
 
 - [Literature Review](chapters/p1-ch1-literature-review.qmd)
@@ -79,4 +77,4 @@ General graph equilibrium applications
 
 ---
 
-*This book represents years of research culminating in the first analytical solution to the radiative transfer equation with full mathematical proof. The graph equilibrium approach presented here provides a new foundation for radiative transfer theory and opens avenues for solving complex transport phenomena with guaranteed correctness.*
+*Your journey into analytical radiative transfer starts here.*
