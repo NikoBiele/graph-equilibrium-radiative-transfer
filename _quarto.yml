@@ -87,6 +87,8 @@ format:
       thm-prefix: "Theorem"
     
 bibliography: references.bib
+link-citations: true
+reference-location: document
 
 execute:
   freeze: auto
