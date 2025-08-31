@@ -38,13 +38,13 @@ The RTE does not directly account for surface reflections, and therefore the exc
 Seeking to quantify combustion heat transfer, Hottel and co-workers [@HottelCohen1958][@HottelSarofim1967][@Noble1975] pioneered solutions to the RTE using a discretized integral approach. Fundamentally, this integral approach produces matrices of *exchange areas*, which describe the radiative connectivity of the discretized domain. The integrals for the exchange areas are:
 
 Surface-surface:
-$$ \overline{s_j s_k} = \frac{1}{\pi}\int_{A_j}\int_{A_k} \frac{\overline{t}(S_{j-k})\mathrm{cos}(\theta_j)\mathrm{cos}(\theta_k)}{S^2_{j-k}}dA_k dA_j $$
+$$ \overline{s_j s_k} = \frac{1}{\pi}\int_{A_j}\int_{A_k} \frac{\overline{t}(S_{j-k})\mathrm{cos}(\theta_j)\mathrm{cos}(\theta_k)}{S^2_{j-k}}dA_k dA_j $$ {#eq-excfact_ss}
 
 Surface-gas and gas-surface:
-$$ \overline{s_k g_\gamma} = \overline{g_\gamma s_k} = \frac{\kappa}{\pi} \int_{V_\gamma}\int_{A_k}\frac{\overline{t}(S_{k-\gamma}) \mathrm{cos}(\theta_k)}{S^2_{k-\gamma}} dA_k dV_\gamma $$
+$$ \overline{s_k g_\gamma} = \overline{g_\gamma s_k} = \frac{\kappa}{\pi} \int_{V_\gamma}\int_{A_k}\frac{\overline{t}(S_{k-\gamma}) \mathrm{cos}(\theta_k)}{S^2_{k-\gamma}} dA_k dV_\gamma $$ {#eq-excfact_sg_gs}
 
 Gas-gas:
-$$ \overline{g_\gamma g_{\gamma*}} = \frac{\kappa^2}{\pi} \int_{V_\gamma}\int_{V_{\gamma*}} \frac{\overline{t}(S_{\gamma-\gamma*})}{S^2_{\gamma-\gamma*}}dV_{\gamma*} dV_\gamma $$
+$$ \overline{g_\gamma g_{\gamma*}} = \frac{\kappa^2}{\pi} \int_{V_\gamma}\int_{V_{\gamma*}} \frac{\overline{t}(S_{\gamma-\gamma*})}{S^2_{\gamma-\gamma*}}dV_{\gamma*} dV_\gamma $$ {#eq-excfact_gg}
 
 where $\overline{t}=\mathrm{exp}(-\kappa S)$ is the transmissivity of the participating medium, $\theta$ is the angle with the surface normal, $\mathrm{cos}(\theta)$ of the emitter surface accounts for the diffuse Lambertian emission and $\mathrm{cos}(\theta)$ of the absorbing surface accounts for the projected area effect, $S$ is the distance from the point of emission to the point of absorption and $\kappa$ is the absorption coefficient of the medium. These integrals, being analytically intractable, were initially, before the general advent of modern day digital computers, solved graphically and tabulated. Once the exchange areas have been determined for all pairs of emitters and absorbers in the system, subsequent solution of the RTE is achieved using linear algebra.
 
