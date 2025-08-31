@@ -1,28 +1,63 @@
 # Methodology
 
-This work develops analytical solutions through a novel graph equilibrium framework that extends beyond radiative transfer to solve general graph equilibrium problems exactly.
-The method requires geometric visibility data as input - for simple geometries this can be computed analytically, yielding fully analytical solutions.
-For complex geometries, visibility is determined through ray tracing, creating a hybrid approach that maintains the proven analytical properties.
+This work develops analytical solutions to the radiative transfer equation through a graph equilibrium framework.
+The method requires geometric visibility data as input—for simple geometries this can be computed analytically, yielding fully analytical solutions.
+For complex geometries, visibility is determined through ray tracing, creating a hybrid approach that retains analytical properties for the equilibrium solution.
 
-## The Graph Equilibrium Breakthrough
+## Graph Equilibrium Formulation
 
-The key insight is recognizing that steady-state radiative transfer can be formulated as a graph equilibrium problem where:
+The central contribution of this work is the recognition that steady-state radiative transfer can be reformulated as a graph equilibrium problem. In this formulation:
 
-- **Nodes** represent spatial control volumes
-- **Edges** represent radiative exchange pathways  
-- **Edge weights** encode geometric and optical visibility
-- **Equilibrium conditions** replace the traditional RTE
+- **Nodes** represent spatial control volumes or surface elements
+- **Edges** represent radiative exchange pathways between nodes
+- **Edge weights** encode geometric view factors and optical properties
+- **Equilibrium conditions** replace the integro-differential RTE
 
-This reformulation transforms the continuous integro-differential equation into a discrete algebraic system with mathematically proven correctness and guaranteed convergence properties.
-Unlike traditional numerical methods that provide approximate solutions with uncertain error bounds, this analytical approach delivers exact solutions with rigorous mathematical validation.
+This reformulation transforms the continuous seven-dimensional integro-differential equation into a discrete algebraic system.
+The approach provides exact solutions with rigorous convergence properties, in contrast to traditional numerical methods that yield approximate solutions with uncertain error bounds.
 
-The graph equilibrium framework represents the first analytical solution to the RTE that can be proven correct for general geometries, providing an invaluable reference standard for validating other computational methods in radiative transfer.
+## Principal Contributions
 
-## Novel Contributions
+This methodology makes several key contributions to radiative transfer theory:
 
-This work makes several groundbreaking contributions:
+1. **Analytical treatment**: Development of an analytical solution framework for the RTE with mathematical proof of correctness
+2. **Reference standard**: Provision of exact solutions for validation of other computational methods
+3. **General framework**: A complete mathematical connection between graph theory and radiative transfer applicable to general geometries
+4. **Extended applications**: Extension of the graph equilibrium approach to other transport phenomena
 
-1. **Proven Analytical Solutions**: The first analytical solution to the RTE with full mathematical proof of correctness and guaranteed convergence conditions
-2. **Validation Standard**: Provides a rigorous reference for validating other computational methods in radiative transfer, addressing a critical need in the field
-3. **General Analytical Framework**: A complete mathematical framework connecting graph theory to radiative transfer that extends to general domains
-4. **Broader Applications**: The graph equilibrium approach extends beyond radiative transfer to solve other transport phenomena and general graph equilibrium problems
+## The Proposed Matrix-based Approach
+
+Similarly to Hottel's method, outlined in chapter @sec-literature, the exchange factor transformation of the present work starts from the exchange area matrix.
+But unlike Hottel's method, which works directly with the exchange area matrix, the proposed transformation uses its non-dimensional counterpart, the *exchange factor* matrix, where each entry of the exchange area matrix has been divided by its equivalent area of emission.
+Before solving a specific problem, the proposed method apply a matrix transformation to augment the exchange factor matrix with additional information about the steady state of reflection and scattering in the domain.
+
+The transformation of the exchange factor matrix into an augmented form is partly inspired by the "F-hat" method developed by Beckman [@Beckman1968], which extends the view factor matrix for a transparent enclosure to include reflections.
+Further analysis revealed that the 'F-hat' method only includes single reflections and does not account for multiple reflections.
+The effective reflection-scattering coefficients of multiple reflection-scattering processes on general domains are functions of extinction and geometry, which seemingly made the problem impossible to solve.
+However, as will be demonstrated in this paper, the problem is neither intractable nor impossible to solve.
+In fact, it has a closed form analytical solution.
+
+Given the availability of an analytically derived matrix of exchange factors, generally referred to as the matrix $\mathbf{F}$, the entire solution is analytical.
+Thanks to Narayanaswamy [@Narayanaswamy2015], who found a general analytical solution to equation (@eq-excfact_ss) with $\overline{t}(S)=1$, this is possible for any convex enclosure composed of polygon surfaces and a transparent medium, giving perfect solutions to multiple reflection systems, which would otherwise be represented by coupled Fredholm equations of the second kind [@Minkowycz1988], the single assumption being that angular distributions of emission and reflection are identical.
+
+For problems involving participating media ($\overline{t}(S)<1$), analytical solutions to the multi-dimensional integrals of equations (@eq-excfact_ss)-(@eq-excfact_gg) have yet to be found.
+In this case, one might employ Monte Carlo methods to obtain near-analytical estimates of $\mathbf{F}$.
+To ensure that $\mathbf{F}$ satisfies both The First and The Second Law of Thermodynamics, smoothing should be employed, such as for example the method proposed by Daun et al. [@Daun2005], or preferably the method proposed in this work.
+
+The solution method proposed in this work is general and, furthermore, it is flexible.
+In fact, a key strength of matrix-based methods for solution of the RTE, is that they allow the formidable monolithic problem of energy transfer by an electromagnetic wave field, to be broken down into two conceptually separate and more manageable parts:
+The geometry and extinction-based ray propagation part and the system-wide energy interaction part.
+If $\mathbf{F}$ is obtained through Monte Carlo ray tracing methods, any number of relevant optical phenomena may be modelled, such as refraction and diffraction, refraction being significant in atmospheric research, due to the variable refractive index.
+This can be achieved by solving differential equations for each ray [@BornWolf1980].
+Since the proposed transformation records only ray trajectory endpoints, it is in some sense blind to the phenomena which govern the trajectories, which explains why the matrix transformations of the present work will preserve any modelled ray trajectory properties.
+
+For the proposed transformation, since $\mathbf{F}$ refers only to the first interaction, Monte Carlo methods used to obtain $\mathbf{F}$ can be truncated after this initial interaction, making them computationally less demanding than basic Monte Carlo implementations that must track multiple reflection-scattering events [@HowellDaun2021].
+This will be increasingly true for higher single reflection-scattering coefficients due to the increased length of the ray paths.
+Instead, the proposed transformation performs the multiple reflection-scattering ray tracing analytically using solution of linear systems.
+This approach offers key advantages:
+
+(1) It significantly improves computational efficiency compared to basic ray tracing methods for multiple reflection-scattering,
+(2) It provides analytical ray tracing accuracy with quantifiable bounds on the necessary numerical precision,
+(3) The precision requirements are expressed as a function of both the geometry and extinction (described by $\mathbf{F}$) and the reflection and scattering properties of each element.
+
+This enables problem-specific numerical precision tuning which is readily implementable in modern numerical programming languages [@IEEEfloat2019].

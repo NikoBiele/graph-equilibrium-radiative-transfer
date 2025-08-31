@@ -1,4 +1,4 @@
-# Literature Review
+# Literature Review {#sec-literature}
 
 Radiative transfer, the propagation of electromagnetic radiation through transparent or participating media, plays a crucial role in fields ranging from atmospheric physics to industrial heat transfer.
 Traditional approaches to solving the radiative transfer equation (RTE) have relied heavily on numerical methods or simplified analytical solutions for specific geometries and boundary conditions.
