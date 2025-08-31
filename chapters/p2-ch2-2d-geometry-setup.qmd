@@ -134,7 +134,7 @@ Finally, the domain is displayed using Makie:
 using CairoMakie
 CairoMakie.activate!()
 Makie.inline!(true)
-fig = Figure(size = (800, 600))
+fig = Figure(; size = (800, 600))
 ax = Axis(fig[1, 1], aspect=AxisAspect(1))
 RayTraceHeatTransfer.plotMesh2D(ax, mesh1) # plot the mesh
 # save("rectangle_mesh.png", fig) # Save the figure
@@ -238,7 +238,7 @@ Finally, the domain is displayed using Makie:
 using CairoMakie
 CairoMakie.activate!()
 Makie.inline!(true)
-fig = Figure(size = (800, 600))
+fig = Figure(; size = (800, 600))
 ax = Axis(fig[1, 1], aspect=AxisAspect(1))
 RayTraceHeatTransfer.plotMesh2D(ax, mesh2) # plot the mesh
 # save("L-shaped_mesh.png", fig) # Save the figure
@@ -333,7 +333,7 @@ mesh1 = RayTracingMeshOptim(faces_1, [(Ndim,Ndim),(Ndim,Ndim),(Ndim,Ndim),(Ndim,
 using CairoMakie
 CairoMakie.activate!()
 Makie.inline!(true)
-fig = Figure(size = (800, 600))
+fig = Figure(; size = (800, 600))
 ax = Axis(fig[1, 1], aspect=AxisAspect(1))
 RayTraceHeatTransfer.plotMesh2D(ax, mesh1) # plot the mesh
 # save("Star-shaped_mesh.png", fig) # Save the figure
