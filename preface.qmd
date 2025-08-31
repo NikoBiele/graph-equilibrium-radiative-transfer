@@ -34,7 +34,7 @@ This allows readers to engage at their preferred level of detail:
 
 ## Julia Implementation
 
-All methods are implemented in Julia [@bezanson2017julia], chosen for its mathematical notation that mirrors theoretical development, high-performance capabilities, and excellent scientific computing ecosystem.
+All methods are implemented in Julia [@Bezanson2017Julia], chosen for its mathematical notation that mirrors theoretical development, high-performance capabilities, and excellent scientific computing ecosystem.
 
 To get started:
 ```julia
