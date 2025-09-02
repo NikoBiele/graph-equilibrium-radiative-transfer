@@ -6,6 +6,12 @@
   margin: 0 auto;
 }
 
+/* Center the navbar/header */
+.navbar {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
 /* Quote box styling */
 .quote-box {
   border-left: 4px solid #007acc;
