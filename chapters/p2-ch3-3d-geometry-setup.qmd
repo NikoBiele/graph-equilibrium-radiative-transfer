@@ -25,8 +25,8 @@ else
     Pkg.instantiate()
 end
 
-using CairoMakie
-CairoMakie.activate!()
+using GLMakie
+GLMakie.activate!()
 Makie.inline!(true)
 
 using RayTraceHeatTransfer
@@ -92,8 +92,8 @@ First, define the geometry:
 
 ```{julia}
 using RayTraceHeatTransfer
-using CairoMakie
-CairoMakie.activate!()
+using GLMakie
+GLMakie.activate!()
 Makie.inline!(true)
 
 # Define tetrahedron vertices
