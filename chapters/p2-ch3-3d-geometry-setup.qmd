@@ -56,6 +56,7 @@ Each geometry demonstrates the construction of 3D domains from surface elements 
 **3D Domain Construction**
 
 3D domains are built from surface faces that enclose volumes. Each face is defined by:
+
 - **Vertices**: Corner points defining the face geometry (triangles or quadrilaterals)
 - **Orientation**: Following the right-hand rule for outward-pointing surface normals
 - **Properties**: Temperature, heat flux, and surface emissivity specifications
@@ -193,7 +194,7 @@ Set the domain properties and build and mesh the domain:
 
 ```{julia}
 # Mesh fineness
-Ndim = 4  # subdivisions per edge
+Ndim = 5  # subdivisions per edge
 
 # Surface properties
 epsilon = ones(size(faces, 1))  # All surfaces are black bodies

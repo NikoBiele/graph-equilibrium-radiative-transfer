@@ -245,9 +245,6 @@ Finally, the domain is displayed using Makie:
 #| warning: false
 #| fig-cap: "2D L-shaped mesh"
 
-using CairoMakie
-CairoMakie.activate!()
-Makie.inline!(true)
 fig = Figure(; size = (800, 600))
 ax = Axis(fig[1, 1], aspect=AxisAspect(1))
 RayTraceHeatTransfer.plotMesh2D(ax, mesh2) # plot the mesh
@@ -330,7 +327,7 @@ for i in 1:5
     face.epsilon = [1.0, 1.0, 1.0]
     face.kappa_g = 1.0 # local absorption coefficient
     face.sigma_s_g = 0.0 # local scattering coefficient
-    
+
     push!(faces_1, face)
 end
 ```
