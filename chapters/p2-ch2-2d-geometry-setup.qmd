@@ -115,6 +115,8 @@ face1.q_in_w = [0.0, 0.0, 0.0, 0.0] # wall fluxes not used when temperature is s
 face1.T_in_g = -1.0 # unknown gas temperature
 face1.q_in_g = 0.0 # known gas flux (radiative equilibrium)
 face1.epsilon = [1.0, 1.0, 1.0, 1.0] # wall emissivities
+face1.kappa_g = 1.0 # local absorption coefficient
+face1.sigma_s_g = 0.0 # local scattering coefficient
 
 push!(faces_1, face1) # push the first part into the vector for meshing
 ```
@@ -129,6 +131,7 @@ mesh1 = RayTraceHeatTransfer.RayTracingMeshOptim(faces_1, [(Ndim,Ndim)]);
 Finally, the domain is displayed using Makie:
 
 ```{julia}
+#| warning: false
 #| fig-cap: "2D quadrilateral mesh"
 
 using CairoMakie
@@ -173,6 +176,8 @@ face1.q_in_w = [0.0, 0.0, 0.0, 0.0] # wall fluxes not used when temperature is s
 face1.T_in_g = -1.0 # unknown gas temperature
 face1.q_in_g = 0.0 # known gas flux (radiative equilibrium)
 face1.epsilon = [1.0, 1.0, 1.0, 1.0] # wall emissivities
+face1.kappa_g = 1.0 # local absorption coefficient
+face1.sigma_s_g = 0.0 # local scattering coefficient
 
 push!(faces_2, face1) # push the first part into the vector for meshing
 ```
@@ -196,6 +201,8 @@ face2.q_in_w = [0.0, 0.0, 0.0, 0.0] # wall fluxes not used when temperature is s
 face2.T_in_g = -1.0 # unknown gas temperature
 face2.q_in_g = 0.0 # known gas flux (radiative equilibrium)
 face2.epsilon = [1.0, 1.0, 1.0, 1.0] # wall emissivities
+face2.kappa_g = 1.0 # local absorption coefficient
+face2.sigma_s_g = 0.0 # local scattering coefficient
 
 push!(faces_2, face2) # push the second part into the vector for meshing
 ```
@@ -219,6 +226,8 @@ face3.q_in_w = [0.0, 0.0, 0.0, 0.0] # wall fluxes not used when temperature is s
 face3.T_in_g = -1.0 # unknown gas temperature
 face3.q_in_g = 0.0 # known gas flux (radiative equilibrium)
 face3.epsilon = [1.0, 1.0, 1.0, 1.0] # wall emissivities
+face3.kappa_g = 1.0 # local absorption coefficient
+face3.sigma_s_g = 0.0 # local scattering coefficient
 
 push!(faces_2, face3) # push the second part into the vector for meshing
 ```
@@ -233,6 +242,7 @@ mesh2 = RayTraceHeatTransfer.RayTracingMeshOptim(faces_2, [(Ndim,Ndim),(Ndim,Ndi
 Finally, the domain is displayed using Makie:
 
 ```{julia}
+#| warning: false
 #| fig-cap: "2D L-shaped mesh"
 
 using CairoMakie
@@ -298,6 +308,9 @@ for i in 1:5
     face.T_in_g = -1.0
     face.q_in_g = 1000.0
     face.epsilon = [1.0, 1.0, 1.0]
+    face.kappa_g = 1.0 # local absorption coefficient
+    face.sigma_s_g = 0.0 # local scattering coefficient
+
     push!(faces_1, face)
 end
 
@@ -315,6 +328,7 @@ for i in 1:5
     face.T_in_g = -1.0
     face.q_in_g = 1000.0
     face.epsilon = [1.0, 1.0, 1.0]
+    
     push!(faces_1, face)
 end
 ```
@@ -328,6 +342,7 @@ mesh1 = RayTracingMeshOptim(faces_1, [(Ndim,Ndim),(Ndim,Ndim),(Ndim,Ndim),(Ndim,
 ```
 
 ```{julia}
+#| warning: false
 #| fig-cap: "2D star-shaped mesh"
 
 using CairoMakie

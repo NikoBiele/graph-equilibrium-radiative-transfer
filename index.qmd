@@ -9,9 +9,16 @@ The complete version will be available at **radiative-transfer.org** upon comple
 
 ## The Breakthrough
 
-This book presents the first analytical solution to the radiative transfer equation with full mathematical proof of correctness.
-This represents a fundamental advance from computational approximations to rigorous analytical methods with guaranteed properties.
-Beyond its theoretical significance, this analytical solution provides an invaluable reference for validating other more complex computational methods in radiative transfer.
+This book presents an analytical method for solving multiple scattering and absorption-reemission in radiative transfer systems.
+Given exchange factor data (computed numerically for complex geometries, or analytically for convex transparent enclosures), the method provides exact solutions to the energy redistribution problem through linear system approaches rather than iterative Monte Carlo sampling.
+
+Key advantages include:
+- **Computational efficiency**: Orders of magnitude faster than traditional ray tracing, especially for high extinction media
+- **Enhanced accuracy**: Eliminates Monte Carlo noise while providing mathematical guarantees
+- **Broad applicability**: Works for spectral problems and anisotropic scattering
+- **Validation capability**: Serves as a reference standard for verifying other computational methods
+
+This represents a significant advance in computational radiative transfer, moving from purely stochastic methods to hybrid analytical-numerical approaches with proven mathematical properties.
 
 ## Resources
 
@@ -24,21 +31,18 @@ Beyond its theoretical significance, this analytical solution provides an invalu
 Navigate through the book using the sidebars, or jump directly to any part:
 
 **[Part I: Introduction and Overview](chapters/p1-ch1-literature-review.qmd)**  
-Background, motivation, and roadmap
 
 - [Literature Review](chapters/p1-ch1-literature-review.qmd)
 - [Methodology Overview](chapters/p1-ch2-methodology-overview.qmd)
 - [Roadmap](chapters/p1-ch3-roadmap.qmd)
 
 **[Part II: Domain and Geometry Setup](chapters/p2-ch1-geometry-concepts.qmd)**  
-Building 2D and 3D geometries with RayTraceHeatTransfer.jl
 
 - [Geometry Concepts](chapters/p2-ch1-geometry-concepts.qmd)
 - [2D Geometry Setup](chapters/p2-ch2-2d-geometry-setup.qmd)
 - [3D Geometry Setup](chapters/p2-ch3-3d-geometry-setup.qmd)
 
 **[Part III: Exchange Factor Transformation](chapters/p3-ch1-exchange-factor-concepts.qmd)**  
-The foundational analytical method
 
 - [Exchange Factor Concepts](chapters/p3-ch1-exchange-factor-concepts.qmd)
 - [2D Applications](chapters/p3-ch2-exchange-factor-2d-applications.qmd)
@@ -46,14 +50,12 @@ The foundational analytical method
 - [Theory and Proofs](chapters/p3-ch4-exchange-factor-theory-proofs.qmd)
 
 **[Part IV: Exchange Factor Smoothing](chapters/p4-ch1-smoothing-concepts.qmd)**  
-Enhanced accuracy through smoothing techniques
 
 - [Smoothing Concepts](chapters/p4-ch1-smoothing-concepts.qmd)
 - [Smoothing Demonstrations](chapters/p4-ch2-smoothing-demonstrations.qmd)
 - [Theory and Proofs](chapters/p4-ch3-smoothing-theory-proofs.qmd)
 
 **[Part V: Anisotropic Extension](chapters/p5-ch1-anisotropic-concepts.qmd)**  
-Handling directionally dependent properties
 
 - [Anisotropic Concepts](chapters/p5-ch1-anisotropic-concepts.qmd)
 - [2D Applications](chapters/p5-ch2-anisotropic-2d-applications.qmd)
@@ -61,7 +63,6 @@ Handling directionally dependent properties
 - [Theory and Proofs](chapters/p5-ch4-anisotropic-theory-proofs.qmd)
 
 **[Part VI: Spectral Extension](chapters/p6-ch1-spectral-concepts.qmd)**  
-Wavelength-dependent analytical solutions
 
 - [Spectral Concepts](chapters/p6-ch1-spectral-concepts.qmd)
 - [2D Applications](chapters/p6-ch2-spectral-2d-applications.qmd)
@@ -69,7 +70,6 @@ Wavelength-dependent analytical solutions
 - [Theory and Proofs](chapters/p6-ch4-spectral-theory-proofs.qmd)
 
 **[Part VII: Beyond Radiative Transfer](chapters/p7-ch1-directed-graphs.qmd)**  
-General graph equilibrium applications
 
 - [Directed Graphs](chapters/p7-ch1-directed-graphs.qmd)
 - [General Applications](chapters/p7-ch2-general-applications.qmd)
