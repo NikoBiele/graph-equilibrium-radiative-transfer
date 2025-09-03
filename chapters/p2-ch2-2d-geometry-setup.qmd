@@ -328,6 +328,8 @@ for i in 1:5
     face.T_in_g = -1.0
     face.q_in_g = 1000.0
     face.epsilon = [1.0, 1.0, 1.0]
+    face.kappa_g = 1.0 # local absorption coefficient
+    face.sigma_s_g = 0.0 # local scattering coefficient
     
     push!(faces_1, face)
 end

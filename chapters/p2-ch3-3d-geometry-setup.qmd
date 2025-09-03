@@ -1,0 +1,250 @@
+# Building and Visualizing 3D Geometry
+
+```{julia}
+#| label: env
+#| include: false
+
+import Pkg
+
+# Activate the book project
+Pkg.activate(abspath(joinpath(@__DIR__, "..")))  # adjust if your cell lives deeper
+
+if get(ENV, "CI", "false") == "true"
+    # --- CI on GitHub Pages: use newest *registered* version within [compat] ---
+    # Keep RayTraceHeatTransfer in [deps] with a [compat] like: RayTraceHeatTransfer = "0.3"
+    Pkg.instantiate()
+    Pkg.update("RayTraceHeatTransfer")   # float to latest allowed version
+else
+    # --- Local dev: always track the latest main branch ---
+    url = "https://github.com/NikoBiele/RayTraceHeatTransfer.jl"
+    try
+        Pkg.rm("RayTraceHeatTransfer"; force=true)
+    catch
+    end
+    Pkg.add(Pkg.PackageSpec(name="RayTraceHeatTransfer", url=url, rev="main"))
+    Pkg.instantiate()
+end
+
+using CairoMakie
+CairoMakie.activate!()
+Makie.inline!(true)
+
+using RayTraceHeatTransfer
+```
+
+## Overview
+
+This chapter extends the geometric foundation to three dimensions, demonstrating how to build and visualize 3D domains using RayTraceHeatTransfer.jl.
+The 3D approach uses surface elements (faces) to define enclosed volumes, with each face serving as a radiative boundary that can emit, absorb, and reflect thermal radiation.
+
+The chapter introduces two fundamental 3D geometries:
+
+- **Tetrahedron**: The simplest 3D enclosed volume, formed by four triangular faces
+- **Cube**: A regular hexahedron with six quadrilateral faces, providing validation against known solutions
+
+Each geometry demonstrates the construction of 3D domains from surface elements and their visualization using interactive 3D plotting.
+
+## What You'll Learn
+
+- Building 3D enclosed volumes from surface faces
+- Understanding face orientation and the right-hand rule for surface normals
+- Visualizing 3D geometries with interactive plots
+- Setting up 3D domains for radiative transfer calculations
+
+## Concepts
+
+**3D Domain Construction**
+
+3D domains are built from surface faces that enclose volumes. Each face is defined by:
+- **Vertices**: Corner points defining the face geometry (triangles or quadrilaterals)
+- **Orientation**: Following the right-hand rule for outward-pointing surface normals
+- **Properties**: Temperature, heat flux, and surface emissivity specifications
+
+**Convexity Requirement**
+
+For accurate radiative heat transfer calculations, 3D enclosures must be **convex**.
+A convex enclosure means that any line segment connecting two points inside the volume remains entirely within the volume. This geometric constraint ensures:
+
+- Accurate view factor calculations between all surface elements
+- Proper radiative exchange without geometric obstruction
+- Convergent analytical solutions using the exchange factor methods
+
+While non-convex geometries can be constructed and meshed using these tools, they require different approaches for radiative heat transfer analysis that are beyond the scope of this analytical method.
+
+**Face Ordering**
+
+The vertex ordering of faces follows the right-hand rule: when fingers curl from the first vertex toward subsequent vertices, the thumb points in the outward normal direction. This ensures consistent surface normal orientations for accurate view factor calculations.
+
+**Material Properties**
+
+Each face can be assigned:
+- Known temperature (T_in_w) or unknown temperature (-1.0 for radiative equilibrium)
+- Known heat flux (q_in_w) when temperature is unknown
+- Surface emissivity (epsilon) for thermal radiation properties
+
+## Examples
+
+### Tetrahedron Domain
+
+The tetrahedron represents the simplest 3D enclosed volume, formed by four triangular faces. We'll construct a regular tetrahedron with vertices at (0,0,0), (1,0,0), (0,1,0), and (0,0,1).
+
+First, define the geometry:
+
+```{julia}
+using RayTraceHeatTransfer
+using CairoMakie
+CairoMakie.activate!()
+Makie.inline!(true)
+
+# Define tetrahedron vertices
+points = Float64[
+   0.0 0.0 0.0;  # Vertex 1
+   1.0 0.0 0.0;  # Vertex 2
+   0.0 1.0 0.0;  # Vertex 3
+   0.0 0.0 1.0   # Vertex 4
+]
+
+# Define face connectivity (following right-hand rule)
+faces = Int64[
+   1 2 3;  # Bottom face
+   1 2 4;  # Front face
+   1 3 4;  # Left face
+   2 3 4   # Right face
+]
+```
+
+Next, set up the domain properties and build and mesh the domain:
+
+```{julia}
+# Mesh fineness
+Ndim = 5  # subdivisions per edge
+
+# Surface properties
+epsilon = ones(size(faces, 1))  # All surfaces are black bodies
+q_in_w = zeros(size(faces, 1))  # No prescribed heat fluxes
+T_in_w = [1000.0, 0.0, 0.0, -1.0]  # Mixed boundary conditions
+
+# Create 3D domain
+domain3D_tet = Domain3D_faces(points, faces, Ndim, q_in_w, T_in_w, epsilon)
+```
+
+Finally, visualize the meshed geometry:
+
+```{julia}
+#| warning: false
+#| fig-cap: "3D tetrahedron mesh: front and back"
+
+# Create dual-view visualization
+fig = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0), size=(1600, 800))
+
+# Create two LScenes side by side
+ax1 = LScene(fig[1,1], scenekw=(camera=cam3d!, show_axis=true))
+ax2 = LScene(fig[1,2], scenekw=(camera=cam3d!, show_axis=true))
+
+# Plot mesh in both views
+plotMesh3D(ax1, domain3D_tet)
+plotMesh3D(ax2, domain3D_tet)
+
+# Set up opposing camera positions
+cam1 = cameracontrols(ax1.scene)
+cam2 = cameracontrols(ax2.scene)
+
+# Set opposing eyeposition for back view
+update_cam!(ax2.scene, cam1.eyeposition[] .* -1, cam1.lookat[], cam1.upvector[])
+
+# Adjust zoom for both views
+new_eye_pos1 = cam1.eyeposition[] * 0.7  # Zoom in slightly
+new_eye_pos2 = cam2.eyeposition[] * 0.7  # Zoom in slightly
+update_cam!(ax1.scene, new_eye_pos1, cam1.lookat[], cam1.upvector[])
+update_cam!(ax2.scene, new_eye_pos2, cam2.lookat[], cam2.upvector[])
+
+fig
+```
+
+### Cube Domain
+
+The cube provides a more complex 3D geometry with six quadrilateral faces, offering validation against well-known analytical solutions for cubic enclosures.
+
+Define the cube geometry:
+
+```{julia}
+# Define cube vertices
+points = Float64[
+   0.0 0.0 0.0;  # Vertex 1
+   0.0 0.0 1.0;  # Vertex 2
+   0.0 1.0 0.0;  # Vertex 3
+   0.0 1.0 1.0;  # Vertex 4
+   1.0 0.0 0.0;  # Vertex 5
+   1.0 0.0 1.0;  # Vertex 6
+   1.0 1.0 0.0;  # Vertex 7
+   1.0 1.0 1.0   # Vertex 8
+]
+
+# Define face connectivity (6 quadrilateral faces)
+faces = Int64[
+   1 3 4 2;  # Left face (-X)
+   5 6 8 7;  # Right face (+X)
+   1 2 6 5;  # Front face (-Y)
+   3 7 8 4;  # Back face (+Y)
+   1 5 7 3;  # Bottom face (-Z)
+   2 4 8 6   # Top face (+Z)
+]
+```
+
+Set the domain properties and build and mesh the domain:
+
+```{julia}
+# Mesh fineness
+Ndim = 4  # subdivisions per edge
+
+# Surface properties
+epsilon = ones(size(faces, 1))  # All surfaces are black bodies
+q_in_w = zeros(size(faces, 1))  # No prescribed heat fluxes
+T_in_w = [1000.0, 0.0, 0.0, 0.0, 0.0, 0.0]  # One hot wall, others cold
+
+# Create 3D domain
+domain3D_cube = Domain3D_faces(points, faces, Ndim, q_in_w, T_in_w, epsilon)
+```
+
+Visualize the meshed cube:
+
+```{julia}
+#| warning: false
+#| fig-cap: "3D cube mesh: front and back"
+
+# Create dual-view visualization
+fig = Figure(backgroundcolor=RGBf(1.0, 1.0, 1.0), size=(1600, 800))
+
+# Create two LScenes side by side
+ax1 = LScene(fig[1,1], scenekw=(camera=cam3d!, show_axis=true))
+ax2 = LScene(fig[1,2], scenekw=(camera=cam3d!, show_axis=true))
+
+# Plot mesh in both views
+plotMesh3D(ax1, domain3D_cube)
+plotMesh3D(ax2, domain3D_cube)
+
+# Set up opposing camera positions
+cam1 = cameracontrols(ax1.scene)
+cam2 = cameracontrols(ax2.scene)
+
+# Set opposing eyeposition for back view
+update_cam!(ax2.scene, cam1.eyeposition[] .* -1, cam1.lookat[], cam1.upvector[])
+
+# Adjust zoom for both views
+new_eye_pos1 = cam1.eyeposition[] * 0.6  # Zoom in
+new_eye_pos2 = cam2.eyeposition[] * 0.6  # Zoom in
+update_cam!(ax1.scene, new_eye_pos1, cam1.lookat[], cam1.upvector[])
+update_cam!(ax2.scene, new_eye_pos2, cam2.lookat[], cam2.upvector[])
+
+fig
+```
+
+## Key Considerations
+
+**Face Orientation**: Proper vertex ordering ensures outward-pointing surface normals, which are essential for accurate radiative calculations.
+
+**Mesh Resolution**: The Ndim parameter controls surface subdivision density, affecting both accuracy and computational cost.
+
+**Boundary Conditions**: Mixed temperature and flux boundary conditions enable modeling of realistic thermal systems with both prescribed temperatures and radiative equilibrium surfaces.
+
+The 3D geometric framework established here provides the foundation for exchange factor calculations and analytical radiative transfer solutions in subsequent chapters.
