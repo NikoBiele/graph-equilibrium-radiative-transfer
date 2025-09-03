@@ -35,6 +35,17 @@ jobs:
         uses: julia-actions/setup-julia@v1
         with:
           version: '1.10'
+      
+      - name: Install OpenGL dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xorg-dev mesa-utils xvfb libgl1 freeglut3-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libxext-dev
+    
+      - name: Setup virtual display  
+        run: |
+          export DISPLAY=:99
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+          sleep 3
 
       - name: Cache Julia
         uses: julia-actions/cache@v1
@@ -49,6 +60,8 @@ jobs:
           Pkg.precompile()
           using IJulia
           IJulia.installkernel("julia-1.10")
+        env:
+          DISPLAY: :99
 
       - name: Verify Julia kernel installation
         run: |
