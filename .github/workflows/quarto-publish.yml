@@ -41,11 +41,17 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y xorg-dev mesa-utils xvfb libgl1 freeglut3-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libxext-dev
     
-      - name: Setup virtual display  
+      - name: Setup virtual display
         run: |
-          export DISPLAY=:99
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-          sleep 3
+          sleep 10  # Increase wait time
+          echo "DISPLAY=:99" >> $GITHUB_ENV  # Set as persistent env var
+
+      - name: Test OpenGL
+        run: |
+          DISPLAY=:99 glxinfo | head -20  # Verify OpenGL is working
+        env:
+          DISPLAY: :99
 
       - name: Cache Julia
         uses: julia-actions/cache@v1
