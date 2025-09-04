@@ -13,6 +13,7 @@ This book presents an analytical method for solving multiple scattering and abso
 Given exchange factor data (computed numerically for complex geometries, or analytically for convex transparent enclosures), the method provides exact solutions to the energy redistribution problem through linear system approaches rather than iterative Monte Carlo sampling.
 
 Key advantages include:
+
 - **Computational efficiency**: Orders of magnitude faster than traditional ray tracing, especially for high extinction media
 - **Enhanced accuracy**: Eliminates Monte Carlo noise while providing mathematical guarantees
 - **Broad applicability**: Works for spectral problems and anisotropic scattering
