@@ -82,7 +82,7 @@ format:
     number-sections: true
     number-depth: 3
     logo: assets/gert-logo.png
-    favicon: assets/favicon.png
+    favicon: assets/gert-favicon.png
     crossref:
       chapters: true
       eq-prefix: "Eq."
