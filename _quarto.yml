@@ -62,6 +62,8 @@ book:
 
   navbar:
     search: true
+    logo: assets/logo.png
+    title: "Graph Equilibrium Radiative Transfer"
     
   sidebar:
     style: "docked"
