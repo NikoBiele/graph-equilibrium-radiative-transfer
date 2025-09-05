@@ -79,6 +79,8 @@ format:
     html-math-method: katex
     number-sections: true
     number-depth: 3
+    logo: assets/logo.png
+    favicon: assets/favicon.png
     crossref:
       chapters: true
       eq-prefix: "Eq."
