@@ -62,7 +62,7 @@ book:
 
   navbar:
     search: true
-    logo: assets/logo.png
+    logo: assets/gert-logo.png
     title: "Graph Equilibrium Radiative Transfer"
     
   sidebar:
