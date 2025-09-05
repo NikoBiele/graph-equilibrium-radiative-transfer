@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="images/gert-logo.png" alt="GERT logo" width="220"/>
+  <img src="assets/gert-logo.png" alt="GERT logo" width="220"/>
 </p>
 
 # Contents {.unnumbered}
