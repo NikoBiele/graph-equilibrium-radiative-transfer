@@ -62,7 +62,7 @@ book:
 
   navbar:
     search: true
-    logo: assets/gert-logo.png
+    logo: assets/logo-transparent.png
     title: "Graph Equilibrium Radiative Transfer"
     
   sidebar:
@@ -81,7 +81,7 @@ format:
     html-math-method: katex
     number-sections: true
     number-depth: 3
-    logo: assets/gert-logo.png
+    logo: assets/logo-transparent.png
     crossref:
       chapters: true
       eq-prefix: "Eq."
