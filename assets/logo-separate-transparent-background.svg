@@ -23,11 +23,11 @@
        id="linearGradient43"
        inkscape:collect="always">
       <stop
-         style="stop-color:#ff0000;stop-opacity:1"
+         style="stop-color:#ff0000;stop-opacity:1;"
          offset="0"
          id="stop43" />
       <stop
-         style="stop-color:#ffff00;stop-opacity:1"
+         style="stop-color:#ffaa00;stop-opacity:1;"
          offset="1"
          id="stop44" />
     </linearGradient>
@@ -87,11 +87,11 @@
      inkscape:deskcolor="#d1d1d1"
      showgrid="false"
      inkscape:zoom="3.2136752"
-     inkscape:cx="111.24335"
-     inkscape:cy="128.35771"
+     inkscape:cx="112.64362"
+     inkscape:cy="121.82314"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
-     inkscape:window-x="-8"
+     inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      inkscape:current-layer="g1" />
