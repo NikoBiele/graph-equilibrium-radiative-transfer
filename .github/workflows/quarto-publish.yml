@@ -79,6 +79,11 @@ jobs:
         with:
           to: html
 
+      - name: Manually add favicon
+        run: |
+          cp gert-favicon-32.ico _book/
+          find _book -name "*.html" -exec sed -i 's|</head>|  <link rel="icon" type="image/x-icon" href="/gert-favicon-32.ico">\n</head>|' {} \;
+
       - name: Upload to GitHub Pages
         uses: actions/upload-pages-artifact@v3
         if: contains(github.ref, 'main')
