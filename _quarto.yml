@@ -2,7 +2,8 @@ project:
   type: book
   output-dir: _book
   resources:
-    - "assets/"
+    - assets/gert-logo.png
+    - assets/gert-favicon-32.ico
 
 jupyter: julia-1.10
 
