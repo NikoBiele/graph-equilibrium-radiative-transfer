@@ -7,19 +7,20 @@
 ::: {.callout-note}
 ## 🚧 Book Under Development
 
-This book is currently being written and expanded. New chapters are added regularly as the content is developed and refined.
-The complete version will be available at **radiative-transfer.org** upon completion.
+This book is currently being written and expanded.
+New chapters are added regularly as the content is developed and refined.
+The complete version will be available at **gert.net** upon completion.
 :::
 
-## The Breakthrough
+## Analytic Solutions
 
-This book presents an analytical method for solving multiple scattering and absorption-reemission in radiative transfer systems.
-Given exchange factor data (computed numerically for complex geometries, or analytically for convex transparent enclosures), the method provides exact solutions to the energy redistribution problem through linear system approaches rather than iterative Monte Carlo sampling.
+This book presents analytical methods for solving multiple scattering and absorption-reemission in radiative transfer systems.
+Given exchange factor data, computed numerically for complex geometries, or analytically for convex transparent enclosures, these methods provide exact solutions to the energy redistribution problem through direct linear solves rather than iterative approaches.
 
 Key advantages include:
 
-- **Computational efficiency**: Orders of magnitude faster than traditional ray tracing, especially for high extinction media
-- **Enhanced accuracy**: Eliminates Monte Carlo noise while providing mathematical guarantees
+- **Computational efficiency**: Faster than traditional ray tracing, especially for high extinction media
+- **Enhanced accuracy**: Minimizes Monte Carlo noise while providing mathematical guarantees
 - **Broad applicability**: Works for spectral problems and anisotropic scattering
 - **Validation capability**: Serves as a reference standard for verifying other computational methods
 
