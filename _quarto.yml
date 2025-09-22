@@ -9,6 +9,7 @@ book:
   subtitle: "Analytic Solutions and Computational Methods"
   author: "Nikolaj Maack Bielefeld"
   date: today
+  date-meta: "Last updated"
   chapters:
     - index.qmd
     - preface.qmd
