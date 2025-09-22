@@ -93,6 +93,8 @@ The rectangle is the most basic geometry and provides an essential validation ca
 Let's construct a simple rectangular domain:
 
 ```{julia}
+#| output: false
+
 using RayTraceHeatTransfer
 using StaticArrays
 using GeometryBasics
@@ -124,6 +126,8 @@ push!(faces_1, face1) # push the first part into the vector for meshing
 Next, the domain is meshed into a desired resolution:
 
 ```{julia}
+#| output: false
+
 Ndim = 11 # splits in (x,y) directions
 mesh1 = RayTraceHeatTransfer.RayTracingMeshOptim(faces_1, [(Ndim,Ndim)]);
 ```
@@ -150,6 +154,8 @@ The L-shaped domain is the first non-convex geometry and provides a more complex
 Let's construct a simple L-shaped domain. We'll build it from 3 rectangles:
 
 ```{julia}
+#| output: false
+
 using RayTraceHeatTransfer
 using StaticArrays
 using GeometryBasics
@@ -160,6 +166,8 @@ faces_2 = RayTraceHeatTransfer.PolyFace2D{Float64,Float64}[] # create a vector t
 **Rectangle 1**
 
 ```{julia}
+#| output: false
+
 # build the first part
 vertices1 = SVector(
     Point2(0.0, 0.0), # 2D vertices
@@ -185,6 +193,8 @@ push!(faces_2, face1) # push the first part into the vector for meshing
 **Rectangle 2**
 
 ```{julia}
+#| output: false
+
 # build the first part
 vertices2 = SVector(
     Point2(0.0, 1.0), # 2D vertices
@@ -210,6 +220,8 @@ push!(faces_2, face2) # push the second part into the vector for meshing
 **Rectangle 3**
 
 ```{julia}
+#| output: false
+
 # build the first part
 vertices3 = SVector(
     Point2(1.0, 1.0), # 2D vertices
@@ -235,6 +247,8 @@ push!(faces_2, face3) # push the second part into the vector for meshing
 Next, the domain is meshed into a desired resolution:
 
 ```{julia}
+#| output: false
+
 Ndim = 11 # splits in 3 (x,y) directions
 mesh2 = RayTraceHeatTransfer.RayTracingMeshOptim(faces_2, [(Ndim,Ndim),(Ndim,Ndim),(Ndim,Ndim)]);
 ```
@@ -258,6 +272,8 @@ The star-shaped domain is the first non-convex, complex enclosure we'll mesh pro
 We'll build it from 10 triangles. First, let's calculate the points of the star:
 
 ```{julia}
+#| output: false
+
 using RayTraceHeatTransfer
 using GeometryBasics
 using StaticArrays
@@ -288,6 +304,8 @@ end
 Next, let's create the faces:
 
 ```{julia}
+#| output: false
+
 # Create faces
 faces_1 = PolyFace2D{Float64,Float64}[]
 
@@ -335,6 +353,8 @@ end
 Finally, let's mesh and plot the geometry:
 
 ```{julia}
+#| output: false
+
 Ndim = 11
 mesh1 = RayTracingMeshOptim(faces_1, [(Ndim,Ndim),(Ndim,Ndim),(Ndim,Ndim),(Ndim,Ndim),(Ndim,Ndim),
                                 (Ndim,Ndim),(Ndim,Ndim),(Ndim,Ndim),(Ndim,Ndim),(Ndim,Ndim)]);

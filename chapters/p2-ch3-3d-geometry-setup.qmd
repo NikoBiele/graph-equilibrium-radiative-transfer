@@ -80,7 +80,7 @@ The vertex ordering of faces follows the right-hand rule: when fingers curl from
 
 Each face can be assigned:
 
-- Known temperature (T_in_w) or unknown temperature (-1.0 for radiative equilibrium)
+- Known temperature (T_in_w) or unknown temperature (-1.0 for known heat flux)
 - Known heat flux (q_in_w) when temperature is unknown
 - Surface emissivity (epsilon) for thermal radiation properties
 
@@ -93,6 +93,8 @@ The tetrahedron represents the simplest 3D enclosed volume, formed by four trian
 First, define the geometry:
 
 ```{julia}
+#| output: false
+
 using RayTraceHeatTransfer
 using GLMakie
 GLMakie.activate!()
@@ -118,6 +120,8 @@ faces = Int64[
 Next, set up the domain properties and build and mesh the domain:
 
 ```{julia}
+#| output: false
+
 # Mesh fineness
 Ndim = 5  # subdivisions per edge
 
@@ -168,6 +172,8 @@ The cube provides a more complex 3D geometry with six quadrilateral faces, offer
 Define the cube geometry:
 
 ```{julia}
+#| output: false
+
 # Define cube vertices
 points = [
     0.0 0.0 0.0; # vertex 1
@@ -194,6 +200,8 @@ faces = [
 Set the domain properties and build and mesh the domain:
 
 ```{julia}
+#| output: false
+
 # Mesh fineness
 Ndim = 5  # subdivisions per edge
 
