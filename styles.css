@@ -12,6 +12,16 @@
   margin: 0 auto;
 }
 
+/* Change 'published' to 'last updated' */
+.quarto-title-meta-heading:contains("Published") {
+    display: none;
+}
+
+.quarto-title-meta-heading:contains("Published")::after {
+    content: "Last updated";
+    display: block;
+}
+
 /* Quote box styling */
 .quote-box {
   border-left: 4px solid #007acc;
