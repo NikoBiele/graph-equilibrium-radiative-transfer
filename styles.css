@@ -12,13 +12,13 @@
   margin: 0 auto;
 }
 
-/* Target only the second occurrence of quarto-title-meta-heading */
-div:nth-child(2) .quarto-title-meta-heading {
+/* Target only the Published metadata by being more specific about the container */
+.quarto-title-meta > div:nth-child(2) .quarto-title-meta-heading {
   visibility: hidden;
   position: relative;
 }
 
-div:nth-child(2) .quarto-title-meta-heading:after {
+.quarto-title-meta > div:nth-child(2) .quarto-title-meta-heading:after {
   visibility: visible;
   position: absolute;
   top: 0;
