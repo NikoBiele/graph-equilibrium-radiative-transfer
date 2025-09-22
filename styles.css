@@ -12,18 +12,18 @@
   margin: 0 auto;
 }
 
-/* Change "PUBLISHED" to "Last updated" */
-.quarto-title-meta-heading {
+/* Change only "PUBLISHED" to "Last updated", leave "AUTHOR" unchanged */
+.quarto-title-meta .quarto-title-meta-contents:last-child .quarto-title-meta-heading {
   visibility: hidden;
   position: relative;
 }
 
-.quarto-title-meta-heading:after {
+.quarto-title-meta .quarto-title-meta-contents:last-child .quarto-title-meta-heading:after {
   visibility: visible;
   position: absolute;
   top: 0;
   left: 0;
-  content: "Last updated";
+  content: "LAST UPDATED";
 }
 
 /* Quote box styling */
