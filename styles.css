@@ -12,13 +12,13 @@
   margin: 0 auto;
 }
 
-/* Target the second quarto-title-meta-heading (which should be "Published") */
-.quarto-title-meta .quarto-title-meta-heading:nth-of-type(2) {
+/* Target the last quarto-title-meta-heading in the document */
+.quarto-title-meta-heading:last-of-type {
   visibility: hidden;
   position: relative;
 }
 
-.quarto-title-meta .quarto-title-meta-heading:nth-of-type(2):after {
+.quarto-title-meta-heading:last-of-type:after {
   visibility: visible;
   position: absolute;
   top: 0;
