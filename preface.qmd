@@ -19,9 +19,6 @@ Readers should have:
 - Basic knowledge of radiative transfer concepts
 - Some programming experience (Julia examples are provided, but programming knowledge isn't required to understand concepts)
 
-Note: This book is designed with multiple tracks in mind.
-Practically-oriented readers can focus on the examples and skip the mathematical proofs, while theoretically-oriented readers can dive deep into the full derivations and proofs.
-
 ## How to Use This Book
 
 This book is structured to accommodate different learning styles and needs.
@@ -37,6 +34,9 @@ This allows readers to engage at their preferred level of detail:
 All methods are implemented in Julia [@Bezanson2017Julia], chosen for its mathematical notation that mirrors theoretical development, high-performance capabilities, and excellent scientific computing ecosystem.
 
 To get started:
+
+Install [Julia](https://julialang.org/downloads/) and optionally [VS Code](https://code.visualstudio.com/) with the [Julia extension](https://www.julia-vscode.org/).
+To add the package of this book, inside Julia, run:
 ```julia
 using Pkg
 Pkg.add("RayTraceHeatTransfer")
@@ -45,7 +45,7 @@ using RayTraceHeatTransfer
 
 ## Acknowledgments
 
-I would like to acknowledge all of my great teachers, tutors and sources of inspiration throughout my life.
+The author would like to acknowledge all of the great teachers, tutors and sources of inspiration throughout his life.
 
 ## Independent Research Notice
 
