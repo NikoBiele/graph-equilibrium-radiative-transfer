@@ -4,6 +4,10 @@
 
 # Overview {.unnumbered}
 
+This book presents the Graph Equilibrium Radiative Transfer (GERT) framework, which compute equilibrium states on graphs analytically.
+Radiative transfer is an important application in its own right, and also offers detailed validation opportunities.
+The GERT algorithms are general and extend beyond radiative transfer to equilibrium problems on directed graphs.
+
 ::: {.callout-note}
 ## 🚧 Book Under Development
 
