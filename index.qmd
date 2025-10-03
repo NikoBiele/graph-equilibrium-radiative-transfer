@@ -2,7 +2,7 @@
   <img src="assets/logo-transparent.png" alt="GERT logo" width="220"/>
 </p>
 
-# Contents {.unnumbered}
+# Overview {.unnumbered}
 
 ::: {.callout-note}
 ## 🚧 Book Under Development
@@ -12,19 +12,52 @@ New chapters are added regularly as the content is developed and refined.
 The complete version will be available at **gert.net** upon completion.
 :::
 
-## Analytic Solutions
+## Analytical Solutions
 
-This book presents analytical methods for solving multiple scattering and absorption-reemission in radiative transfer systems.
-Given exchange factor data, computed numerically for complex geometries, or analytically for convex transparent enclosures, these methods provide exact solutions to the energy redistribution problem through direct linear solves rather than iterative approaches.
+This book presents analytic methods for solving multiple scattering and absorption-reemission in radiative transfer systems.
+Given perfect optical knowledge of the domain, in the form of perfect exchange factors, these methods provide exact solutions to the energy redistribution problem.
+In reality, exchange factors do not perfectly match the domain in question.
+Exchange factors can be estimated numerically using Monte Carlo sampling for complex enclosures containing media which emit, absorp and scatter radiation (participating media).
+For convex transparent enclosures composed of polygon surfaces, the set of exchange factors can be computed analytically.
+In both cases, the exchange factors must satisfy both The First and The Second Law of Thermodynamics.
+This book presents a simple and effective algorithm to enforce these physical constraints (exchange factor smoothing, Part IV), with minimal distortion of the initial factors.
 
-Key advantages include:
+Advantages of the methods presented here:
 
-- **Computational efficiency**: Faster than traditional ray tracing, especially for high extinction media
-- **Enhanced accuracy**: Minimizes Monte Carlo noise while providing mathematical guarantees
-- **Broad applicability**: Works for spectral problems and anisotropic scattering
-- **Validation capability**: Serves as a reference standard for verifying other computational methods
+- **Part III: Exchange Factor Transformation**
+    - Proven machine precision global energy conservation under specified conditions
+    - Proven non-negative radiation results
+    - Proven convergence conditions
+    - Faster than traditional multiple scattering Monte Carlo ray tracing
+        - Especially for high extinction media
+        - And for cases with several non-zero specified source fluxes (direct solve, no iteration)
+- **Part IV: Exchange Factor Smoothing**
+    - Simultaneously enforces The First and The Second Law of Thermodynamics to machine precision
+    - The convergence rate of the algorithm improves as the number of exchange factors scales
+    - Remains feasible and effective even for billions of exchange factors
+    - Guaranteed convergence rate via continued fractions proof
+- **Part V: Anisotropic Extension**
+    - Allowance for dependencies on the incident ray direction
+    - Relaxes the requirements to obtain machine precision energy conservation
+- **Part VI: Spectral Extension**
+    - Extension to spectral problems via spectral bins
+    - The convergence rate of the algorithm improves as the number of spectral bins scales
+    - An empirical expression for the approximate convergence rate
 
-This represents a significant advance in computational radiative transfer, moving from purely stochastic methods to hybrid analytical-numerical approaches with proven mathematical properties.
+Disadvantages of the methods presented here:
+
+- The outgoing radiation distribution from each element is fixed by the exchange factors
+    - For this reason specular reflections are not possible
+    - Both emission and reflection-scattering share the same distribution
+        - For surfaces a diffuse Lambertian distribution is used
+        - For volumes a uniform spherical distribution is used
+- The methods presented here split the domain into discrete elements and spectral bins
+    - If continuous results are needed use of interpolation or other methods is necessary
+- Matrix methods suffer from computational memory limitations due to quadratic scaling
+    - The methods presented here have been tested on a 64 GB RAM workstation
+
+It is the hope of the author that these methods can prove useful as a reference for validation of other more complex methods.
+This is the way the author has used these methods, for building and validating a full two-dimensional multiple scattering Monte Carlo code.
 
 ## Resources
 
