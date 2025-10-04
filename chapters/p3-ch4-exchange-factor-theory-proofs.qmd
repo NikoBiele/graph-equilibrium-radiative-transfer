@@ -112,31 +112,31 @@ $$ {#eq-A_plus_R_form}
 ::: {.proof}
 The result is established through a sequence of key relationships.
 
-\textbf{Step 1:} The fundamental vector relationship is established:
+**Step 1:** The fundamental vector relationship is established:
 
 $$
 [\mathbf{F}(\mathbf{1} - \mathbf{b})]_i = \sum_j \mathbf{F}_{ij}(1 - \mathbf{b}_j) = \sum_j \mathbf{F}_{ij} - \sum_j \mathbf{F}_{ij} \mathbf{b}_j = 1 - \sum_j \mathbf{K}_{ij}
 $$
 
-\textbf{Step 2:} The corresponding property for $(\mathbf{I} - \mathbf{K})$ is established:
+**Step 2:** The corresponding property for $(\mathbf{I} - \mathbf{K})$ is established:
 
 $$
 [(\mathbf{I} - \mathbf{K})\mathbf{1}]_i = \sum_j (\delta_{ij} - \mathbf{K}_{ij}) = 1 - \sum_j \mathbf{K}_{ij}
 $$
 
-\textbf{Step 3:} Steps 1 and 2 are combined to obtain the key identity:
+**Step 3:** Steps 1 and 2 are combined to obtain the key identity:
 
 $$
 \mathbf{F}(\mathbf{1} - \mathbf{b}) = (\mathbf{I} - \mathbf{K})\mathbf{1}
 $$ {#eq-key_identity}
 
-\textbf{Step 4:} Left-multiplying equation \eqref{eq:key_identity} by the inverse $(\mathbf{I} - \mathbf{K})^{-1}$:
+**Step 4:** Left-multiplying equation \eqref{eq:key_identity} by the inverse $(\mathbf{I} - \mathbf{K})^{-1}$:
 
 $$
 (\mathbf{I} - \mathbf{K})^{-1}\mathbf{F}(\mathbf{1} - \mathbf{b}) = \mathbf{1}
 $$
 
-\textbf{Step 5:} Left-multiplication by the diagonal matrix $\mathbf{P}$:
+**Step 5:** Left-multiplication by the diagonal matrix $\mathbf{P}$:
 
 $$
 \begin{aligned}
@@ -158,5 +158,64 @@ $$
 Therefore, $\mathbf{v} = (\mathbf{1} - \mathbf{b})$ is an eigenvector with eigenvalue $\lambda = 1$.
 Since all components of $\mathbf{v}$ are positive (assuming $\mathbf{b}_i < 1$ for convergence), this is the Perron eigenvector.
 By the Perron-Frobenius theorem, the corresponding eigenvalue equals the spectral radius [@HornJohnson2013], hence $\rho(\mathbf{A} + \mathbf{R}) = 1$.
+
+:::
+
+::: {.theorem data-title="Spectral Radius of Absorption" #theorem-spectral_radius_absorption}
+
+Let $\mathbf{A}$ be the absorption matrix of the exchange factor transformation and $\mathbf{P}$ be the diagonal matrix with entries $\mathbf{P}_{ii} = 1-\mathbf{b}_i$. Then:
+
+- The absorption matrix can be expressed as:
+
+$$
+\mathbf{A} = (\mathbf{A}+\mathbf{R})\mathbf{P}
+$$ {#eq-A_decomposition}
+
+- The row sums of $\mathbf{A}$ satisfy:
+
+$$
+[\mathbf{A}\mathbf{1}]_i = 1-\mathbf{b}_i
+$$
+
+- The spectral radius is bounded by:
+
+$$
+1-\max_i \mathbf{b}_i \leq \rho(\mathbf{A}) \leq 1-\min_i \mathbf{b}_i
+$$ {#eq-rho_A_bounds}
+
+In the limiting case $\mathbf{b}_i = 0$, this recovers the row-stochastic spectral radius of unity for $\mathbf{F}$.
+
+:::
+
+::: {.proof}
+
+**Step 1:** The matrix decomposition is established.
+Since $\mathbf{B}$ is column constant, the Hadamard product $\mathbf{A} = (\mathbf{A}+\mathbf{R})\circ (\mathbf{1}-\mathbf{B})$ is equivalent to right matrix multiplication by the diagonal matrix $\mathbf{P}$:
+
+$$
+\mathbf{A} = (\mathbf{A}+\mathbf{R})\mathbf{P}
+$$
+
+**Step 2:** The row sums are computed using the eigenvalue relationship.
+From Theorem @theorem:spectral_radius_unity, it is known that $(\mathbf{A}+\mathbf{R})(\mathbf{1} - \mathbf{b}) = (\mathbf{1} - \mathbf{b})$ with $\rho(\mathbf{A}+\mathbf{R}) = 1$.
+Therefore:
+$$
+\begin{aligned}
+[\mathbf{A}\mathbf{1}]_i &= [(\mathbf{A}+\mathbf{R})\mathbf{P}\mathbf{1}]_i \\
+&= [(\mathbf{A}+\mathbf{R})(\mathbf{1}-\mathbf{b})]_i \\
+&= \rho(\mathbf{A}+\mathbf{R})(1-\mathbf{b}_i) \\
+&= 1-\mathbf{b}_i
+\end{aligned}
+$$
+
+**Step 3:** The spectral radius bounds are derived.
+Since $[\mathbf{A}\mathbf{1}]_i = 1-\mathbf{b}_i$, the row sums range from $1-\max_i \mathbf{b}_i$ to $1-\min_i \mathbf{b}_i$.
+By the Gershgorin circle theorem and properties of non-negative matrices, the spectral radius satisfies [@HornJohnson2013]:
+
+$$
+1-\max_i \mathbf{b}_i \leq \rho(\mathbf{A}) \leq 1-\min_i \mathbf{b}_i
+$$
+
+When $\mathbf{b}_i = 0$ for all $i$, the exchange factor transformation yields $\mathbf{A} = \mathbf{F}$, and the bounds collapse to $\rho(\mathbf{A}) = 1$, consistent with the row-stochastic property of the exchange factor matrix.
 
 :::
