@@ -15,9 +15,11 @@ book:
     
     - part: "Part I: Introduction and Overview"
       chapters:
-        - chapters/p1-ch1-literature-review.qmd
-        - chapters/p1-ch2-methodology-overview.qmd
-        - chapters/p1-ch3-roadmap.qmd
+        - chapters/p1-ch1-fundamental-challenge.qmd
+        - chapters/p1-ch2-grey-matrix-methods.qmd
+        - chapters/p1-ch3-exchange-factor-smoothing.qmd
+        - chapters/p1-ch4-anisotropic-extensions.qmd
+        - chapters/p1-ch5-spectral-extensions.qmd
     
     - part: "Part II: Domain and Geometry Setup"
       chapters:

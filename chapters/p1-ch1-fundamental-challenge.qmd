@@ -1,0 +1,35 @@
+# The Fundamental Challenge
+
+Radiative transfer in participating media is a fundamental process in many natural and engineered systems, from stellar atmospheres to thermal engineering.
+The theoretical foundation for radiative transfer was established in the 19th century by Gustav Kirchhoff, who formulated the fundamental relationship between emission and absorption of thermal radiation and introduced the concept of blackbody radiation [@Kirchhoff1860].
+Building upon this work, Karl Schwarzschild developed early formulations for radiative transfer in stellar atmospheres in the early 1900s [@Schwarzschild1906].
+The modern mathematical framework of the radiative transfer equation (RTE) was systematically developed by Subrahmanyan Chandrasekhar in his seminal 1950 treatise "Radiative Transfer," [@Chandrasekhar1950] which provided rigorous analytical methods and established the equation as the cornerstone of radiation transport theory across diverse fields from astrophysics to engineering applications. Chandrasekhar’s formulation marks the point where radiative transfer became a unified, quantitative theory. From that foundation, the radiative transfer equation (RTE) has served as the central model describing how radiant energy is emitted, absorbed, scattered, and transmitted through participating media.
+
+Despite this rich theoretical heritage, solving the RTE in its full generality remains exceptionally challenging.
+The equation couples radiation intensity across space, direction, spectrum, and time — seven independent variables in total: three spatial coordinates ($x$, $y$, $z$), two directional angles ($\theta$, $\phi$), one spectral wavelength ($\lambda$), and one temporal coordinate ($t$).
+Under steady-state and grey media assumptions, the temporal ($t$) and spectral ($\lambda$) dependencies are eliminated, reducing the RTE from seven to five independent variables, which yields the differential form shown in equation (@eq-rte) [@Howell2021]:
+
+$$ \frac{\partial i(S,\Omega)}{\partial S} = \; \kappa i_\mathrm{b}(S) - \kappa i(S,\Omega) - \sigma_\mathrm{s} i(S,\Omega) + \frac{\sigma_\mathrm{s}}{4 \pi} \int_{\Omega_i=4 \pi}i(S,\Omega_i) \Phi(\Omega_i,\Omega) d\Omega_i $$ {#eq-rte}
+
+where $i(S,\Omega)$ is the intensity along a ray trajectory, as a function of position $S$ and direction $\Omega\equiv\Omega(\theta,\phi)$, $\kappa$ is the absorption coefficient of the medium, $i_\mathrm{b}(S)$ is the blackbody intensity, $\sigma_\mathrm{s}$ is the scattering coefficient and $\Phi$ is the scattering phase function and the integral is over all solid angles.
+
+The RTE of equation (@eq-rte) is a differential energy balance along the trajectory $S$ of a single ray.
+To solve it one could, in principle, simply integrate along the ray trajectory.
+The fundamental difficulty arises because all ray trajectories in the domain are *coupled* through two mechanisms:
+(1) The state of the participating medium, i.e. the temperature of the intervening gas, which depends on the local radiative heating rate and governs both the rate of emission (through blackbody emission laws) and temperature-dependent absorption properties, and
+(2) the in-scattering term, which requires integration over all incoming directions (4$\pi$ steradians) to account for radiation scattered from every direction into the direction of $S$.
+As a result, determining the equilibrium radiative field requires solving for *all possible ray trajectories simultaneously*.
+This explains why the RTE has historically resisted general analytical treatment, and is most commonly solved numerically, or through analytical solutions for special simplified cases [@Howell2021].
+
+As noted by Modest and Mazumder [@ModestMazumder2022] in their 2022 textbook:
+<div class="quote-box">
+<strong>Modest and Mazumder (2022):</strong> "... to this day no truly satisfactory RTE solution method has emerged."
+</div>
+
+The difficulty highlighted by Modest and Mazumder persists even though the traditional formulation of the RTE is concerned only with volumetric radiative transfer in participating media and does not directly account for surface reflections.
+The exchange factor transformation of the GERT framework extends this formulation by including surface interactions and may be regarded as a generalized hybrid numerical-analytical solution of the RTE.
+The numerical part of the solution is required to obtain exchange factors which serve as inputs to the GERT framework.
+
+In summary, the fundamental challenge of radiative transfer lies in the simultaneous coupling of all emission, absorption, and scattering processes within the medium and at its boundaries.
+A satisfactory solution must preserve energy conservation, remain stable under multiple scattering, and represent surface and volumetric effects within a single coherent framework.
+The next chapter introduces the class of *grey matrix-based methods*, which form the foundation for such a unified treatment by expressing radiative exchange in purely algebraic form while retaining its full physical meaning.
