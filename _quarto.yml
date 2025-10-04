@@ -84,6 +84,20 @@ format:
     number-sections: true
     number-depth: 3
     logo: assets/logo-transparent.png
+    include-in-header:
+      - text: |
+          <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            // Extract chapter number from page title (e.g., "3.4 Title" -> "3.4.")
+            const titleElement = document.querySelector('.quarto-title h1.title');
+            if (titleElement) {
+              const match = titleElement.textContent.match(/^(\d+\.\d+)/);
+              if (match) {
+                document.documentElement.style.setProperty('--chapter-number', '"' + match[1] + '."');
+              }
+            }
+          });
+          </script>
     crossref:
       chapters: true
       eq-prefix: "Eq."

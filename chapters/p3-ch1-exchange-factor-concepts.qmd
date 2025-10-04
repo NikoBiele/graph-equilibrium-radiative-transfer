@@ -1,3 +1,7 @@
+---
+title: "3.1 The Exchange Factor Transformation"
+---
+
 # The Exchange Factor Transformation
 
 ## Introduction

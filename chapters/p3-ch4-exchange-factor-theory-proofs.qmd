@@ -1,7 +1,10 @@
+---
+title: "3.4 Exchange Factor Transformation Theory and Proofs"
+---
+
 # Exchange Factor Transformation Theory and Proofs
 
-\section{Convergence Properties}
-\label{sec:convergence_props}
+## Convergence Properties {#sec-convergence_props}
 
 This section presents the essential convergence guarantees of the proposed transformation through two fundamental theorems which characterize the steady state path matrix.
 
@@ -81,5 +84,77 @@ Disk $i$ is centered at $1-\mathbf{K}_{ii}$ with radius $\sum_{j\neq i} \mathbf{
 Since $\det(\mathbf{I}-\mathbf{K}) = \prod_i \lambda_i$, the bounds follow from taking the product over extreme eigenvalue positions.
 
 For uniform $b$ and row-stochastic $\mathbf{F}$, the lower bound becomes $(1-b)^{m+n}$. Requiring that this exceeds machine precision $\epsilon$ gives the numerical feasibility conditions.
+
+:::
+
+## Matrix Properties {#sec-matrix_props}
+
+This section will explore the properties of the matrices of the proposed exchange factor transformation.
+These properties will subsequently be used to establish conditions which guarantee physical correctness.
+
+### Spectral Radii of the Absorption and Reflection-Scattering Matrices
+
+This section determines bounds on the spectral radii of $\mathbf{A}$ and $\mathbf{R}$.
+
+::: {.theorem data-title="Spectral Radius of Combined Absorption and Reflection-Scattering" #thm:spectral_radius_unity}
+
+Let $\mathbf{F}$ be the row stochastic and irreducible exchange factor matrix, and let $\mathbf{A}$ and $\mathbf{R}$ be the absorption and multiple reflection-scattering matrices defined by the exchange factor transformation, and let $\mathbf{P}$ be the diagonal matrix with entries $\mathbf{P}_{ii} = 1-\mathbf{b}_i$ where $\mathbf{b}_i$ are the reflection-scattering coefficients. Then:
+
+- The sum $\mathbf{A} + \mathbf{R}$ can be expressed as
+
+$$
+\mathbf{A} + \mathbf{R} = \mathbf{P}(\mathbf{I} - \mathbf{K})^{-1}\mathbf{F}
+$$ {#eq-A_plus_R_form}
+
+- The spectral radius satisfies $\rho(\mathbf{A} + \mathbf{R}) = 1$
+- The vector $\mathbf{v} = (\mathbf{1} - \mathbf{b})$ is the Perron eigenvector corresponding to the positive real eigenvalue $\lambda = 1$
+
+:::
+
+::: {.proof}
+The result is established through a sequence of key relationships.
+
+\textbf{Step 1:} The fundamental vector relationship is established:
+
+$$
+[\mathbf{F}(\mathbf{1} - \mathbf{b})]_i = \sum_j \mathbf{F}_{ij}(1 - \mathbf{b}_j) = \sum_j \mathbf{F}_{ij} - \sum_j \mathbf{F}_{ij} \mathbf{b}_j = 1 - \sum_j \mathbf{K}_{ij}
+$$
+
+\textbf{Step 2:} The corresponding property for $(\mathbf{I} - \mathbf{K})$ is established:
+
+$$
+[(\mathbf{I} - \mathbf{K})\mathbf{1}]_i = \sum_j (\delta_{ij} - \mathbf{K}_{ij}) = 1 - \sum_j \mathbf{K}_{ij}
+$$
+
+\textbf{Step 3:} Steps 1 and 2 are combined to obtain the key identity:
+
+$$
+\mathbf{F}(\mathbf{1} - \mathbf{b}) = (\mathbf{I} - \mathbf{K})\mathbf{1}
+$$ {#eq-key_identity}
+
+\textbf{Step 4:} Left-multiplying equation \eqref{eq:key_identity} by the inverse $(\mathbf{I} - \mathbf{K})^{-1}$:
+
+$$
+(\mathbf{I} - \mathbf{K})^{-1}\mathbf{F}(\mathbf{1} - \mathbf{b}) = \mathbf{1}
+$$
+
+\textbf{Step 5:} Left-multiplication by the diagonal matrix $\mathbf{P}$:
+
+$$
+\mathbf{P}(\mathbf{I} - \mathbf{K})^{-1}\mathbf{F}(\mathbf{1} - \mathbf{b}) &= \mathbf{P}\mathbf{1} \\
+(\mathbf{A} + \mathbf{R})(\mathbf{1} - \mathbf{b}) &= (\mathbf{1} - \mathbf{b})
+$$
+
+where the second equality uses $\mathbf{P}\mathbf{1} = (\mathbf{1} - \mathbf{b})$ and the definition of $\mathbf{A} + \mathbf{R}$:
+
+$$
+	\mathbf{A} + \mathbf{R} &= (\mathbf{1}-\mathbf{B})^T\circ\mathbf{S}_\infty\circ (\mathbf{1}-\mathbf{B})+(\mathbf{1}-\mathbf{B})^T\circ\mathbf{S}_\infty\circ \mathbf{B} \\
+	&= (\mathbf{1}-\mathbf{B})^T\circ\mathbf{S}_\infty \\
+	&= \mathbf{P}(\mathbf{I} - \mathbf{K})^{-1}\mathbf{F}
+$$
+
+Therefore, $\mathbf{v} = (\mathbf{1} - \mathbf{b})$ is an eigenvector with eigenvalue $\lambda = 1$.
+Since all components of $\mathbf{v}$ are positive (assuming $\mathbf{b}_i < 1$ for convergence), this is the Perron eigenvector.
+By the Perron-Frobenius theorem, the corresponding eigenvalue equals the spectral radius [@HornJohnson2018], hence $\rho(\mathbf{A} + \mathbf{R}) = 1$.
 
 :::

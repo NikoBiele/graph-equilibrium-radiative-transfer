@@ -41,10 +41,13 @@
   color: #007acc;
 }
 
-/* Counters for theorem environments */
+/* Counters for theorem environments - reset per chapter */
 body {
   counter-reset: theorem definition lemma proposition corollary;
 }
+
+/* Extract chapter number from page title and store as CSS variable */
+/* This will be set by JavaScript below */
 
 /* Theorem environments */
 .theorem {
@@ -57,7 +60,7 @@ body {
 }
 
 .theorem::before {
-  content: "Theorem " counter(theorem) ". ";
+  content: "Theorem " var(--chapter-number, "") counter(theorem) ". ";
   font-weight: bold;
   color: #007acc;
   display: block;
@@ -65,7 +68,7 @@ body {
 }
 
 .theorem[data-title]::before {
-  content: "Theorem " counter(theorem) " (" attr(data-title) "). ";
+  content: "Theorem " var(--chapter-number, "") counter(theorem) " (" attr(data-title) "). ";
 }
 
 /* Proof environment */
@@ -102,7 +105,7 @@ body {
 }
 
 .definition::before {
-  content: "Definition " counter(definition) ". ";
+  content: "Definition " var(--chapter-number, "") counter(definition) ". ";
   font-weight: bold;
   color: #6f42c1;
   display: block;
@@ -110,7 +113,7 @@ body {
 }
 
 .definition[data-title]::before {
-  content: "Definition " counter(definition) " (" attr(data-title) "). ";
+  content: "Definition " var(--chapter-number, "") counter(definition) " (" attr(data-title) "). ";
 }
 
 /* Lemma environment */
@@ -124,7 +127,7 @@ body {
 }
 
 .lemma::before {
-  content: "Lemma " counter(lemma) ". ";
+  content: "Lemma " var(--chapter-number, "") counter(lemma) ". ";
   font-weight: bold;
   color: #007acc;
   display: block;
@@ -132,7 +135,7 @@ body {
 }
 
 .lemma[data-title]::before {
-  content: "Lemma " counter(lemma) " (" attr(data-title) "). ";
+  content: "Lemma " var(--chapter-number, "") counter(lemma) " (" attr(data-title) "). ";
 }
 
 /* Proposition environment */
@@ -146,7 +149,7 @@ body {
 }
 
 .proposition::before {
-  content: "Proposition " counter(proposition) ". ";
+  content: "Proposition " var(--chapter-number, "") counter(proposition) ". ";
   font-weight: bold;
   color: #007acc;
   display: block;
@@ -154,7 +157,7 @@ body {
 }
 
 .proposition[data-title]::before {
-  content: "Proposition " counter(proposition) " (" attr(data-title) "). ";
+  content: "Proposition " var(--chapter-number, "") counter(proposition) " (" attr(data-title) "). ";
 }
 
 /* Corollary environment */
@@ -168,7 +171,7 @@ body {
 }
 
 .corollary::before {
-  content: "Corollary " counter(corollary) ". ";
+  content: "Corollary " var(--chapter-number, "") counter(corollary) ". ";
   font-weight: bold;
   color: #007acc;
   display: block;
@@ -176,7 +179,7 @@ body {
 }
 
 .corollary[data-title]::before {
-  content: "Corollary " counter(corollary) " (" attr(data-title) "). ";
+  content: "Corollary " var(--chapter-number, "") counter(corollary) " (" attr(data-title) "). ";
 }
 
 /* Example boxes */
@@ -198,24 +201,6 @@ body {
 
 .example[data-title]::before {
   content: "Example (" attr(data-title) "). ";
-}
-
-/* Definition boxes */
-.definition {
-  border-left: 4px solid #6f42c1;
-  background-color: #faf8ff;
-  padding: 1rem;
-  margin: 1rem 0;
-  border-radius: 0 4px 4px 0;
-}
-
-/* Example boxes */
-.example {
-  border-left: 4px solid #fd7e14;
-  background-color: #fff8f0;
-  padding: 1rem;
-  margin: 1rem 0;
-  border-radius: 0 4px 4px 0;
 }
 
 /* Code styling */
