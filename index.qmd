@@ -80,11 +80,13 @@ This is the way the author has used these methods, for building and validating a
 
 Navigate through the book using the sidebars, or jump directly to any part:
 
-**[Part I: Introduction and Overview](chapters/p1-ch1-literature-review.qmd)**  
+**[Part I: Introduction and Overview](chapters/p1-ch1-fundamental-challenge.qmd)**  
 
-- [Literature Review](chapters/p1-ch1-literature-review.qmd)
-- [Methodology Overview](chapters/p1-ch2-methodology-overview.qmd)
-- [Roadmap](chapters/p1-ch3-roadmap.qmd)
+- [Fundamental Challenge](chapters/p1-ch1-fundamental-challenge.qmd)
+- [Grey Matrix Methods](chapters/p1-ch2-grey-matrix-methods.qmd)
+- [Exchange Factor Smoothing](chapters/p1-ch3-exchange-factor-smoothing.qmd)
+- [Anisotropic Extensions](chapters/p1-ch4-anisotropic-extensions.qmd)
+- [Spectral Extensions](chapters/p1-ch5-spectral-extensions.qmd)
 
 **[Part II: Domain and Geometry Setup](chapters/p2-ch1-geometry-concepts.qmd)**  
 
