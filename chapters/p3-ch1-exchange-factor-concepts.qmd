@@ -36,3 +36,148 @@ This approach offers key advantages:
 (3) The precision requirements are expressed as a function of both the geometry and extinction (described by $\mathbf{F}$) and the reflection and scattering properties of each element.
 
 This enables problem-specific numerical precision tuning which is readily implementable in modern numerical programming languages [@IEEEfloat2019].
+
+## Methodology
+
+The methodology is split into three parts: First, the exchange factor matrix is formally defined, next, the exchange factor transformation is defined, and lastly, the transformed exchange factors are applied to solution of the RTE.
+
+### Definition of the Exchange Factor Matrix
+
+The proposed transformation requires as an input a general description of the radiative connectivity of the domain in the form of the exchange factor matrix $\mathbf{F}$. The exchange factor matrix $\mathbf{F}$ may be obtained analytically or numerically. All of the subsequent operations of the proposed transformation are analytical.
+The $(m+n)\times(m+n)$ row-stochastic blocked first interaction exchange factor matrix $\mathbf{F}$ for a system of $m$ bounding surfaces and $n$ gas volume elements is defined as:
+
+$$
+	\mathbf{F} = 
+	\begin{bmatrix}
+\mathbf{F}_\mathrm{ss} & \mathbf{F}_\mathrm{sg} \\
+\mathbf{F}_\mathrm{gs} & \mathbf{F}_\mathrm{gg}
+\end{bmatrix}
+$$
+
+where $\mathbf{F}$ is row stochastic to ensure that The First Law of Thermodynamics is satisfied and the entries of $\mathbf{F}$ are the fractions of energy emitted by the emitter of row $i$ which has its first interaction with the element of column $j$.
+The entries of $\mathbf{F}$ can be defined from equations (@eq-excfact_ss)-(@eq-excfact_gg), by normalizing with the equivalent total capacity for emission and reflection-scattering of the emitter zone (and using the extinction coefficient $\beta$ in place of the absorption coefficient $\kappa$):
+
+$$
+	F_{s_j s_k} = \frac{\overline{s_j s_k}}{(\rho_j+\varepsilon_j)A_j}, \quad
+	F_{s_k g_\gamma} = \frac{\overline{s_k g_\gamma}}{(\rho_k+\varepsilon_k)A_k}, \quad
+	F_{g_\gamma s_k} = \frac{\overline{g_\gamma s_k}}{4\beta V_\gamma}, \quad
+	F_{g_\gamma g_{\gamma*}} = \frac{\overline{g_\gamma g_{\gamma*}}}{4\beta V_\gamma}.
+$$
+
+where $\rho+\varepsilon=1$ where $\rho$ is the single reflectivity and $\varepsilon$ is the emissivity and for volumes of participating media, $\kappa+\sigma_s=\beta$ where $\sigma_s$ is the single scattering coefficient. Additionally, $\mathbf{F}$ satisfies The Second Law of Thermodynamics (reciprocity) [@Daun2005]:
+
+$$
+ \mathbf{E} \mathbf{F} = \mathbf{F}^T  \mathbf{E}
+ {#eq-reciprocity}
+$$
+
+where $\mathbf{E}$ is a diagonal matrix of equivalent emission areas with $\mathbf{E}_{ii}=(\rho_i+\varepsilon_i) A_i$ for $i\leq m$ and $\mathbf{E}_{ii}=4 \beta_i V_i$ for $i>m$, where the full capacity to emit and reflect-scatter is used.
+
+Furthermore, in the general case, $\mathbf{F}$ will have some zero entries, i.e., physical elements without direct view of each other, meaning $\mathbf{F}$ is not merely a positive matrix but a non-negative matrix. Therefore, for the proofs of this paper to guarantee convergence, $\mathbf{F}$ must be \textit{irreducible} [@HornJohnson2013], where irreducibility corresponds to the physical requirement that the domain contains no isolated regions, that is, for any two elements $i$ and $j$, there exists a sequence of direct radiation exchanges $i \to k_1 \to k_2 \to \ldots \to j$ connecting them. This requirement can always be satisfied by treating isolated regions as separate radiative transfer problems.
+
+For the present transformation, $\mathbf{F}$ should be derived exactly as if dealing with pure absorption, but always using the total capacity to emit and reflect-scatter instead of the absorption coefficient.
+Note that extinction $\beta$ does not need to be uniform across the domain, but should be uniform for each element. In the case of non-uniformity, $\mathbf{F}$ must be obtained using the same non-uniform distribution of $\beta$.
+Then after $\mathbf{F}$ has been obtained, any part of the capacity to absorb may be converted into a capacity for reflection-scattering, meaning a single $\mathbf{F}$ covers all combinations of $\kappa+\sigma_s$ which sum to $\beta$.
+
+### The Exchange Factor Transformation
+
+The column constant $(m+n)\times(m+n)$ blocked single reflection-scattering matrix $\mathbf{B}$ is defined as:
+
+$$
+	\mathbf{B} = 
+	\begin{bmatrix}
+\mathbf{B}_\mathrm{ss} & \mathbf{B}_\mathrm{sg} \\
+\mathbf{B}_\mathrm{gs} & \mathbf{B}_\mathrm{gg}
+\end{bmatrix}
+	=
+	\begin{bmatrix}
+	\rho_1 \quad \dots \quad \rho_m \quad \omega_1  \quad \dots \quad \omega_n \\
+	\vdots \quad \ddots \quad\quad \vdots \quad\quad \vdots \quad \ddots \quad \vdots \\
+	\rho_1 \quad \dots  \quad \rho_m \quad \omega_1  \quad \dots  \quad \omega_n
+	\end{bmatrix}
+$$
+
+where $\rho_i$ is the reflectivity of boundary element $i$ and $\omega_i=\sigma_{\mathrm{s},i}/\beta_i$ is the single scattering albedo of volume element $i$. The single reflection-scattering interaction matrix $\mathbf{K}$ and the steady state path matrix $\mathbf{S}_\infty$ are defined as:
+
+$$
+	\mathbf{K} = \mathbf{F} \circ \mathbf{B} \quad , \quad
+	\mathbf{S}_\infty = (\mathbf{I}-\mathbf{K})^{-1} \mathbf{F}
+$$
+
+where $\circ$ is the Hadamard product and $\mathbf{K}$ combines first interaction probabilities with single reflection-scattering probabilities, and $\mathbf{S}_\infty$ describes reflection-scattering paths. The absorption matrix $\mathbf{A}$ and the multiple reflection-scattering matrix $\mathbf{R}$ are expressed as:
+
+$$
+	\mathbf{A} = (\mathbf{1} - \mathbf{B})^T \circ \mathbf{S}_\infty \circ (\mathbf{1} - \mathbf{B})
+	\label{eq:A}
+$$
+
+$$
+	\mathbf{R} = (\mathbf{1} - \mathbf{B})^T \circ \mathbf{S}_\infty \circ \mathbf{B}
+	\label{eq:R}
+$$
+
+where $\mathbf{1}$ is a matrix of ones. The first matrix, $(\mathbf{1} - \mathbf{B})^T$, accounts for the probability of emission, the middle matrix, $\mathbf{S}_\infty$, accounts for all possible reflection-scattering paths at the steady-state, and the last matrices, $\mathbf{1} - \mathbf{B}$ or $\mathbf{B}$ account for absorption or reflection at the destination.
+
+### Application of the Transformed Exchange Factors
+
+Next, based on fundamental radiative energy balances, which state that an energy source is equal to the total radiant power, minus the absorbed power, minus the reflected incident power, and that the emissive power equals the total radiant power, minus the reflected incident power, the matrices $\mathbf{C}$ and $\mathbf{D}$ are defined as:
+
+$$
+	\mathbf{C} = \mathbf{I} - \mathbf{A}^T - \mathbf{R}^T
+	\quad , \quad
+	\mathbf{D} = \mathbf{I} - \mathbf{R}^T
+	{#eq-C_and_D}
+$$
+
+Now, given a vector $\mathbf{e}$ of the emissive powers and a vector $\mathbf{q}$ of the source terms of each element, where only one entry of these can be specified for each element, the mixed-boundary matrix $\mathbf{M}$ can be assembled row by row:
+
+$$
+	\mathbf{M}[i,:] = \mathbf{C}[i,:] \quad , \quad \mathbf{M}[j,:] = \mathbf{D}[j,:]
+$$
+
+using $i$ for known entries of the source vector $\mathbf{q}_i$ and using $j$ for known entries of the emissive power vector $\mathbf{e}_j$, where $i$ and $j$ are mutually exclusive. Next, the linear system:
+
+$$
+	\mathbf{M}\mathbf{j} = \mathbf{h}
+	\label{eq:solve_for_j}
+$$
+
+is solved for the total radiant power $\mathbf{j}$ of each element, where $\mathbf{h}$ is a vector of known emissive powers or source terms, depending on which is known, corresponding to the $i$ and $j$ rows of $\mathbf{M}$.
+
+Knowing the total radiant power of each element, the absorbed incident power $\mathbf{g}_\mathrm{a}$ and the unknown terms of the emissive power vector $\mathbf{e}$ and the source term vector $\mathbf{q}$ can be determined from:
+
+$$
+	\mathbf{g}_\mathrm{a} = \mathbf{A}^T \mathbf{j} 
+	\quad , \quad
+	\mathbf{e}_i = \mathbf{q}_i + \mathbf{g}_{\mathrm{a},i}
+	\quad, \quad 
+	\mathbf{q}_j = \mathbf{e}_j - \mathbf{g}_{\mathrm{a},j}
+	{#eq-emissive_source}
+$$
+
+where $i$ and $j$ are again mutually exclusive. The reflected-scattered power $\mathbf{r}$ and the total incident power $\mathbf{g}$ can be determined from:
+
+$$
+	\mathbf{r} = \mathbf{R}^T \mathbf{j} \quad , \quad
+	\mathbf{g} = \mathbf{g}_\mathrm{a} + \mathbf{r}
+	\label{eq:r_and_g}
+$$
+
+The total intensity of volumes and of Lambertian surfaces can be determined from:
+
+$$
+	\mathbf{i}_{\mathrm{V},i} = \frac{\mathbf{j}_{\mathrm{V},i}}{4\pi V_i} 
+	\quad , \quad
+	\mathbf{i}_{\mathrm{S},i} = \frac{\mathbf{j}_{\mathrm{S},i}}{\pi A_i}
+$$
+
+Finally the temperature of each element can be determined from its emissive power using $\varepsilon$ and $\kappa$ and the Stefan-Boltzmann law:
+
+$$
+	T_{\mathrm{s},i} = \left( \frac{\mathbf{e}_{\mathrm{s},i} }{ \varepsilon_{\mathrm{s},i}\sigma A_{\mathrm{s},i} }\right)^{1/4}
+	\quad , \quad
+	T_{\mathrm{g},i} = \left( \frac{\mathbf{e}_{\mathrm{g},i} }{4 \kappa\sigma V_{\mathrm{g},i} n_i^2 }\right)^{1/4}	
+    {#eq-temperature}
+$$
+
+where $\sigma$ is the Stefan-Boltzmann constant and $n_i$ is the refractive index of the medium of element $i$.
