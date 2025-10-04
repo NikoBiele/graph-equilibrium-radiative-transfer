@@ -190,6 +190,7 @@ In the limiting case $\mathbf{b}_i = 0$, this recovers the row-stochastic spectr
 ::: {.proof}
 
 **Step 1:** The matrix decomposition is established.
+
 Since $\mathbf{B}$ is column constant, the Hadamard product $\mathbf{A} = (\mathbf{A}+\mathbf{R})\circ (\mathbf{1}-\mathbf{B})$ is equivalent to right matrix multiplication by the diagonal matrix $\mathbf{P}$:
 
 $$
@@ -197,7 +198,8 @@ $$
 $$
 
 **Step 2:** The row sums are computed using the eigenvalue relationship.
-From Theorem @theorem:spectral_radius_unity, it is known that $(\mathbf{A}+\mathbf{R})(\mathbf{1} - \mathbf{b}) = (\mathbf{1} - \mathbf{b})$ with $\rho(\mathbf{A}+\mathbf{R}) = 1$.
+
+From Theorem @theorem-spectral_radius_unity, it is known that $(\mathbf{A}+\mathbf{R})(\mathbf{1} - \mathbf{b}) = (\mathbf{1} - \mathbf{b})$ with $\rho(\mathbf{A}+\mathbf{R}) = 1$.
 Therefore:
 $$
 \begin{aligned}
@@ -209,6 +211,7 @@ $$
 $$
 
 **Step 3:** The spectral radius bounds are derived.
+
 Since $[\mathbf{A}\mathbf{1}]_i = 1-\mathbf{b}_i$, the row sums range from $1-\max_i \mathbf{b}_i$ to $1-\min_i \mathbf{b}_i$.
 By the Gershgorin circle theorem and properties of non-negative matrices, the spectral radius satisfies [@HornJohnson2013]:
 
@@ -217,5 +220,96 @@ $$
 $$
 
 When $\mathbf{b}_i = 0$ for all $i$, the exchange factor transformation yields $\mathbf{A} = \mathbf{F}$, and the bounds collapse to $\rho(\mathbf{A}) = 1$, consistent with the row-stochastic property of the exchange factor matrix.
+
+:::
+
+::: {.theorem data-title"Upper Bound on Spectral Radius of Reflection-Scattering" #theorem-reflection_upper_bound}
+
+The spectral radius of the multiple reflection-scattering matrix $\mathbf{R}$ of the exchange factor transformation satisfies:
+
+$$
+\rho(\mathbf{R}) \leq (1-\min_i \mathbf{b}_i)\frac{\|\mathbf{K}\|_\infty}{1-\|\mathbf{K}\|_\infty}
+$$ {#eq-rho_R_upper}
+
+For physical realizability, the bound on $\rho(\mathbf{R})$ must be less than unity, requiring:
+$$
+\|\mathbf{K}\|_\infty < \frac{1}{2-\min_i \mathbf{b}_i}
+$$ {#eq-physical_constraint}
+
+:::
+
+::: {.proof}
+
+From the eigenvalue equation $(\mathbf{A} + \mathbf{R})(\mathbf{1} - \mathbf{b}) = \mathbf{1} - \mathbf{b}$ and using $\mathbf{A}\mathbf{1} = \mathbf{1} - \mathbf{b}$:
+
+$$
+\begin{aligned}
+(\mathbf{A} + \mathbf{R})(\mathbf{1} - \mathbf{b}) &= \mathbf{1} - \mathbf{b} \\
+\mathbf{A}\mathbf{1} + \mathbf{R}\mathbf{1} - \mathbf{A}\mathbf{b} - \mathbf{R}\mathbf{b} &= \mathbf{1} - \mathbf{b} \\
+\mathbf{R}\mathbf{1} - \mathbf{A}\mathbf{b} - \mathbf{R}\mathbf{b} &= \mathbf{0} \\
+\mathbf{R}\mathbf{1} &= (\mathbf{A} + \mathbf{R})\mathbf{b}
+\end{aligned}
+$$
+
+Substituting $\mathbf{A} + \mathbf{R} = \mathbf{P}(\mathbf{I}-\mathbf{K})^{-1}\mathbf{F}$ and applying submultiplicativity:
+$$
+\begin{aligned}
+\mathbf{R}\mathbf{1} &= \mathbf{P}(\mathbf{I}-\mathbf{K})^{-1}\mathbf{F}\mathbf{b} \\
+\|\mathbf{R}\|_\infty &\leq \|\mathbf{P}\|_\infty \|(\mathbf{I}-\mathbf{K})^{-1}\|_\infty \|\mathbf{K}\|_\infty \\
+&\leq \max_i(1-\mathbf{b}_i) \frac{1}{1-\|\mathbf{K}\|_\infty} \|\mathbf{K}\|_\infty
+\end{aligned}
+$$
+
+Since $\rho(\mathbf{R}) \leq \|\mathbf{R}\|_\infty$, the bound follows. The physical constraint comes from requiring that $\mathbf{D}=\mathbf{I}-\mathbf{R}^T$ is invertible, which is necessary for $\mathbf{M}$ of equation (@eq:solve_for_j) to be invertible. By the Neumann series theorem, the inverse $\mathbf{D}^{-1}=(\mathbf{I}-\mathbf{R}^T)^{-1}$ exists when $\rho(\mathbf{R})<1$ [@HornJohnson2013].
+
+:::
+
+::: {.theorem data-title="Spectral Radius of Reflection-Scattering for Uniform Properties" #theorem:uniform_beta}
+
+When the reflection-scattering coefficients are uniform, $\mathbf{b}_i = \gamma$ for all $i$ where $\gamma \in [0,1)$, then:
+
+- The vector $\mathbf{b} = \gamma\mathbf{1}$ is an eigenvector of $\mathbf{R}$ with eigenvalue $\gamma$
+- The spectral radius satisfies $\rho(\mathbf{R}) = \gamma$
+
+:::
+
+::: {.proof}
+
+For uniform $\gamma$, it holds that $\mathbf{P} = (1-\gamma)\mathbf{I}$ and $\mathbf{K} = \gamma\mathbf{F}$.
+
+**Step 1:** The key relationship is developed:
+
+$$
+(\mathbf{I}-\mathbf{K})\mathbf{b} = \gamma\mathbf{1} - \gamma\mathbf{F}\mathbf{b} = \gamma\mathbf{1} - \gamma^2\mathbf{F}\mathbf{1} = \gamma(1-\gamma)\mathbf{1} = (1-\gamma)\mathbf{b}
+$$
+
+**Step 2:** The eigenvalue property is established.
+
+From Step 1: $(\mathbf{I}-\mathbf{K})^{-1}\mathbf{b} = \frac{\mathbf{b}}{1-\gamma}$
+
+Computing $\mathbf{R}\mathbf{b}$:
+
+$$
+\begin{aligned}
+(\mathbf{A}+\mathbf{R})\mathbf{b} &= \mathbf{P}(\mathbf{I}-\mathbf{K})^{-1}\mathbf{F}\mathbf{b} \\
+&= (1-\gamma)\frac{\gamma}{1-\gamma}\mathbf{1} = \gamma\mathbf{1} = \mathbf{b}
+\end{aligned}
+$$
+
+Since $\mathbf{A}\mathbf{b} = \gamma\mathbf{A}\mathbf{1} = \gamma(1-\gamma)\mathbf{1}$:
+
+$$
+\mathbf{R}\mathbf{b} = (\mathbf{A}+\mathbf{R})\mathbf{b} - \mathbf{A}\mathbf{b} = \gamma\mathbf{1} - \gamma(1-\gamma)\mathbf{1} = \gamma^2\mathbf{1} = \gamma\mathbf{b}
+$$
+
+**Step 3:** The spectral radius is established.
+
+The upper bound from Theorem @theorem-reflection_upper_bound gives:
+
+$$
+\rho(\mathbf{R}) \leq \frac{(1-\gamma)\gamma}{1-\gamma} = \gamma
+$$
+
+Combined with $\rho(\mathbf{R}) \geq \gamma$ (since $\gamma$ is an eigenvalue), it is concluded that $\rho(\mathbf{R}) = \gamma$.
 
 :::
