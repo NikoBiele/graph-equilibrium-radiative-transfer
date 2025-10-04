@@ -264,7 +264,7 @@ Since $\rho(\mathbf{R}) \leq \|\mathbf{R}\|_\infty$, the bound follows. The phys
 
 :::
 
-::: {.theorem data-title="Spectral Radius of Reflection-Scattering for Uniform Properties" #theorem:uniform_beta}
+::: {.theorem data-title="Spectral Radius of Reflection-Scattering for Uniform Properties" #theorem-uniform_beta}
 
 When the reflection-scattering coefficients are uniform, $\mathbf{b}_i = \gamma$ for all $i$ where $\gamma \in [0,1)$, then:
 
@@ -311,5 +311,29 @@ $$
 $$
 
 Combined with $\rho(\mathbf{R}) \geq \gamma$ (since $\gamma$ is an eigenvalue), it is concluded that $\rho(\mathbf{R}) = \gamma$.
+
+:::
+
+::: {.theorem data-title="Spectral Radius Sum Property" #theorem-spectral_sum}
+
+For uniform reflection-scattering coefficients $\mathbf{b}_i = \gamma$, the spectral radii of the absorption and multiple reflection-scattering matrices satisfy:
+
+$$
+\rho(\mathbf{A}) + \rho(\mathbf{R}) = \rho(\mathbf{A}+\mathbf{R}) = 1
+$$ {#eq-spectral_sum}
+
+For uniform reflection-scattering coefficients, all eigenvalues corresponding to the spectral radii are real.
+
+:::
+
+::: {.proof}
+
+From Theorems @theorem-spectral_radius_absorption and @theorem-uniform_beta:
+
+- $\rho(\mathbf{A}) = 1-\gamma$ (uniform case)
+- $\rho(\mathbf{R}) = \gamma$ (uniform case)
+- $\rho(\mathbf{A}+\mathbf{R}) = 1$
+
+Therefore: $\rho(\mathbf{A}) + \rho(\mathbf{R}) = (1-\gamma) + \gamma = 1 = \rho(\mathbf{A}+\mathbf{R})$. Since $\gamma=\mathbf{b}_i$ is real, all eigenvalues corresponding to the spectral radii are real.
 
 :::
