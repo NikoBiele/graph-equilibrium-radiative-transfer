@@ -20,7 +20,7 @@ In this case, one might employ Monte Carlo methods to obtain near-analytical est
 To ensure that $\mathbf{F}$ satisfies both The First and The Second Law of Thermodynamics, smoothing should be employed, such as for example the method proposed by Daun et al. [@Daun2005], or preferably the method proposed in this work.
 
 The solution method proposed in this work is general and, furthermore, it is flexible.
-In fact, a key strength of matrix-based methods for solution of the RTE, is that they allow the formidable monolithic problem of energy transfer by an electromagnetic wave field, to be broken down into two conceptually separate and more manageable parts:
+In fact, a key strength of exchange factor-based methods for solution of the RTE, is that they allow the formidable monolithic problem of energy transfer by an electromagnetic wave field, to be broken down into two conceptually separate and more manageable parts:
 The geometry and extinction-based ray propagation part and the system-wide energy interaction part.
 If $\mathbf{F}$ is obtained through Monte Carlo ray tracing methods, any number of relevant optical phenomena may be modelled, such as refraction and diffraction, refraction being significant in atmospheric research, due to the variable refractive index.
 This can be achieved by solving differential equations for each ray [@BornWolf1980].
@@ -68,12 +68,11 @@ where $\rho+\varepsilon=1$ where $\rho$ is the single reflectivity and $\varepsi
 
 $$
  \mathbf{E} \mathbf{F} = \mathbf{F}^T  \mathbf{E}
- {#eq-reciprocity}
-$$
+$$ {#eq-reciprocity}
 
 where $\mathbf{E}$ is a diagonal matrix of equivalent emission areas with $\mathbf{E}_{ii}=(\rho_i+\varepsilon_i) A_i$ for $i\leq m$ and $\mathbf{E}_{ii}=4 \beta_i V_i$ for $i>m$, where the full capacity to emit and reflect-scatter is used.
 
-Furthermore, in the general case, $\mathbf{F}$ will have some zero entries, i.e., physical elements without direct view of each other, meaning $\mathbf{F}$ is not merely a positive matrix but a non-negative matrix. Therefore, for the proofs of this paper to guarantee convergence, $\mathbf{F}$ must be \textit{irreducible} [@HornJohnson2013], where irreducibility corresponds to the physical requirement that the domain contains no isolated regions, that is, for any two elements $i$ and $j$, there exists a sequence of direct radiation exchanges $i \to k_1 \to k_2 \to \ldots \to j$ connecting them. This requirement can always be satisfied by treating isolated regions as separate radiative transfer problems.
+Furthermore, in the general case, $\mathbf{F}$ will have some zero entries, i.e., physical elements without direct view of each other, meaning $\mathbf{F}$ is not merely a positive matrix but a non-negative matrix. Therefore, for the proofs of this paper to guarantee convergence, $\mathbf{F}$ must be *irreducible* [@HornJohnson2013], where irreducibility corresponds to the physical requirement that the domain contains no isolated regions, that is, for any two elements $i$ and $j$, there exists a sequence of direct radiation exchanges $i \to k_1 \to k_2 \to \ldots \to j$ connecting them. This requirement can always be satisfied by treating isolated regions as separate radiative transfer problems.
 
 For the present transformation, $\mathbf{F}$ should be derived exactly as if dealing with pure absorption, but always using the total capacity to emit and reflect-scatter instead of the absorption coefficient.
 Note that extinction $\beta$ does not need to be uniform across the domain, but should be uniform for each element. In the case of non-uniformity, $\mathbf{F}$ must be obtained using the same non-uniform distribution of $\beta$.
@@ -108,13 +107,11 @@ where $\circ$ is the Hadamard product and $\mathbf{K}$ combines first interactio
 
 $$
 	\mathbf{A} = (\mathbf{1} - \mathbf{B})^T \circ \mathbf{S}_\infty \circ (\mathbf{1} - \mathbf{B})
-	\label{eq:A}
-$$
+$$ {#eq-A}
 
 $$
 	\mathbf{R} = (\mathbf{1} - \mathbf{B})^T \circ \mathbf{S}_\infty \circ \mathbf{B}
-	\label{eq:R}
-$$
+$$ {#eq-R}
 
 where $\mathbf{1}$ is a matrix of ones. The first matrix, $(\mathbf{1} - \mathbf{B})^T$, accounts for the probability of emission, the middle matrix, $\mathbf{S}_\infty$, accounts for all possible reflection-scattering paths at the steady-state, and the last matrices, $\mathbf{1} - \mathbf{B}$ or $\mathbf{B}$ account for absorption or reflection at the destination.
 
@@ -126,8 +123,7 @@ $$
 	\mathbf{C} = \mathbf{I} - \mathbf{A}^T - \mathbf{R}^T
 	\quad , \quad
 	\mathbf{D} = \mathbf{I} - \mathbf{R}^T
-	{#eq-C_and_D}
-$$
+$$ {#eq-C_and_D}
 
 Now, given a vector $\mathbf{e}$ of the emissive powers and a vector $\mathbf{q}$ of the source terms of each element, where only one entry of these can be specified for each element, the mixed-boundary matrix $\mathbf{M}$ can be assembled row by row:
 
@@ -139,8 +135,7 @@ using $i$ for known entries of the source vector $\mathbf{q}_i$ and using $j$ fo
 
 $$
 	\mathbf{M}\mathbf{j} = \mathbf{h}
-	\label{eq:solve_for_j}
-$$
+$$ {#eq-solve_for_j}
 
 is solved for the total radiant power $\mathbf{j}$ of each element, where $\mathbf{h}$ is a vector of known emissive powers or source terms, depending on which is known, corresponding to the $i$ and $j$ rows of $\mathbf{M}$.
 
@@ -152,16 +147,14 @@ $$
 	\mathbf{e}_i = \mathbf{q}_i + \mathbf{g}_{\mathrm{a},i}
 	\quad, \quad 
 	\mathbf{q}_j = \mathbf{e}_j - \mathbf{g}_{\mathrm{a},j}
-	{#eq-emissive_source}
-$$
+$$ {#eq-emissive_source}
 
 where $i$ and $j$ are again mutually exclusive. The reflected-scattered power $\mathbf{r}$ and the total incident power $\mathbf{g}$ can be determined from:
 
 $$
 	\mathbf{r} = \mathbf{R}^T \mathbf{j} \quad , \quad
 	\mathbf{g} = \mathbf{g}_\mathrm{a} + \mathbf{r}
-	\label{eq:r_and_g}
-$$
+$$ {#eq-r_and_g}
 
 The total intensity of volumes and of Lambertian surfaces can be determined from:
 
@@ -177,7 +170,6 @@ $$
 	T_{\mathrm{s},i} = \left( \frac{\mathbf{e}_{\mathrm{s},i} }{ \varepsilon_{\mathrm{s},i}\sigma A_{\mathrm{s},i} }\right)^{1/4}
 	\quad , \quad
 	T_{\mathrm{g},i} = \left( \frac{\mathbf{e}_{\mathrm{g},i} }{4 \kappa\sigma V_{\mathrm{g},i} n_i^2 }\right)^{1/4}	
-    {#eq-temperature}
-$$
+$$ {#eq-temperature}
 
 where $\sigma$ is the Stefan-Boltzmann constant and $n_i$ is the refractive index of the medium of element $i$.
