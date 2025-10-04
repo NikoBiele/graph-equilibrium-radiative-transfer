@@ -1,6 +1,5 @@
 ---
 title: "Exchange Factor Transformation Theory and Proofs"
-number: 3.4
 ---
 
 ## Convergence Properties {#sec-convergence_props}

@@ -1,4 +1,3 @@
 ---
 title: "Exchange Factor Two-dimensional Application"
-number: 3.2
 ---

@@ -1,4 +1,3 @@
 ---
 title: "Exchange Factor Smoothing"
-number: 1.3
 ---

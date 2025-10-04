@@ -88,10 +88,10 @@ body {
 }
 
 .proof::after {
-  content: " ∎";
+  content: " ■";  /* Black square instead of ∎ */
   float: right;
   font-weight: bold;
-  color: #28a745;
+  color: #000000;  /* Pure black */
 }
 
 /* Definition boxes */

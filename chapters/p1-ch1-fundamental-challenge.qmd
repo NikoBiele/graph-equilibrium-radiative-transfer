@@ -1,6 +1,5 @@
 ---
 title: "The Fundamental Challenge"
-number: 1.1
 ---
 
 Radiative transfer in participating media is a fundamental process in many natural and engineered systems, from stellar atmospheres to thermal engineering.

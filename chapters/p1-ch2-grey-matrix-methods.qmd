@@ -1,6 +1,5 @@
 ---
 title: "Grey Matrix-based Methods"
-number: 1.2
 ---
 
 ## Introduction

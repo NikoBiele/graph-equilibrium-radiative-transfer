@@ -1,4 +1,3 @@
 ---
 title: "Anisotropic Extensions"
-number: 1.4
 ---

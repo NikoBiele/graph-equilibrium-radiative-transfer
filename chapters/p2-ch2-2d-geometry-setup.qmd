@@ -1,6 +1,5 @@
 ---
 title: "Two-dimensional Geometry Setup"
-number: 2.2
 ---
 
 ```{julia}

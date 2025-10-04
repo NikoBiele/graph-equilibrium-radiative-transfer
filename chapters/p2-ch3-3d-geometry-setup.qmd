@@ -1,6 +1,5 @@
 ---
 title: "Three-dimensional Geometry Setup"
-number: 2.3
 ---
 
 ```{julia}
