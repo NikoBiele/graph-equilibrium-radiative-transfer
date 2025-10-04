@@ -1,0 +1,85 @@
+# Exchange Factor Transformation Theory and Proofs
+
+\section{Convergence Properties}
+\label{sec:convergence_props}
+
+This section presents the essential convergence guarantees of the proposed transformation through two fundamental theorems which characterize the steady state path matrix.
+
+::: {.theorem data-title="Convergence and Irreducibility of the Steady State Path"}
+
+Let $\mathbf{F}$ be the row stochastic irreducible exchange factor matrix, let $\mathbf{B}$ be the column constant single reflection-scattering matrix and let $\mathbf{K}=\mathbf{F}\circ\mathbf{B}$ be the single reflection-scattering interaction matrix.
+The steady state path matrix is defined as:
+
+$$
+\mathbf{S}_\infty = \lim_{N \to \infty} \sum_{i=0}^N \mathbf{K}^i \mathbf{F} = (\mathbf{I}-\mathbf{K})^{-1} \mathbf{F}
+$$ {#eq-Sinfty_thm}
+
+Then $\mathbf{S}_\infty$ exists, is finite and irreducible if and only if the spectral radius $\rho(\mathbf{K}) < 1$.
+Moreover, the spectral radius satisfies:
+
+$$
+0 \leq \min_j(\mathbf{B}) \leq \min_i\sum_j\mathbf{K} \leq \rho(\mathbf{K})\leq\max_i\sum_j\mathbf{K} \leq \max_j(\mathbf{B}) < 1
+$$ {#eq-rho_K_thm}
+
+::: {#thm-convergence}
+
+::: {.proof}
+
+Each entry of $\mathbf{F}$ represents the probability of a ray travelling from emitter $i$ to interact with element $j$.
+The accumulated probability after $N$ reflections or scatterings is given by the finite sum:
+
+$$
+\mathbf{S}_N = \mathbf{F} + \mathbf{K}\mathbf{F} + \mathbf{K}^2\mathbf{F} + \cdots + \mathbf{K}^N\mathbf{F} = \left(\sum_{i=0}^N \mathbf{K}^i \right) \mathbf{F}
+$$
+
+By the Neumann series theorem, $\sum_{i=0}^\infty \mathbf{K}^i = (\mathbf{I}-\mathbf{K})^{-1}$ converges if and only if $\rho(\mathbf{K}) < 1$ [@HornJohnson2013].
+
+The bounds on $\rho(\mathbf{K})$ follow from Perron-Frobenius theory applied to the non-negative matrix $\mathbf{K}$, where $\mathbf{B}$ represents the column constant matrix of reflection-scattering coefficients.
+
+Since the infinite series for the inverse $(\mathbf{I}-\mathbf{K})^{-1}$ always contains the identity matrix, $(\mathbf{I}-\mathbf{K})^{-1}\mathbf{F}$ always contains $\mathbf{F}$, and since remaining terms in the series are non-negative, the connectivity in the domain can only increase with $\mathbf{B}>\mathbf{0}$, hence the irreducibility of $\mathbf{F}$ is preserved in $\mathbf{S}_\infty$.
+
+:::
+
+The physical interpretation ensures convergence: as long as at least at single element with reflection-scattering coefficient strictly less than unity is visible from all elements, infinite reflection-scattering paths are prevented.
+
+::: {.theorem data-title="Numerical Stability of the Steady State Path"}
+
+Let $\mathbf{I}-\mathbf{K}$ be the matrix to be inverted in the calculation of the steady state path matrix.
+Then the determinant of $\mathbf{I}-\mathbf{K}$ satisfies:
+
+$$
+\prod_{i=1}^{m+n} \left( 1-\sum_j\mathbf{K}_{ij} \right) \leq \det(\mathbf{I}-\mathbf{K}) \leq \prod_{i=1}^{m+n} \left( 1-\mathbf{K}_{ii} + \sum_{j\neq i}\mathbf{K}_{ij} \right)
+$$ {#eq-determinant_bounds_thm}
+
+where $m+n$ is the matrix dimension.
+For uniform reflection-scattering coefficient $b$, numerical feasibility requires:
+
+$$
+\epsilon \leq (1-b)^{m+n} \implies b \leq 1-\epsilon^{1/(m+n)} \implies m+n \leq \left\lfloor\frac{\mathrm{ln}(\epsilon)}{\mathrm{ln}(1-b)}\right\rfloor
+$$ {#eq-machine_eps_thm}
+
+where $\epsilon$ is the machine precision.
+
+::: {#thm-gershgorin}
+
+::: {.proof}
+
+Gershgorin's circle theorem is applied to $\mathbf{I}-\mathbf{K}$.
+The diagonal and off-diagonal elements are:
+$$
+(\mathbf{I}-\mathbf{K})_{ii} = 1-\mathbf{K}_{ii}, \quad (\mathbf{I}-\mathbf{K})_{i \neq j} = -\mathbf{K}_{i \neq j}
+$$
+
+Each eigenvalue $\lambda_i$ lies within at least one Gershgorin disk [@HornJohnson2013]:
+
+$$
+|\lambda_i - (1-\mathbf{K}_{ii})| \leq \sum_{j\neq i} \mathbf{K}_{ij}
+$$
+
+Disk $i$ is centered at $1-\mathbf{K}_{ii}$ with radius $\sum_{j\neq i} \mathbf{K}_{ij}$, giving leftmost point at $1-\sum_j \mathbf{K}_{ij}$ and rightmost at $1-\mathbf{K}_{ii} + \sum_{j\neq i}\mathbf{K}_{ij}$.
+
+Since $\det(\mathbf{I}-\mathbf{K}) = \prod_i \lambda_i$, the bounds follow from taking the product over extreme eigenvalue positions.
+
+For uniform $b$ and row-stochastic $\mathbf{F}$, the lower bound becomes $(1-b)^{m+n}$. Requiring that this exceeds machine precision $\epsilon$ gives the numerical feasibility conditions.
+
+:::

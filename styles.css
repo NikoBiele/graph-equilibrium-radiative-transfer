@@ -41,8 +41,14 @@
   color: #007acc;
 }
 
+/* Counters for theorem environments */
+body {
+  counter-reset: theorem definition lemma proposition corollary;
+}
+
 /* Theorem environments */
 .theorem {
+  counter-increment: theorem;
   border-left: 4px solid #007acc;
   background-color: #f8f9fa;
   padding: 1rem;
@@ -50,31 +56,148 @@
   border-radius: 0 4px 4px 0;
 }
 
-.theorem h2 {
-  color: #007acc;
-  margin-top: 0;
-  font-size: 1.1em;
+.theorem::before {
+  content: "Theorem " counter(theorem) ". ";
   font-weight: bold;
+  color: #007acc;
+  display: block;
+  margin-bottom: 0.5rem;
 }
 
+.theorem[data-title]::before {
+  content: "Theorem " counter(theorem) " (" attr(data-title) "). ";
+}
+
+/* Proof environment */
 .proof {
   border-left: 4px solid #28a745;
   background-color: #f8fff9;
+  padding: 1rem;
+  margin: 1rem 0 1.5rem 0;
+  border-radius: 0 4px 4px 0;
+}
+
+.proof::before {
+  content: "Proof. ";
+  font-weight: bold;
+  font-style: italic;
+  color: #28a745;
+}
+
+.proof::after {
+  content: " ∎";
+  float: right;
+  font-weight: bold;
+  color: #28a745;
+}
+
+/* Definition boxes */
+.definition {
+  counter-increment: definition;
+  border-left: 4px solid #6f42c1;
+  background-color: #faf8ff;
   padding: 1rem;
   margin: 1rem 0;
   border-radius: 0 4px 4px 0;
 }
 
-.proof::before {
-  content: "Proof: ";
+.definition::before {
+  content: "Definition " counter(definition) ". ";
   font-weight: bold;
-  color: #28a745;
+  color: #6f42c1;
+  display: block;
+  margin-bottom: 0.5rem;
 }
 
-.proof::after {
-  content: " □";
-  float: right;
+.definition[data-title]::before {
+  content: "Definition " counter(definition) " (" attr(data-title) "). ";
+}
+
+/* Lemma environment */
+.lemma {
+  counter-increment: lemma;
+  border-left: 4px solid #007acc;
+  background-color: #f8f9fa;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 0 4px 4px 0;
+}
+
+.lemma::before {
+  content: "Lemma " counter(lemma) ". ";
   font-weight: bold;
+  color: #007acc;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.lemma[data-title]::before {
+  content: "Lemma " counter(lemma) " (" attr(data-title) "). ";
+}
+
+/* Proposition environment */
+.proposition {
+  counter-increment: proposition;
+  border-left: 4px solid #007acc;
+  background-color: #f8f9fa;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 0 4px 4px 0;
+}
+
+.proposition::before {
+  content: "Proposition " counter(proposition) ". ";
+  font-weight: bold;
+  color: #007acc;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.proposition[data-title]::before {
+  content: "Proposition " counter(proposition) " (" attr(data-title) "). ";
+}
+
+/* Corollary environment */
+.corollary {
+  counter-increment: corollary;
+  border-left: 4px solid #007acc;
+  background-color: #f8f9fa;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 0 4px 4px 0;
+}
+
+.corollary::before {
+  content: "Corollary " counter(corollary) ". ";
+  font-weight: bold;
+  color: #007acc;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.corollary[data-title]::before {
+  content: "Corollary " counter(corollary) " (" attr(data-title) "). ";
+}
+
+/* Example boxes */
+.example {
+  border-left: 4px solid #fd7e14;
+  background-color: #fff8f0;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-radius: 0 4px 4px 0;
+}
+
+.example::before {
+  content: "Example. ";
+  font-weight: bold;
+  color: #fd7e14;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.example[data-title]::before {
+  content: "Example (" attr(data-title) "). ";
 }
 
 /* Definition boxes */

@@ -173,3 +173,15 @@ $$
 $$ {#eq-temperature}
 
 where $\sigma$ is the Stefan-Boltzmann constant and $n_i$ is the refractive index of the medium of element $i$.
+
+As mentioned in the introduction, for a medium with varying refractive index, $\mathbf{F}$ should be obtained by solving differential equations for each ray trajectory.
+While differential equations require a continuously changing refractive index, the proposed transformation uses a discrete mesh of the domain.
+For this reason, a mean value of the refractive index in each volume element should be used in equation (@eq-temperature) to calculate the temperature.
+The ray trajectories in a medium with variable refractive index are found by solving the following vector differential equation for each ray [@BornWolf1980]:
+
+$$
+	\frac{d}{dS}\left(n \frac{d \mathbf{x}}{dS}\right) = \nabla  n
+$$
+
+where $\mathbf{x}$ is the position and $S$ is the distance along a ray path and $\nabla $ is the gradient operator.
+Since the proposed method uses only the points of emission and first interaction, everything regarding the geometric ray trajectories is handled during the ray tracing step.
