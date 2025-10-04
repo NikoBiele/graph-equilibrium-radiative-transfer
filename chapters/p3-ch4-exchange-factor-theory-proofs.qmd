@@ -5,7 +5,7 @@
 
 This section presents the essential convergence guarantees of the proposed transformation through two fundamental theorems which characterize the steady state path matrix.
 
-::: {.theorem data-title="Convergence and Irreducibility of the Steady State Path"}
+::: {.theorem data-title="Convergence and Irreducibility of the Steady State Path" #thm-convergence}
 
 Let $\mathbf{F}$ be the row stochastic irreducible exchange factor matrix, let $\mathbf{B}$ be the column constant single reflection-scattering matrix and let $\mathbf{K}=\mathbf{F}\circ\mathbf{B}$ be the single reflection-scattering interaction matrix.
 The steady state path matrix is defined as:
@@ -21,7 +21,7 @@ $$
 0 \leq \min_j(\mathbf{B}) \leq \min_i\sum_j\mathbf{K} \leq \rho(\mathbf{K})\leq\max_i\sum_j\mathbf{K} \leq \max_j(\mathbf{B}) < 1
 $$ {#eq-rho_K_thm}
 
-::: {#thm-convergence}
+:::
 
 ::: {.proof}
 
@@ -42,7 +42,7 @@ Since the infinite series for the inverse $(\mathbf{I}-\mathbf{K})^{-1}$ always 
 
 The physical interpretation ensures convergence: as long as at least at single element with reflection-scattering coefficient strictly less than unity is visible from all elements, infinite reflection-scattering paths are prevented.
 
-::: {.theorem data-title="Numerical Stability of the Steady State Path"}
+::: {.theorem data-title="Numerical Stability of the Steady State Path" #thm-gershgorin}
 
 Let $\mathbf{I}-\mathbf{K}$ be the matrix to be inverted in the calculation of the steady state path matrix.
 Then the determinant of $\mathbf{I}-\mathbf{K}$ satisfies:
@@ -60,7 +60,7 @@ $$ {#eq-machine_eps_thm}
 
 where $\epsilon$ is the machine precision.
 
-::: {#thm-gershgorin}
+:::
 
 ::: {.proof}
 
