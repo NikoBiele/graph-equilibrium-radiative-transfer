@@ -1,11 +1,6 @@
 # Literature Review {#sec-literature}
 
-Radiative transfer, the propagation of electromagnetic radiation through transparent or participating media, plays a crucial role in fields ranging from atmospheric physics to industrial heat transfer.
-Traditional approaches to solving the radiative transfer equation (RTE) have relied heavily on numerical methods or simplified analytical solutions for specific geometries and boundary conditions.
-
-This book introduces a novel perspective: **graph equilibrium methods for radiative transfer**. By recasting radiative transfer problems as equilibrium problems on graphs, new analytical pathways are unlocked and computational accuracies previously infeasible become readily available.
-
-## The Traditional Challenge
+## The Fundamental Challenge
 
 Radiative transfer in participating media is a fundamental process in many natural and engineered systems, from stellar atmospheres to thermal engineering.
 The theoretical foundation for radiative transfer was established in the 19th century by Gustav Kirchhoff, who formulated the fundamental relationship between emission and absorption of thermal radiation and introduced the concept of blackbody radiation [@Kirchhoff1860].
@@ -24,16 +19,19 @@ To solve it one could, in principle, simply integrate along the ray trajectory.
 What makes the RTE particularly challenging to solve for general geometries is that all possible ray trajectories in the domain are coupled through two mechanisms:
 (1) The state of the participating medium, i.e. the temperature of the intervening gas, which depends on the local radiative heating rate and governs both the rate of emission (through blackbody emission laws) and temperature-dependent absorption properties, and
 (2) the in-scattering term, which requires integration over all incoming directions (4$\pi$ steradians) to account for radiation scattered from every direction into the direction of $S$.
-Therefore, for general geometries, to determine the equilibrium state, all possible ray trajectories must be solved simultaneously, which explains why the RTE has historically resisted general analytical treatment, and is most commonly solved numerically, or through analytical solutions for special simplified cases [@Howell2021].
+Therefore, for general geometries, to determine the equilibrium state, all possible ray trajectories must be solved simultaneously.
+This explains why the RTE has historically resisted general analytical treatment, and is most commonly solved numerically, or through analytical solutions for special simplified cases [@Howell2021].
 
 As noted by Modest and Mazumder [@ModestMazumder2022] in their most recent textbook:
 <div class="quote-box">
 <strong>Modest and Mazumder (2022):</strong> "... to this day no truly satisfactory RTE solution method has emerged."
 </div>
 
-The RTE does not directly account for surface reflections, and therefore the exchange factor transformation presented here may be thought of as a generalized analytical solution of the RTE.
+The RTE is concerned with radiative transfer in participating media and does not directly account for surface reflections.
+The exchange factor transformation of the GERT framework includes surface treatment and may be thought of as a generalized hybrid numerical-analytical solution of the RTE.
+The numerical part of the solution is necessary to obtain exchange factors which are required in the GERT framework.
 
-## Existing Matrix-based Methods
+## Matrix-based Methods for Radiative Transfer
 
 Seeking to quantify combustion heat transfer, Hottel and co-workers [@HottelCohen1958; @HottelSarofim1967; @Noble1975] pioneered solutions to the RTE using a discretized integral approach. Fundamentally, this integral approach produces matrices of *exchange areas*, which describe the radiative connectivity of the discretized domain. The integrals for the exchange areas are:
 
