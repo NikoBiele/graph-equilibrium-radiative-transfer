@@ -1,14 +1,13 @@
 ---
-title: "3.4 Exchange Factor Transformation Theory and Proofs"
+title: "Exchange Factor Transformation Theory and Proofs"
+number: 3.4
 ---
-
-# Exchange Factor Transformation Theory and Proofs
 
 ## Convergence Properties {#sec-convergence_props}
 
 This section presents the essential convergence guarantees of the proposed transformation through two fundamental theorems which characterize the steady state path matrix.
 
-::: {.theorem data-title="Convergence and Irreducibility of the Steady State Path" #thm-convergence}
+::: {.theorem data-title="Convergence and Irreducibility of the Steady State Path" #theorem-convergence}
 
 Let $\mathbf{F}$ be the row stochastic irreducible exchange factor matrix, let $\mathbf{B}$ be the column constant single reflection-scattering matrix and let $\mathbf{K}=\mathbf{F}\circ\mathbf{B}$ be the single reflection-scattering interaction matrix.
 The steady state path matrix is defined as:
@@ -45,7 +44,7 @@ Since the infinite series for the inverse $(\mathbf{I}-\mathbf{K})^{-1}$ always 
 
 The physical interpretation ensures convergence: as long as at least at single element with reflection-scattering coefficient strictly less than unity is visible from all elements, infinite reflection-scattering paths are prevented.
 
-::: {.theorem data-title="Numerical Stability of the Steady State Path" #thm-gershgorin}
+::: {.theorem data-title="Numerical Stability of the Steady State Path" #theorem-gershgorin}
 
 Let $\mathbf{I}-\mathbf{K}$ be the matrix to be inverted in the calculation of the steady state path matrix.
 Then the determinant of $\mathbf{I}-\mathbf{K}$ satisfies:
@@ -96,7 +95,7 @@ These properties will subsequently be used to establish conditions which guarant
 
 This section determines bounds on the spectral radii of $\mathbf{A}$ and $\mathbf{R}$.
 
-::: {.theorem data-title="Spectral Radius of Combined Absorption and Reflection-Scattering" #thm:spectral_radius_unity}
+::: {.theorem data-title="Spectral Radius of Combined Absorption and Reflection-Scattering" #theorem-spectral_radius_unity}
 
 Let $\mathbf{F}$ be the row stochastic and irreducible exchange factor matrix, and let $\mathbf{A}$ and $\mathbf{R}$ be the absorption and multiple reflection-scattering matrices defined by the exchange factor transformation, and let $\mathbf{P}$ be the diagonal matrix with entries $\mathbf{P}_{ii} = 1-\mathbf{b}_i$ where $\mathbf{b}_i$ are the reflection-scattering coefficients. Then:
 
@@ -141,20 +140,24 @@ $$
 \textbf{Step 5:} Left-multiplication by the diagonal matrix $\mathbf{P}$:
 
 $$
+\begin{aligned}
 \mathbf{P}(\mathbf{I} - \mathbf{K})^{-1}\mathbf{F}(\mathbf{1} - \mathbf{b}) &= \mathbf{P}\mathbf{1} \\
 (\mathbf{A} + \mathbf{R})(\mathbf{1} - \mathbf{b}) &= (\mathbf{1} - \mathbf{b})
+\end{aligned}
 $$
 
 where the second equality uses $\mathbf{P}\mathbf{1} = (\mathbf{1} - \mathbf{b})$ and the definition of $\mathbf{A} + \mathbf{R}$:
 
 $$
+\begin{aligned}
 	\mathbf{A} + \mathbf{R} &= (\mathbf{1}-\mathbf{B})^T\circ\mathbf{S}_\infty\circ (\mathbf{1}-\mathbf{B})+(\mathbf{1}-\mathbf{B})^T\circ\mathbf{S}_\infty\circ \mathbf{B} \\
 	&= (\mathbf{1}-\mathbf{B})^T\circ\mathbf{S}_\infty \\
 	&= \mathbf{P}(\mathbf{I} - \mathbf{K})^{-1}\mathbf{F}
+\end{aligned}
 $$
 
 Therefore, $\mathbf{v} = (\mathbf{1} - \mathbf{b})$ is an eigenvector with eigenvalue $\lambda = 1$.
 Since all components of $\mathbf{v}$ are positive (assuming $\mathbf{b}_i < 1$ for convergence), this is the Perron eigenvector.
-By the Perron-Frobenius theorem, the corresponding eigenvalue equals the spectral radius [@HornJohnson2018], hence $\rho(\mathbf{A} + \mathbf{R}) = 1$.
+By the Perron-Frobenius theorem, the corresponding eigenvalue equals the spectral radius [@HornJohnson2013], hence $\rho(\mathbf{A} + \mathbf{R}) = 1$.
 
 :::

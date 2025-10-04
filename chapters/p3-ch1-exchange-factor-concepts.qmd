@@ -1,5 +1,6 @@
 ---
-title: "3.1 The Exchange Factor Transformation"
+title: "The Exchange Factor Transformation"
+number: 3.1
 ---
 
 # The Exchange Factor Transformation

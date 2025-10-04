@@ -88,13 +88,11 @@ format:
       - text: |
           <script>
           document.addEventListener('DOMContentLoaded', function() {
-            // Extract chapter number from page title (e.g., "3.4 Title" -> "3.4.")
-            const titleElement = document.querySelector('.quarto-title h1.title');
-            if (titleElement) {
-              const match = titleElement.textContent.match(/^(\d+\.\d+)/);
-              if (match) {
-                document.documentElement.style.setProperty('--chapter-number', '"' + match[1] + '."');
-              }
+            // Extract chapter number from the span.chapter-number element
+            const chapterSpan = document.querySelector('.quarto-title .chapter-number');
+            if (chapterSpan) {
+              const chapterNum = chapterSpan.textContent.trim();
+              document.documentElement.style.setProperty('--chapter-number', '"' + chapterNum + '."');
             }
           });
           </script>

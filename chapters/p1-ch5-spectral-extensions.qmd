@@ -1,5 +1,4 @@
 ---
-title: "1.5 Spectral Extensions"
+title: "Spectral Extensions"
+number: 1.5
 ---
-
-# Spectral Extensions

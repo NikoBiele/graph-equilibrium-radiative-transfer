@@ -1,8 +1,7 @@
 ---
-title: "2.3 Three-dimensional Geometry Setup"
+title: "Three-dimensional Geometry Setup"
+number: 2.3
 ---
-
-# Building and Visualizing 3D Geometry
 
 ```{julia}
 #| label: env
