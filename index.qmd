@@ -21,7 +21,7 @@ The complete version will be available at **gert.net** upon completion.
 The GERT methods treat radiative systems as stochastic graphs, where nodes represent surfaces or volumes, and edge weights represent energy transfer probabilities.
 Energy conservation is enforced through the requirement that outgoing probabilities from each node sum to 1 (row-stochastic matrices).
 
-Unlike Monte Carlo approaches, this linear algebra structure allows all results to be proven with mathematical certainty, establishing rigorous guarantees on accuracy, convergence, and physical correctness.
+Unlike Monte Carlo approaches, this linear algebra structure allows results to be proven with mathematical certainty, establishing rigorous guarantees on accuracy, convergence, and physical correctness.
 
 ## Analytical Solutions
 
