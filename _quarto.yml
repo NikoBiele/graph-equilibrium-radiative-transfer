@@ -32,27 +32,27 @@ book:
         - chapters/p3-ch1-exchange-factor-concepts.qmd
         - chapters/p3-ch2-exchange-factor-2d-applications.qmd
         - chapters/p3-ch3-exchange-factor-3d-applications.qmd
-        - chapters/p3-ch4-exchange-factor-theory-proofs.qmd
+        - chapters/p3-ch4-exchange-factor-analysis.qmd
     
     - part: "Part IV: Exchange Factor Smoothing"
       chapters:
         - chapters/p4-ch1-smoothing-concepts.qmd
         - chapters/p4-ch2-smoothing-demonstrations.qmd
-        - chapters/p4-ch3-smoothing-theory-proofs.qmd
+        - chapters/p4-ch3-smoothing-analysis.qmd
     
     - part: "Part V: Anisotropic Extension"
       chapters:
         - chapters/p5-ch1-anisotropic-concepts.qmd
         - chapters/p5-ch2-anisotropic-2d-applications.qmd
         - chapters/p5-ch3-anisotropic-3d-applications.qmd
-        - chapters/p5-ch4-anisotropic-theory-proofs.qmd
+        - chapters/p5-ch4-anisotropic-analysis.qmd
     
     - part: "Part VI: Spectral Extension"
       chapters:
         - chapters/p6-ch1-spectral-concepts.qmd
         - chapters/p6-ch2-spectral-2d-applications.qmd
         - chapters/p6-ch3-spectral-3d-applications.qmd
-        - chapters/p6-ch4-spectral-theory-proofs.qmd
+        - chapters/p6-ch4-spectral-analysis.qmd
     
     - part: "Part VII: Beyond Radiative Transfer"
       chapters:

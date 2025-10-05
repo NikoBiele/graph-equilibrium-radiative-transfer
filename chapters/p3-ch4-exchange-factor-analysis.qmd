@@ -335,3 +335,93 @@ From Theorems @thm-spectral_radius_absorption and @thm-uniform_beta:
 Therefore: $\rho(\mathbf{A}) + \rho(\mathbf{R}) = (1-\gamma) + \gamma = 1 = \rho(\mathbf{A}+\mathbf{R})$. Since $\gamma=\mathbf{b}_i$ is real, all eigenvalues corresponding to the spectral radii are real.
 
 :::
+
+### Non-negativity of the Inverse of the Mixed Boundary Matrix {#sec-nonnegative_inv}
+
+To ensure non-negative radiation for the proposed transformation, the inverse of the mixed boundary matrix $\mathbf{M}$ of equation (@eq-solve_for_j) should be non-negative.
+This requires establishing that both component matrices $\mathbf{C}$ and $\mathbf{D}$ are M-matrices and that $\mathbf{M}$ is non-singular.
+
+::: {.theorem data-title="M-matrix Property of $\mathbf{C}$" #thm-C_matrix}
+
+The matrix $\mathbf{C} = \mathbf{I} - \mathbf{A}^T - \mathbf{R}^T$ is a singular M-matrix with the following properties:
+
+- $\mathbf{C}$ has zero as the eigenvalue with the smallest real part, with left eigenvector $(\mathbf{1} - \mathbf{b})^T$
+- The diagonal entries satisfy $\mathbf{C}_{ii} \geq 0$ for all $i$
+- The off-diagonal entries satisfy $\mathbf{C}_{ij} \leq 0$ for all $i \neq j$
+
+:::
+
+::: {.proof}
+
+**Step 1:** The zero eigenvalue is established as the smallest real part eigenvalue.
+
+From the row sum properties established in previous theorems:
+
+$$
+\begin{aligned}
+\mathbf{A}\mathbf{1} + \mathbf{R}\mathbf{1} &= (\mathbf{1} - \mathbf{b}) + (\mathbf{A}+\mathbf{R})\mathbf{b} \\
+(\mathbf{I} - \mathbf{A} - \mathbf{R})\mathbf{b} &= (\mathbf{I} - \mathbf{A} - \mathbf{R})\mathbf{1} \\
+\mathbf{C}^T(\mathbf{1} - \mathbf{b}) &= \mathbf{0}
+\end{aligned}
+$$
+
+Therefore, $(\mathbf{1} - \mathbf{b})^T$ is a left eigenvector of $\mathbf{C}$ with eigenvalue zero.
+Since $\mathbf{C} = \mathbf{I} - \mathbf{A}^T - \mathbf{R}^T$, if $\lambda$ is an eigenvalue of $\mathbf{A}+\mathbf{R}$, then $1-\lambda$ is an eigenvalue of $\mathbf{C}$. From theorem @thm-spectral_radius_unity, $\mathbf{1} - \mathbf{b}$ corresponds to the Perron eigenvector of $\mathbf{A}+\mathbf{R}$ with spectral radius from the corresponding real eigenvalue of unity.
+This shows that zero is the smallest real part of any eigenvalue of $\mathbf{C}$.
+
+**Step 2:** The non-negative diagonal entries are established.
+
+From the eigenvalue equation $\mathbf{C}^T(\mathbf{1} - \mathbf{b}) = \mathbf{0}$:
+
+$$
+\begin{aligned}
+0 &= [\mathbf{C}^T(\mathbf{1} - \mathbf{b})]_i \\
+&= (1 - (\mathbf{A}+\mathbf{R})_{ii})(1 - \mathbf{b}_i) - \sum_{j \neq i} (\mathbf{A}+\mathbf{R})_{ij}(1 - b_j)
+\end{aligned}
+$$
+
+Solving for the diagonal:
+
+$$
+\mathbf{C}_{ii} = 1 - (\mathbf{A}+\mathbf{R})_{ii} = \sum_{j \neq i} (\mathbf{A}+\mathbf{R})_{ij} \frac{1 - b_j}{1 - \mathbf{b}_i} \geq 0
+$$
+
+since all terms are non-negative.
+
+**Step 3:** Off-diagonal entries are non-positive by construction since $\mathbf{C}_{ij} = -(\mathbf{A}^T+\mathbf{R}^T)_{ij} \leq 0$ for $i \neq j$.
+
+:::
+
+::: {.theorem data-title="M-matrix Property of $\mathbf{D}$" #thm-D_matrix}
+
+The matrix $\mathbf{D} = \mathbf{I} - \mathbf{R}^T$ is a non-singular M-matrix with the following properties:
+
+- All eigenvalues have real parts bounded below: $\text{Re}(\lambda_{\mathbf{D}}) \geq 1 - \rho(\mathbf{R})$
+- The diagonal entries satisfy $\mathbf{D}_{ii} \geq 0$ for all $i$
+- The off-diagonal entries satisfy $\mathbf{D}_{ij} \leq 0$ for all $i \neq j$
+
+As long as $\rho(\mathbf{R}) < 1$, $\mathbf{D}$ is guaranteed to be non-singular.
+
+:::
+
+::: {.proof}
+
+**Step 1:** Eigenvalue bounds.
+
+Since $\mathbf{D} = \mathbf{I} - \mathbf{R}^T$, if $\lambda$ is an eigenvalue of $\mathbf{R}$, then $1 - \lambda$ is an eigenvalue of $\mathbf{D}$. From Theorem @thm-reflection_upper_bound:
+
+$$
+\text{Re}(\lambda_{\mathbf{D}}) \geq 1 - \rho(\mathbf{R}) \geq 1 - (1-\min_i \mathbf{b}_i)\frac{\|\mathbf{K}\|_\infty}{1-\|\mathbf{K}\|_\infty}
+$$
+
+**Step 2:** Non-negative diagonal entries.
+
+Since $\mathbf{D} = \mathbf{C} + \mathbf{A}^T$ and both $\mathbf{C}$ (from Theorem @thm-C_matrix) and $\mathbf{A}^T$ have non-negative diagonal entries:
+
+$$
+\mathbf{D}_{ii} = \mathbf{C}_{ii} + \mathbf{A}_{ii} \geq 0
+$$
+
+**Step 3:** Off-diagonal entries are non-positive by construction since $\mathbf{D}_{ij} = -\mathbf{R}^T_{ij} \leq 0$ for $i \neq j$.
+
+:::
