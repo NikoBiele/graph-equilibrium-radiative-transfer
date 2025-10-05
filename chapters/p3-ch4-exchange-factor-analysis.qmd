@@ -33,7 +33,11 @@ $$
 
 By the Neumann series theorem, $\sum_{i=0}^\infty \mathbf{K}^i = (\mathbf{I}-\mathbf{K})^{-1}$ converges if and only if $\rho(\mathbf{K}) < 1$ [@HornJohnson2013].
 
-The bounds on $\rho(\mathbf{K})$ follow from Perron-Frobenius theory applied to the non-negative matrix $\mathbf{K}$, where $\mathbf{B}$ represents the column constant matrix of reflection-scattering coefficients.
+The middle part bounds on $\rho(\mathbf{K})$ follow from the Gershgorin theorem applied to the non-negative matrix $\mathbf{K}$, where $\mathbf{B}$ represents the column constant matrix of reflection-scattering coefficients. The outer bounds follow from bounds on the row sums of $\mathbf{K}$ with $\mathbf{B}_j<1$:
+
+$$
+0 \leq \min_j(\mathbf{B}) \leq \sum_j\mathbf{K} \leq \max_j(\mathbf{B}) < 1
+$$
 
 Since the infinite series for the inverse $(\mathbf{I}-\mathbf{K})^{-1}$ always contains the identity matrix, $(\mathbf{I}-\mathbf{K})^{-1}\mathbf{F}$ always contains $\mathbf{F}$, and since remaining terms in the series are non-negative, the connectivity in the domain can only increase with $\mathbf{B}>\mathbf{0}$, hence the irreducibility of $\mathbf{F}$ is preserved in $\mathbf{S}_\infty$.
 
@@ -137,13 +141,16 @@ $$
 **Step 5:** Left-multiplication by the diagonal matrix $\mathbf{P}$:
 
 $$
-\begin{aligned}
-\mathbf{P}(\mathbf{I} - \mathbf{K})^{-1}\mathbf{F}(\mathbf{1} - \mathbf{b}) &= \mathbf{P}\mathbf{1} \\
-(\mathbf{A} + \mathbf{R})(\mathbf{1} - \mathbf{b}) &= (\mathbf{1} - \mathbf{b})
-\end{aligned}
+\mathbf{P}(\mathbf{I} - \mathbf{K})^{-1}\mathbf{F}(\mathbf{1} - \mathbf{b}) = \mathbf{P}\mathbf{1}
 $$
 
-where the second equality uses $\mathbf{P}\mathbf{1} = (\mathbf{1} - \mathbf{b})$ and the definition of $\mathbf{A} + \mathbf{R}$:
+**Step 6:** Simplification of the right-hand side of Step 5:
+
+$$
+\mathbf{P}\mathbf{1} = (\mathbf{1} - \mathbf{b})
+$$
+
+**Step 7:** Simplification of the left-hand side of Step 5:
 
 $$
 \begin{aligned}
@@ -151,6 +158,12 @@ $$
 	&= (\mathbf{1}-\mathbf{B})^T\circ\mathbf{S}_\infty \\
 	&= \mathbf{P}(\mathbf{I} - \mathbf{K})^{-1}\mathbf{F}
 \end{aligned}
+$$
+
+**Step 8:** Conclude the eigenvalue relation by substitution:
+
+$$
+(\mathbf{A} + \mathbf{R})(\mathbf{1} - \mathbf{b}) = (\mathbf{1} - \mathbf{b})
 $$
 
 Therefore, $\mathbf{v} = (\mathbf{1} - \mathbf{b})$ is an eigenvector with eigenvalue $\lambda = 1$.
