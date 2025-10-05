@@ -376,14 +376,14 @@ From the eigenvalue equation $\mathbf{C}^T(\mathbf{1} - \mathbf{b}) = \mathbf{0}
 $$
 \begin{aligned}
 0 &= [\mathbf{C}^T(\mathbf{1} - \mathbf{b})]_i \\
-&= (1 - (\mathbf{A}+\mathbf{R})_{ii})(1 - \mathbf{b}_i) - \sum_{j \neq i} (\mathbf{A}+\mathbf{R})_{ij}(1 - b_j)
+&= (1 - (\mathbf{A}+\mathbf{R})_{ii})(1 - \mathbf{b}_i) - \sum_{j \neq i} (\mathbf{A}+\mathbf{R})_{ij}(1 - \mathbf{b}_j)
 \end{aligned}
 $$
 
 Solving for the diagonal:
 
 $$
-\mathbf{C}_{ii} = 1 - (\mathbf{A}+\mathbf{R})_{ii} = \sum_{j \neq i} (\mathbf{A}+\mathbf{R})_{ij} \frac{1 - b_j}{1 - \mathbf{b}_i} \geq 0
+\mathbf{C}_{ii} = 1 - (\mathbf{A}+\mathbf{R})_{ii} = \sum_{j \neq i} (\mathbf{A}+\mathbf{R})_{ij} \frac{1 - \mathbf{b}_j}{1 - \mathbf{b}_i} \geq 0
 $$
 
 since all terms are non-negative.
@@ -471,10 +471,10 @@ where $(\mathbf{A}^T)_j$ denotes the $j$-th row of $\mathbf{A}^T$ and $\mathbf{e
 Since $(\mathbf{1}-\mathbf{b})^T \mathbf{C} = \mathbf{0}$, it is obtained that:
 
 $$
-(\mathbf{1}-\mathbf{b})^T \mathbf{M} = (\mathbf{1}-\mathbf{b})^T \mathbf{C} + (\mathbf{1}-\mathbf{b})^T (\mathbf{e}_j (\mathbf{A}^T)_j) = (1-b_j)(\mathbf{A}^T)_j
+(\mathbf{1}-\mathbf{b})^T \mathbf{M} = (\mathbf{1}-\mathbf{b})^T \mathbf{C} + (\mathbf{1}-\mathbf{b})^T (\mathbf{e}_j (\mathbf{A}^T)_j) = (1-\mathbf{b}_j)(\mathbf{A}^T)_j
 $$
 
-Since $\mathbf{A} \geq \mathbf{0}$, $(1-b_j) > 0$, and step 2 ensures $\mathbf{A}$ has at least one positive entry in each column, it is obtained that $(\mathbf{1}-\mathbf{b})^T \mathbf{M} \neq \mathbf{0}$.
+Since $\mathbf{A} \geq \mathbf{0}$, $(1-\mathbf{b}_j) > 0$, and step 2 ensures $\mathbf{A}$ has at least one positive entry in each column, it is obtained that $(\mathbf{1}-\mathbf{b})^T \mathbf{M} \neq \mathbf{0}$.
 
 Therefore $(\mathbf{1}-\mathbf{b}) \notin \text{null}(\mathbf{M}^T)$, which means $\text{nullity}(\mathbf{M}^T) < \text{nullity}(\mathbf{C}^T) = 1$.
 
