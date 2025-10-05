@@ -97,29 +97,29 @@ Navigate through the book using the sidebars, or jump directly to any part:
 **[Part III: Exchange Factor Transformation](chapters/p3-ch1-exchange-factor-concepts.qmd)**  
 
 - [Exchange Factor Concepts](chapters/p3-ch1-exchange-factor-concepts.qmd)
-- [2D Applications](chapters/p3-ch2-exchange-factor-2d-applications.qmd)
-- [3D Applications](chapters/p3-ch3-exchange-factor-3d-applications.qmd)
-- [Theory and Proofs](chapters/p3-ch4-exchange-factor-theory-proofs.qmd)
+- [Exchange Factor 2D Applications](chapters/p3-ch2-exchange-factor-2d-applications.qmd)
+- [Exchange Factor 3D Applications](chapters/p3-ch3-exchange-factor-3d-applications.qmd)
+- [Exchange Factor Analysis](chapters/p3-ch4-exchange-factor-analysis.qmd)
 
 **[Part IV: Exchange Factor Smoothing](chapters/p4-ch1-smoothing-concepts.qmd)**  
 
 - [Smoothing Concepts](chapters/p4-ch1-smoothing-concepts.qmd)
 - [Smoothing Demonstrations](chapters/p4-ch2-smoothing-demonstrations.qmd)
-- [Theory and Proofs](chapters/p4-ch3-smoothing-theory-proofs.qmd)
+- [Smoothing Analysis](chapters/p4-ch3-smoothing-analysis.qmd)
 
 **[Part V: Anisotropic Extension](chapters/p5-ch1-anisotropic-concepts.qmd)**  
 
 - [Anisotropic Concepts](chapters/p5-ch1-anisotropic-concepts.qmd)
-- [2D Applications](chapters/p5-ch2-anisotropic-2d-applications.qmd)
-- [3D Applications](chapters/p5-ch3-anisotropic-3d-applications.qmd)
-- [Theory and Proofs](chapters/p5-ch4-anisotropic-theory-proofs.qmd)
+- [Anisotropic 2D Applications](chapters/p5-ch2-anisotropic-2d-applications.qmd)
+- [Anisotropic 3D Applications](chapters/p5-ch3-anisotropic-3d-applications.qmd)
+- [Anisotropic Analysis](chapters/p5-ch4-anisotropic-analysis.qmd)
 
 **[Part VI: Spectral Extension](chapters/p6-ch1-spectral-concepts.qmd)**  
 
 - [Spectral Concepts](chapters/p6-ch1-spectral-concepts.qmd)
-- [2D Applications](chapters/p6-ch2-spectral-2d-applications.qmd)
-- [3D Applications](chapters/p6-ch3-spectral-3d-applications.qmd)
-- [Theory and Proofs](chapters/p6-ch4-spectral-theory-proofs.qmd)
+- [Spectral 2D Applications](chapters/p6-ch2-spectral-2d-applications.qmd)
+- [Spectral 3D Applications](chapters/p6-ch3-spectral-3d-applications.qmd)
+- [Spectral Analysis](chapters/p6-ch4-spectral-analysis.qmd)
 
 **[Part VII: Beyond Radiative Transfer](chapters/p7-ch1-directed-graphs.qmd)**  
 

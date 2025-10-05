@@ -9,7 +9,7 @@ Before solving a specific problem, the proposed method apply a matrix transforma
 The transformation of the exchange factor matrix into an augmented form is partly inspired by the "F-hat" method developed by Beckman [@Beckman1968], which extends the view factor matrix for a transparent enclosure to include reflections.
 Further analysis revealed that the 'F-hat' method only includes single reflections and does not account for multiple reflections.
 The effective reflection-scattering coefficients of multiple reflection-scattering processes on general domains are functions of extinction and geometry, which seemingly made the problem impossible to solve.
-However, as will be demonstrated in this paper, the problem is neither intractable nor impossible to solve.
+However, as will be demonstrated in this book, the problem is neither intractable nor impossible to solve.
 In fact, it has a closed form analytical solution.
 
 Given the availability of an analytically derived matrix of exchange factors, generally referred to as the matrix $\mathbf{F}$, the entire solution is analytical.
@@ -72,7 +72,7 @@ $$ {#eq-reciprocity}
 
 where $\mathbf{E}$ is a diagonal matrix of equivalent emission areas with $\mathbf{E}_{ii}=(\rho_i+\varepsilon_i) A_i$ for $i\leq m$ and $\mathbf{E}_{ii}=4 \beta_i V_i$ for $i>m$, where the full capacity to emit and reflect-scatter is used.
 
-Furthermore, in the general case, $\mathbf{F}$ will have some zero entries, i.e., physical elements without direct view of each other, meaning $\mathbf{F}$ is not merely a positive matrix but a non-negative matrix. Therefore, for the proofs of this paper to guarantee convergence, $\mathbf{F}$ must be *irreducible* [@HornJohnson2013], where irreducibility corresponds to the physical requirement that the domain contains no isolated regions, that is, for any two elements $i$ and $j$, there exists a sequence of direct radiation exchanges $i \to k_1 \to k_2 \to \ldots \to j$ connecting them. This requirement can always be satisfied by treating isolated regions as separate radiative transfer problems.
+Furthermore, in the general case, $\mathbf{F}$ will have some zero entries, i.e., physical elements without direct view of each other, meaning $\mathbf{F}$ is not merely a positive matrix but a non-negative matrix. Therefore, for the proofs of this book to guarantee convergence, $\mathbf{F}$ must be *irreducible* [@HornJohnson2013], where irreducibility corresponds to the physical requirement that the domain contains no isolated regions, that is, for any two elements $i$ and $j$, there exists a sequence of direct radiation exchanges $i \to k_1 \to k_2 \to \ldots \to j$ connecting them. This requirement can always be satisfied by treating isolated regions as separate radiative transfer problems.
 
 For the present transformation, $\mathbf{F}$ should be derived exactly as if dealing with pure absorption, but always using the total capacity to emit and reflect-scatter instead of the absorption coefficient.
 Note that extinction $\beta$ does not need to be uniform across the domain, but should be uniform for each element. In the case of non-uniformity, $\mathbf{F}$ must be obtained using the same non-uniform distribution of $\beta$.

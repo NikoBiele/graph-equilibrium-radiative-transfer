@@ -1,4 +1,4 @@
-# Exchange Factor Transformation Theory and Proofs
+# Exchange Factor Transformation Analysis
 
 ## Convergence Properties {#sec-convergence_props}
 
