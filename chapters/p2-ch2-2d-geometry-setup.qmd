@@ -1,6 +1,4 @@
----
-title: "Two-dimensional Geometry Setup"
----
+# Two-dimensional Geometry Setup
 
 ```{julia}
 #| label: env

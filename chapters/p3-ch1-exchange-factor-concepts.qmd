@@ -1,12 +1,8 @@
----
-title: "The Exchange Factor Transformation"
----
-
 # The Exchange Factor Transformation
 
 ## Introduction
 
-Similarly to Hottel's method, outlined in chapter @sec-matrixmethods, the exchange factor transformation of the present work starts from the exchange area matrix.
+Similarly to Hottel's method, outlined in chapter @sec-matrix_methods, the exchange factor transformation of the present work starts from the exchange area matrix.
 But unlike Hottel's method, which works directly with the exchange area matrix, the proposed transformation uses its non-dimensional counterpart, the *exchange factor* matrix, where each entry of the exchange area matrix has been divided by its equivalent area of emission.
 Before solving a specific problem, the proposed method apply a matrix transformation to augment the exchange factor matrix with additional information about the steady state of reflection and scattering in the domain.
 

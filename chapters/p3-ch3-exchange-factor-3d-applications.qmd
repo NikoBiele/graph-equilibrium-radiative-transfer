@@ -1,3 +1,1 @@
----
-title: "Exchange Factor Three-dimensional Application"
----
+# Exchange Factor Three-dimensional Application

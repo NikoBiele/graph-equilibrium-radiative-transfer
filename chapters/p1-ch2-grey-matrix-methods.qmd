@@ -1,7 +1,4 @@
----
-title: "Grey Matrix-based Methods"
----
-{#sec-matrixmethods}
+# Grey Matrix-based Methods {#sec-matrix_methods}
 
 ## Introduction
 

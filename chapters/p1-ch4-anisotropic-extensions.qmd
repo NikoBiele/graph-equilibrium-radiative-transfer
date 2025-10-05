@@ -1,3 +1,1 @@
----
-title: "Anisotropic Extensions"
----
+# Anisotropic Extensions

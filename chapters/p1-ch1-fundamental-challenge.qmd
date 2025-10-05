@@ -1,6 +1,4 @@
----
-title: "The Fundamental Challenge"
----
+# The Fundamental Challenge {#sec-fundamental_challenge}
 
 Radiative transfer in participating media is a fundamental process in many natural and engineered systems, from stellar atmospheres to thermal engineering.
 The theoretical foundation for radiative transfer was established in the 19th century by Gustav Kirchhoff, who formulated the fundamental relationship between emission and absorption of thermal radiation and introduced the concept of blackbody radiation [@Kirchhoff1860].

@@ -1,6 +1,4 @@
----
-title: "Exchange Factor Transformation Theory and Proofs"
----
+# Exchange Factor Transformation Theory and Proofs
 
 ## Convergence Properties {#sec-convergence_props}
 
@@ -223,7 +221,7 @@ When $\mathbf{b}_i = 0$ for all $i$, the exchange factor transformation yields $
 
 :::
 
-::: {.theorem data-title"Upper Bound on Spectral Radius of Reflection-Scattering" #thm-reflection_upper_bound}
+::: {.theorem data-title="Upper Bound on Spectral Radius of Reflection-Scattering" #thm-reflection_upper_bound}
 
 The spectral radius of the multiple reflection-scattering matrix $\mathbf{R}$ of the exchange factor transformation satisfies:
 
@@ -260,7 +258,7 @@ $$
 \end{aligned}
 $$
 
-Since $\rho(\mathbf{R}) \leq \|\mathbf{R}\|_\infty$, the bound follows. The physical constraint comes from requiring that $\mathbf{D}=\mathbf{I}-\mathbf{R}^T$ is invertible, which is necessary for $\mathbf{M}$ of equation (@eq:solve_for_j) to be invertible. By the Neumann series theorem, the inverse $\mathbf{D}^{-1}=(\mathbf{I}-\mathbf{R}^T)^{-1}$ exists when $\rho(\mathbf{R})<1$ [@HornJohnson2013].
+Since $\rho(\mathbf{R}) \leq \|\mathbf{R}\|_\infty$, the bound follows. The physical constraint comes from requiring that $\mathbf{D}=\mathbf{I}-\mathbf{R}^T$ is invertible, which is necessary for $\mathbf{M}$ of equation (@eq-solve_for_j) to be invertible. By the Neumann series theorem, the inverse $\mathbf{D}^{-1}=(\mathbf{I}-\mathbf{R}^T)^{-1}$ exists when $\rho(\mathbf{R})<1$ [@HornJohnson2013].
 
 :::
 
