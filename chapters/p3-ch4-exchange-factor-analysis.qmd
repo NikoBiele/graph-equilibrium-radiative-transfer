@@ -197,7 +197,7 @@ $$
 
 **Step 2:** The row sums are computed using the eigenvalue relationship.
 
-From Theorem @thm-spectral_radius_unity, it is known that $(\mathbf{A}+\mathbf{R})(\mathbf{1} - \mathbf{b}) = (\mathbf{1} - \mathbf{b})$ with $\rho(\mathbf{A}+\mathbf{R}) = 1$.
+From @thm-spectral_radius_unity, it is known that $(\mathbf{A}+\mathbf{R})(\mathbf{1} - \mathbf{b}) = (\mathbf{1} - \mathbf{b})$ with $\rho(\mathbf{A}+\mathbf{R}) = 1$.
 Therefore:
 $$
 \begin{aligned}
@@ -302,7 +302,7 @@ $$
 
 **Step 3:** The spectral radius is established.
 
-The upper bound from Theorem @thm-reflection_upper_bound gives:
+The upper bound from @thm-reflection_upper_bound gives:
 
 $$
 \rho(\mathbf{R}) \leq \frac{(1-\gamma)\gamma}{1-\gamma} = \gamma
@@ -341,7 +341,7 @@ Therefore: $\rho(\mathbf{A}) + \rho(\mathbf{R}) = (1-\gamma) + \gamma = 1 = \rho
 To ensure non-negative radiation for the proposed transformation, the inverse of the mixed boundary matrix $\mathbf{M}$ of equation (@eq-solve_for_j) should be non-negative.
 This requires establishing that both component matrices $\mathbf{C}$ and $\mathbf{D}$ are M-matrices and that $\mathbf{M}$ is non-singular.
 
-::: {.theorem data-title="M-matrix Property of $\mathbf{C}$" #thm-C_matrix}
+::: {.theorem data-title="M-matrix Property of C" #thm-C_matrix}
 
 The matrix $\mathbf{C} = \mathbf{I} - \mathbf{A}^T - \mathbf{R}^T$ is a singular M-matrix with the following properties:
 
@@ -366,7 +366,7 @@ $$
 $$
 
 Therefore, $(\mathbf{1} - \mathbf{b})^T$ is a left eigenvector of $\mathbf{C}$ with eigenvalue zero.
-Since $\mathbf{C} = \mathbf{I} - \mathbf{A}^T - \mathbf{R}^T$, if $\lambda$ is an eigenvalue of $\mathbf{A}+\mathbf{R}$, then $1-\lambda$ is an eigenvalue of $\mathbf{C}$. From theorem @thm-spectral_radius_unity, $\mathbf{1} - \mathbf{b}$ corresponds to the Perron eigenvector of $\mathbf{A}+\mathbf{R}$ with spectral radius from the corresponding real eigenvalue of unity.
+Since $\mathbf{C} = \mathbf{I} - \mathbf{A}^T - \mathbf{R}^T$, if $\lambda$ is an eigenvalue of $\mathbf{A}+\mathbf{R}$, then $1-\lambda$ is an eigenvalue of $\mathbf{C}$. From @thm-spectral_radius_unity, $\mathbf{1} - \mathbf{b}$ corresponds to the Perron eigenvector of $\mathbf{A}+\mathbf{R}$ with spectral radius from the corresponding real eigenvalue of unity.
 This shows that zero is the smallest real part of any eigenvalue of $\mathbf{C}$.
 
 **Step 2:** The non-negative diagonal entries are established.
@@ -392,7 +392,7 @@ since all terms are non-negative.
 
 :::
 
-::: {.theorem data-title="M-matrix Property of $\mathbf{D}$" #thm-D_matrix}
+::: {.theorem data-title="M-matrix Property of D" #thm-D_matrix}
 
 The matrix $\mathbf{D} = \mathbf{I} - \mathbf{R}^T$ is a non-singular M-matrix with the following properties:
 
@@ -408,7 +408,7 @@ As long as $\rho(\mathbf{R}) < 1$, $\mathbf{D}$ is guaranteed to be non-singular
 
 **Step 1:** Eigenvalue bounds.
 
-Since $\mathbf{D} = \mathbf{I} - \mathbf{R}^T$, if $\lambda$ is an eigenvalue of $\mathbf{R}$, then $1 - \lambda$ is an eigenvalue of $\mathbf{D}$. From Theorem @thm-reflection_upper_bound:
+Since $\mathbf{D} = \mathbf{I} - \mathbf{R}^T$, if $\lambda$ is an eigenvalue of $\mathbf{R}$, then $1 - \lambda$ is an eigenvalue of $\mathbf{D}$. From @thm-reflection_upper_bound:
 
 $$
 \text{Re}(\lambda_{\mathbf{D}}) \geq 1 - \rho(\mathbf{R}) \geq 1 - (1-\min_i \mathbf{b}_i)\frac{\|\mathbf{K}\|_\infty}{1-\|\mathbf{K}\|_\infty}
@@ -416,7 +416,7 @@ $$
 
 **Step 2:** Non-negative diagonal entries.
 
-Since $\mathbf{D} = \mathbf{C} + \mathbf{A}^T$ and both $\mathbf{C}$ (from Theorem @thm-C_matrix) and $\mathbf{A}^T$ have non-negative diagonal entries:
+Since $\mathbf{D} = \mathbf{C} + \mathbf{A}^T$ and both $\mathbf{C}$ (from @thm-C_matrix) and $\mathbf{A}^T$ have non-negative diagonal entries:
 
 $$
 \mathbf{D}_{ii} = \mathbf{C}_{ii} + \mathbf{A}_{ii} \geq 0
@@ -425,3 +425,64 @@ $$
 **Step 3:** Off-diagonal entries are non-positive by construction since $\mathbf{D}_{ij} = -\mathbf{R}^T_{ij} \leq 0$ for $i \neq j$.
 
 :::
+
+::: {.theorem data-title="Non-singularity of Mixed Boundaries" #thm-M_nonsingular}
+
+Let $\mathbf{A}, \mathbf{R}, \mathbf{C}, \mathbf{D}$ be the system matrices defined by the proposed exchange factor transform, let $\mathbf{F}$ be the irreducible and row stochastic exchange factor matrix, and let $\mathbf{1}-\mathbf{b}$ be the Perron eigenvector of $\mathbf{A}+\mathbf{R}$.
+Then any matrix $\mathbf{M}$ obtained by replacing at least one row of $\mathbf{C}$ with the corresponding row from $\mathbf{D}$ is non-singular.
+
+:::
+
+::: {.proof}
+
+**Step 1:** Application of established spectral properties.
+
+By @thm-spectral_radius_unity, $\mathbf{A}+\mathbf{R}$ has spectral radius $\rho(\mathbf{A}+\mathbf{R}) = 1$ with corresponding Perron eigenvector $(\mathbf{1}-\mathbf{b}) > \mathbf{0}$.
+Since $\mathbf{F}$ and $\mathbf{S}_\infty$ are both irreducible and multiplication by the positive diagonal $\mathbf{P}_{ii}=1-\mathbf{b}_i>0$ cannot change connectivity, the matrix $\mathbf{A}+\mathbf{R}=\mathbf{P}\mathbf{S}_\infty$ is irreducible.
+By the Perron-Frobenius theorem, eigenvalue $1$ has geometric multiplicity exactly $1$ [@HornJohnson2013].
+
+**Step 2:** Positive column sums of $\mathbf{A}$.
+
+Irreducibility ensures that each column $j$ of the row-stochastic $\mathbf{F}$ has positive sum:
+
+$$
+\sum_i \mathbf{F}_{ij} > 0
+$$
+
+The infinite series form of $\mathbf{S}_\infty = (\mathbf{I}-\mathbf{K})^{-1}\mathbf{F}$ shows that the matrix $\mathbf{S}_\infty$ inherits the property that each column has positive sum.
+
+Therefore, $\mathbf{A}$, which can formulated as $\mathbf{A} = \mathbf{P}\mathbf{S}_\infty\mathbf{P}$ with positive diagonal $\mathbf{P}$, preserves this structure, ensuring that each column of $\mathbf{A}$ has at least one positive entry.
+
+**Step 3:** Non-singularity of $\mathbf{M}$.
+
+By @thm-C_matrix, $\mathbf{C}^T$ has nullity (dimension of null space) exactly $1$ with $\text{null}(\mathbf{C}^T) = \text{span}\{\mathbf{1}-\mathbf{b}\}$.
+Since $\text{nullity}(\mathbf{C}) = \text{nullity}(\mathbf{C}^T) = 1$, it is obtained that $\text{rank}(\mathbf{C}) = n-1$.
+
+Let $\mathbf{M}$ be obtained by replacing at least one row of $\mathbf{C}$ with the corresponding row from $\mathbf{D}$.
+Without loss of generality, assume the $j$-th row is replaced.
+Then, since $\mathbf{D}=\mathbf{C}+\mathbf{A}^T$:
+
+$$
+\mathbf{M} = \mathbf{C} + \mathbf{e}_j (\mathbf{A}^T)_j
+$$
+
+where $(\mathbf{A}^T)_j$ denotes the $j$-th row of $\mathbf{A}^T$ and $\mathbf{e}_j$ is the $j$-th standard basis vector.
+
+Since $(\mathbf{1}-\mathbf{b})^T \mathbf{C} = \mathbf{0}$, it is obtained that:
+
+$$
+(\mathbf{1}-\mathbf{b})^T \mathbf{M} = (\mathbf{1}-\mathbf{b})^T \mathbf{C} + (\mathbf{1}-\mathbf{b})^T (\mathbf{e}_j (\mathbf{A}^T)_j) = (1-b_j)(\mathbf{A}^T)_j
+$$
+
+Since $\mathbf{A} \geq \mathbf{0}$, $(1-b_j) > 0$, and step 2 ensures $\mathbf{A}$ has at least one positive entry in each column, it is obtained that $(\mathbf{1}-\mathbf{b})^T \mathbf{M} \neq \mathbf{0}$.
+
+Therefore $(\mathbf{1}-\mathbf{b}) \notin \text{null}(\mathbf{M}^T)$, which means $\text{nullity}(\mathbf{M}^T) < \text{nullity}(\mathbf{C}^T) = 1$.
+
+Since $\text{nullity}(\mathbf{M}^T) = \text{nullity}(\mathbf{M})$, it is obtained that $\text{nullity}(\mathbf{M}) = 0$, so $\mathbf{M}$ is non-singular.
+
+:::
+
+The irreducibility of the exchange factor matrix $\mathbf{F}$ is crucial for this result.
+In radiative transfer applications, $\mathbf{F}$ represents connectivity within a physical domain.
+The matrix $\mathbf{F}$ is irreducible if and only if the underlying domain has no isolated regions, that is, for any two regions $i$ and $j$, there exists a sequence of direct sight lines connecting them.
+This physical connectivity condition naturally ensures the mathematical irreducibility required for the theorem.
