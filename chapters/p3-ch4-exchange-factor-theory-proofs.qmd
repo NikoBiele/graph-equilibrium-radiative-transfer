@@ -6,7 +6,7 @@ title: "Exchange Factor Transformation Theory and Proofs"
 
 This section presents the essential convergence guarantees of the proposed transformation through two fundamental theorems which characterize the steady state path matrix.
 
-::: {.theorem data-title="Convergence and Irreducibility of the Steady State Path" #theorem-convergence}
+::: {.theorem data-title="Convergence and Irreducibility of the Steady State Path" #thm-convergence}
 
 Let $\mathbf{F}$ be the row stochastic irreducible exchange factor matrix, let $\mathbf{B}$ be the column constant single reflection-scattering matrix and let $\mathbf{K}=\mathbf{F}\circ\mathbf{B}$ be the single reflection-scattering interaction matrix.
 The steady state path matrix is defined as:
@@ -43,7 +43,7 @@ Since the infinite series for the inverse $(\mathbf{I}-\mathbf{K})^{-1}$ always 
 
 The physical interpretation ensures convergence: as long as at least at single element with reflection-scattering coefficient strictly less than unity is visible from all elements, infinite reflection-scattering paths are prevented.
 
-::: {.theorem data-title="Numerical Stability of the Steady State Path" #theorem-gershgorin}
+::: {.theorem data-title="Numerical Stability of the Steady State Path" #thm-gershgorin}
 
 Let $\mathbf{I}-\mathbf{K}$ be the matrix to be inverted in the calculation of the steady state path matrix.
 Then the determinant of $\mathbf{I}-\mathbf{K}$ satisfies:
@@ -94,7 +94,7 @@ These properties will subsequently be used to establish conditions which guarant
 
 This section determines bounds on the spectral radii of $\mathbf{A}$ and $\mathbf{R}$.
 
-::: {.theorem data-title="Spectral Radius of Combined Absorption and Reflection-Scattering" #theorem-spectral_radius_unity}
+::: {.theorem data-title="Spectral Radius of Combined Absorption and Reflection-Scattering" #thm-spectral_radius_unity}
 
 Let $\mathbf{F}$ be the row stochastic and irreducible exchange factor matrix, and let $\mathbf{A}$ and $\mathbf{R}$ be the absorption and multiple reflection-scattering matrices defined by the exchange factor transformation, and let $\mathbf{P}$ be the diagonal matrix with entries $\mathbf{P}_{ii} = 1-\mathbf{b}_i$ where $\mathbf{b}_i$ are the reflection-scattering coefficients. Then:
 
@@ -161,7 +161,7 @@ By the Perron-Frobenius theorem, the corresponding eigenvalue equals the spectra
 
 :::
 
-::: {.theorem data-title="Spectral Radius of Absorption" #theorem-spectral_radius_absorption}
+::: {.theorem data-title="Spectral Radius of Absorption" #thm-spectral_radius_absorption}
 
 Let $\mathbf{A}$ be the absorption matrix of the exchange factor transformation and $\mathbf{P}$ be the diagonal matrix with entries $\mathbf{P}_{ii} = 1-\mathbf{b}_i$. Then:
 
@@ -199,7 +199,7 @@ $$
 
 **Step 2:** The row sums are computed using the eigenvalue relationship.
 
-From Theorem @theorem-spectral_radius_unity, it is known that $(\mathbf{A}+\mathbf{R})(\mathbf{1} - \mathbf{b}) = (\mathbf{1} - \mathbf{b})$ with $\rho(\mathbf{A}+\mathbf{R}) = 1$.
+From Theorem @thm-spectral_radius_unity, it is known that $(\mathbf{A}+\mathbf{R})(\mathbf{1} - \mathbf{b}) = (\mathbf{1} - \mathbf{b})$ with $\rho(\mathbf{A}+\mathbf{R}) = 1$.
 Therefore:
 $$
 \begin{aligned}
@@ -223,7 +223,7 @@ When $\mathbf{b}_i = 0$ for all $i$, the exchange factor transformation yields $
 
 :::
 
-::: {.theorem data-title"Upper Bound on Spectral Radius of Reflection-Scattering" #theorem-reflection_upper_bound}
+::: {.theorem data-title"Upper Bound on Spectral Radius of Reflection-Scattering" #thm-reflection_upper_bound}
 
 The spectral radius of the multiple reflection-scattering matrix $\mathbf{R}$ of the exchange factor transformation satisfies:
 
@@ -264,7 +264,7 @@ Since $\rho(\mathbf{R}) \leq \|\mathbf{R}\|_\infty$, the bound follows. The phys
 
 :::
 
-::: {.theorem data-title="Spectral Radius of Reflection-Scattering for Uniform Properties" #theorem-uniform_beta}
+::: {.theorem data-title="Spectral Radius of Reflection-Scattering for Uniform Properties" #thm-uniform_beta}
 
 When the reflection-scattering coefficients are uniform, $\mathbf{b}_i = \gamma$ for all $i$ where $\gamma \in [0,1)$, then:
 
@@ -304,7 +304,7 @@ $$
 
 **Step 3:** The spectral radius is established.
 
-The upper bound from Theorem @theorem-reflection_upper_bound gives:
+The upper bound from Theorem @thm-reflection_upper_bound gives:
 
 $$
 \rho(\mathbf{R}) \leq \frac{(1-\gamma)\gamma}{1-\gamma} = \gamma
@@ -314,7 +314,7 @@ Combined with $\rho(\mathbf{R}) \geq \gamma$ (since $\gamma$ is an eigenvalue), 
 
 :::
 
-::: {.theorem data-title="Spectral Radius Sum Property" #theorem-spectral_sum}
+::: {.theorem data-title="Spectral Radius Sum Property" #thm-spectral_sum}
 
 For uniform reflection-scattering coefficients $\mathbf{b}_i = \gamma$, the spectral radii of the absorption and multiple reflection-scattering matrices satisfy:
 
@@ -328,7 +328,7 @@ For uniform reflection-scattering coefficients, all eigenvalues corresponding to
 
 ::: {.proof}
 
-From Theorems @theorem-spectral_radius_absorption and @theorem-uniform_beta:
+From Theorems @thm-spectral_radius_absorption and @thm-uniform_beta:
 
 - $\rho(\mathbf{A}) = 1-\gamma$ (uniform case)
 - $\rho(\mathbf{R}) = \gamma$ (uniform case)
