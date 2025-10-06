@@ -6,11 +6,11 @@ These proofs demonstrate that the anisotropic extension preserves the mathematic
 
 ## Non-Negativity of the Anisotropic Interaction Matrix
 
-The first requirement for physical correctness is that the interaction-reflection-scattering matrix $\textbf{K}$ must be non-negative, as negative probabilities are not physically meaningful.
+The first requirement for physical correctness is that the interaction-reflection-scattering matrix $\mathbf{K}$ must be non-negative, as negative probabilities are not physically meaningful.
 
 ::: {.theorem data-title="Non-Negativity of K (Anisotropic Case)" #thm-aniso-nonnegative}
 
-For the anisotropic radiative transfer formulation with anisotropy matrix $\textbf{\Gamma}$ satisfying $\textbf{\Gamma}_{ij} \in [0, 1]$, the interaction-reflection-scattering matrix $\textbf{K}$ constructed via row-stochastic normalization is guaranteed to be non-negative: $K_{ij} \geq 0$ for all $i, j$.
+For the anisotropic radiative transfer formulation with anisotropy matrix $\mathbf{\Gamma}$ satisfying $\mathbf{\Gamma}_{ij} \in [0, 1]$, the interaction-reflection-scattering matrix $\mathbf{K}$ constructed via row-stochastic normalization is guaranteed to be non-negative: $K_{ij} \geq 0$ for all $i, j$.
 
 :::
 
@@ -96,15 +96,15 @@ Therefore: $\mathbf{K}_{ij} \geq 0$ ✓
 
 ## Physical Interpretation
 
-The non-negativity proof reveals a fundamental constraint: the upper bound $\textbf{Γ} \leq 1$ ensures $S[i] \leq 1$, which makes the normalization correction term non-positive, thereby guaranteeing $\mathbf{K}_{ij} \geq 0$.
+The non-negativity proof reveals a fundamental constraint: the upper bound $\mathbf{Γ} \leq 1$ ensures $S[i] \leq 1$, which makes the normalization correction term non-positive, thereby guaranteeing $\mathbf{K}_{ij} \geq 0$.
 
-**Importantly, no lower bound on Γ is required for non-negativity.** The full range $\textbf{Γ} \in [0, 1]$ is permissible, providing maximum flexibility for representing anisotropic reflection-scattering distributions while maintaining physical validity.
+**Importantly, no lower bound on Γ is required for non-negativity.** The full range $\mathbf{Γ} \in [0, 1]$ is permissible, providing maximum flexibility for representing anisotropic reflection-scattering distributions while maintaining physical validity.
 
 :::
 
 ## Energy Conservation for the Anisotropic Formulation
 
-The second requirement for physical correctness is conservation of energy at steady state. At equilibrium, the sum of all source fluxes must equal zero: $\textbf{1}^T\textbf{C}\textbf{j} = 0$.
+The second requirement for physical correctness is conservation of energy at steady state. At equilibrium, the sum of all source fluxes must equal zero: $\mathbf{1}^T\mathbf{C}\mathbf{j} = 0$.
 
 ### Key Identity: The Foundation of Energy Conservation
 
@@ -115,16 +115,16 @@ The proof of energy conservation relies on establishing that the fundamental eig
 For the anisotropic formulation with row-stochastic normalization, the key identity holds:
 
 $$
-\textbf{F}(\textbf{1} - \textbf{b}) = (\textbf{I} - \textbf{K})\textbf{1}
+\mathbf{F}(\mathbf{1} - \mathbf{b}) = (\mathbf{I} - \mathbf{K})\mathbf{1}
 $$
 
-where $\textbf{b}$ is the vector of reflection-scattering coefficients.
+where $\mathbf{b}$ is the vector of reflection-scattering coefficients.
 
 :::
 
 ::: {.proof}
 
-**Step 1:** Analyze the row sums of $\textbf{K}$.
+**Step 1:** Analyze the row sums of $\mathbf{K}$.
 
 From the row-stochastic property of rowsums_unity:
 
@@ -150,29 +150,29 @@ $$
 \sum_j \mathbf{K}[i,j] = 1 - \sum_j F[i,j] \cdot (1 - b_j)
 $$
 
-**Step 3:** Compute $[(\textbf{I} - \textbf{K})\textbf{1}]_i$.
+**Step 3:** Compute $[(\mathbf{I} - \mathbf{K})\mathbf{1}]_i$.
 
 $$
-[(\textbf{I} - \textbf{K})\textbf{1}]_i = 1 - \sum_j \mathbf{K}[i,j]
+[(\mathbf{I} - \mathbf{K})\mathbf{1}]_i = 1 - \sum_j \mathbf{K}[i,j]
 $$
 
 Substituting from Step 2:
 
 $$
-[(\textbf{I} - \textbf{K})\textbf{1}]_i = 1 - \left(1 - \sum_j F[i,j] \cdot (1 - b_j)\right)
+[(\mathbf{I} - \mathbf{K})\mathbf{1}]_i = 1 - \left(1 - \sum_j F[i,j] \cdot (1 - b_j)\right)
 $$
 
 $$
-[(\textbf{I} - \textbf{K})\textbf{1}]_i = \sum_j F[i,j] \cdot (1 - b_j)
+[(\mathbf{I} - \mathbf{K})\mathbf{1}]_i = \sum_j F[i,j] \cdot (1 - b_j)
 $$
 
 **Step 4:** Recognize the right-hand side.
 
 $$
-[(\textbf{I} - \textbf{K})\textbf{1}]_i = [\textbf{F}(\textbf{1} - \textbf{b})]_i
+[(\mathbf{I} - \mathbf{K})\mathbf{1}]_i = [\mathbf{F}(\mathbf{1} - \mathbf{b})]_i
 $$
 
-Therefore: $\textbf{F}(\textbf{1} - \textbf{b}) = (\textbf{I} - \textbf{K})\textbf{1}$ ✓
+Therefore: $\mathbf{F}(\mathbf{1} - \mathbf{b}) = (\mathbf{I} - \mathbf{K})\mathbf{1}$ ✓
 
 :::
 
@@ -181,7 +181,7 @@ Therefore: $\textbf{F}(\textbf{1} - \textbf{b}) = (\textbf{I} - \textbf{K})\text
 ## Critical Insight
 
 This theorem is the cornerstone of energy conservation for the anisotropic formulation.
-The row-stochastic normalization ensures that despite the full matrix structure of $\textbf{K}$ (rather than the column-constant structure in the isotropic case), the fundamental relationship between $\textbf{F}$, $\textbf{K}$, and the reflection-scattering coefficients is preserved.
+The row-stochastic normalization ensures that despite the full matrix structure of $\mathbf{K}$ (rather than the column-constant structure in the isotropic case), the fundamental relationship between $\mathbf{F}$, $\mathbf{K}$, and the reflection-scattering coefficients is preserved.
 
 This means that **all subsequent eigenvalue properties of the isotropic case carry over directly to the anisotropic case**.
 
@@ -191,13 +191,13 @@ This means that **all subsequent eigenvalue properties of the isotropic case car
 
 ::: {.theorem data-title="Energy Conservation (Anisotropic - Uniform Coefficients)" #thm-aniso-conservation}
 
-Let $\textbf{F}$ be the row-stochastic exchange factor matrix, let $\textbf{\Gamma}$ be the anisotropy matrix with $\textbf{\Gamma}_{ij} \in [0, 1]$, and let $\textbf{b} = b\textbf{1}$ be the uniform vector of reflection-scattering coefficients for some scalar $b \in [0,1)$.
+Let $\mathbf{F}$ be the row-stochastic exchange factor matrix, let $\mathbf{\Gamma}$ be the anisotropy matrix with $\mathbf{\Gamma}_{ij} \in [0, 1]$, and let $\mathbf{b} = b\mathbf{1}$ be the uniform vector of reflection-scattering coefficients for some scalar $b \in [0,1)$.
 Define the system matrices via the anisotropic exchange factor transformation.
 
-Then for any mixed system $\textbf{M}\textbf{j} = \textbf{h}$ where $\textbf{M}$ is assembled from rows of $\textbf{C}$ and $\textbf{D}$, the sum of the source fluxes equals zero:
+Then for any mixed system $\mathbf{M}\mathbf{j} = \mathbf{h}$ where $\mathbf{M}$ is assembled from rows of $\mathbf{C}$ and $\mathbf{D}$, the sum of the source fluxes equals zero:
 
 $$
-\textbf{1}^T \textbf{C} \textbf{j} = 0
+\mathbf{1}^T \mathbf{C} \mathbf{j} = 0
 $$
 
 regardless of the choice of rows or non-negative boundary conditions in the mixed system.
@@ -208,82 +208,82 @@ regardless of the choice of rows or non-negative boundary conditions in the mixe
 
 The proof follows directly from @lem-key-identity.
 
-**Step 1:** Establish the eigenvalue relationship for $\textbf{A} + \textbf{R}$.
+**Step 1:** Establish the eigenvalue relationship for $\mathbf{A} + \mathbf{R}$.
 
-From @lem-key-identity: $\textbf{F}(\textbf{1} - \textbf{b}) = (\textbf{I} - \textbf{K})\textbf{1}$
+From @lem-key-identity: $\mathbf{F}(\mathbf{1} - \mathbf{b}) = (\mathbf{I} - \mathbf{K})\mathbf{1}$
 
-Left-multiply by $(\textbf{I} - \textbf{K})^{-1}$:
-
-$$
-(\textbf{I} - \textbf{K})^{-1}\textbf{F}(\textbf{1} - \textbf{b}) = \textbf{1}
-$$
-
-Left-multiply by $\textbf{P}$ (where $\textbf{P} = (1-b)\textbf{I}$ for uniform $b$):
+Left-multiply by $(\mathbf{I} - \mathbf{K})^{-1}$:
 
 $$
-\textbf{P}(\textbf{I} - \textbf{K})^{-1}\textbf{F}(\textbf{1} - \textbf{b}) = \textbf{P}\textbf{1}
+(\mathbf{I} - \mathbf{K})^{-1}\mathbf{F}(\mathbf{1} - \mathbf{b}) = \mathbf{1}
+$$
+
+Left-multiply by $\mathbf{P}$ (where $\mathbf{P} = (1-b)\mathbf{I}$ for uniform $b$):
+
+$$
+\mathbf{P}(\mathbf{I} - \mathbf{K})^{-1}\mathbf{F}(\mathbf{1} - \mathbf{b}) = \mathbf{P}\mathbf{1}
 $$
 
 **Step 2:** Simplify using matrix definitions.
 
-The left side equals $\textbf{A} + \textbf{R}$ (from [Theorem @thm-spectral_radius_unity]):
+The left side equals $\mathbf{A} + \mathbf{R}$ (from [Theorem @thm-spectral_radius_unity]):
 
 $$
-(\textbf{A} + \textbf{R})(\textbf{1} - \textbf{b}) = \textbf{P}\textbf{1}
+(\mathbf{A} + \mathbf{R})(\mathbf{1} - \mathbf{b}) = \mathbf{P}\mathbf{1}
 $$
 
 The right side simplifies:
 
 $$
-\textbf{P}\textbf{1} = (1-b)\textbf{1} = \textbf{1} - \textbf{b}
+\mathbf{P}\mathbf{1} = (1-b)\mathbf{1} = \mathbf{1} - \mathbf{b}
 $$
 
 **Step 3:** Establish the eigenvalue property.
 
 $$
-(\textbf{A} + \textbf{R})(\textbf{1} - \textbf{b}) = (\textbf{1} - \textbf{b})
+(\mathbf{A} + \mathbf{R})(\mathbf{1} - \mathbf{b}) = (\mathbf{1} - \mathbf{b})
 $$
 
-Therefore, $(\textbf{1} - \textbf{b})$ is an eigenvector of $\textbf{A} + \textbf{R}$ with eigenvalue 1.
+Therefore, $(\mathbf{1} - \mathbf{b})$ is an eigenvector of $\mathbf{A} + \mathbf{R}$ with eigenvalue 1.
 
-**Step 4:** Derive the nullspace property of $\textbf{C}$.
+**Step 4:** Derive the nullspace property of $\mathbf{C}$.
 
 Taking the transpose:
 
 $$
-(\textbf{1} - \textbf{b})^T(\textbf{A}^T + \textbf{R}^T) = (\textbf{1} - \textbf{b})^T
+(\mathbf{1} - \mathbf{b})^T(\mathbf{A}^T + \mathbf{R}^T) = (\mathbf{1} - \mathbf{b})^T
 $$
 
 Rearranging:
 
 $$
-(\textbf{1} - \textbf{b})^T(\textbf{I} - \textbf{A}^T - \textbf{R}^T) = \textbf{0}^T
+(\mathbf{1} - \mathbf{b})^T(\mathbf{I} - \mathbf{A}^T - \mathbf{R}^T) = \mathbf{0}^T
 $$
 
 Therefore:
 
 $$
-(\textbf{1} - \textbf{b})^T\textbf{C} = \textbf{0}^T
+(\mathbf{1} - \mathbf{b})^T\mathbf{C} = \mathbf{0}^T
 $$
 
 **Step 5:** Apply uniformity to obtain energy conservation.
 
-For uniform $\textbf{b} = b\textbf{1}$:
+For uniform $\mathbf{b} = b\mathbf{1}$:
 
 $$
-(\textbf{1} - b\textbf{1})^T\textbf{C} = (1-b)\textbf{1}^T\textbf{C} = \textbf{0}^T
+(\mathbf{1} - b\mathbf{1})^T\mathbf{C} = (1-b)\mathbf{1}^T\mathbf{C} = \mathbf{0}^T
 $$
 
 Since $(1-b) > 0$:
 
 $$
-\textbf{1}^T\textbf{C} = \textbf{0}^T
+\mathbf{1}^T\mathbf{C} = \mathbf{0}^T
 $$
 
-Therefore, for any vector $\textbf{j}$:
+Therefore, for any vector $\mathbf{j}$:
 
 $$
-\textbf{1}^T\textbf{C}\textbf{j} = \textbf{0}^T\textbf{j} = 0
+\mathbf{1}^T\mathbf{C}\mathbf{j} = \mathbf{0}^T\mathbf{j} = 0
 $$
 
 This establishes energy conservation. ✓
@@ -296,7 +296,7 @@ This establishes energy conservation. ✓
 
 Notice that this proof is **identical** to the proof for the isotropic case (see @thm-spectral_radius_unity). The only difference is that we first had to establish @lem-key-identity for the anisotropic formulation. Once that key relationship is proven, everything else follows exactly as before.
 
-This demonstrates the elegance of the row-stochastic normalization approach: it preserves the fundamental algebraic structure that guarantees energy conservation, regardless of the complexity of the anisotropic distribution $\textbf{\Gamma}$.
+This demonstrates the elegance of the row-stochastic normalization approach: it preserves the fundamental algebraic structure that guarantees energy conservation, regardless of the complexity of the anisotropic distribution $\mathbf{\Gamma}$.
 
 :::
 
@@ -306,29 +306,29 @@ For completeness, we state the energy conservation result for mixed boundary con
 
 ::: {.theorem data-title="Energy Conservation (Anisotropic - Mixed Boundary Conditions)" #thm-aniso-conservation-nonuniform}
 
-Let $\textbf{F}$ be row-stochastic, let $\mathbf{\Gamma}_{ij} \in [0, 1]$, and define the system matrices via the anisotropic exchange factor transformation.
-Consider a mixed system $\textbf{M}\textbf{j} = \textbf{h}$ where:
+Let $\mathbf{F}$ be row-stochastic, let $\mathbf{\Gamma}_{ij} \in [0, 1]$, and define the system matrices via the anisotropic exchange factor transformation.
+Consider a mixed system $\mathbf{M}\mathbf{j} = \mathbf{h}$ where:
 
-- Rows $I$ of $\textbf{M}$ are taken from $\textbf{C}$ with corresponding $\textbf{h}_I = \textbf{0}$
+- Rows $I$ of $\mathbf{M}$ are taken from $\mathbf{C}$ with corresponding $\mathbf{h}_I = \mathbf{0}$
 - Reflection-scattering coefficients on rows $I$ can be non-uniform: $0 \leq b_i < 1$ for all $i \in I$
-- Rows $J$ of $\textbf{M}$ are taken from $\textbf{D}$ with corresponding $\textbf{h}_J \geq \textbf{0}$
+- Rows $J$ of $\mathbf{M}$ are taken from $\mathbf{D}$ with corresponding $\mathbf{h}_J \geq \mathbf{0}$
 - Reflection-scattering coefficients on rows $J$ are uniform: $b_j = \gamma < 1$ for all $j \in J$
 
 Then the energy conservation property holds:
 
 $$
-\textbf{1}^T \textbf{C} \textbf{j} = 0
+\mathbf{1}^T \mathbf{C} \mathbf{j} = 0
 $$
 
 :::
 
 ::: {.proof}
 
-The proof is identical to @thm-uniform_conservation for the isotropic case, using the eigenvalue relationship $(\textbf{1} - \textbf{b})^T\textbf{C} = \textbf{0}^T$ established in the proof of @thm-aniso-conservation.
+The proof is identical to @thm-uniform_conservation for the isotropic case, using the eigenvalue relationship $(\mathbf{1} - \mathbf{b})^T\mathbf{C} = \mathbf{0}^T$ established in the proof of @thm-aniso-conservation.
 
-The constraint $\textbf{C}_I\textbf{j} = \textbf{0}$ eliminates dependence on non-uniform coefficients in rows $I$, while uniformity on rows $J$ ensures that $(1-\gamma)\textbf{1}^T\textbf{C}_J\textbf{j} = 0$, which implies $\textbf{1}^T\textbf{C}_J\textbf{j} = 0$ since $(1-\gamma) > 0$.
+The constraint $\mathbf{C}_I\mathbf{j} = \mathbf{0}$ eliminates dependence on non-uniform coefficients in rows $I$, while uniformity on rows $J$ ensures that $(1-\gamma)\mathbf{1}^T\mathbf{C}_J\mathbf{j} = 0$, which implies $\mathbf{1}^T\mathbf{C}_J\mathbf{j} = 0$ since $(1-\gamma) > 0$.
 
-Combined, these yield $\textbf{1}^T\textbf{C}\textbf{j} = 0$. ✓
+Combined, these yield $\mathbf{1}^T\mathbf{C}\mathbf{j} = 0$. ✓
 
 :::
 
@@ -336,7 +336,7 @@ Combined, these yield $\textbf{1}^T\textbf{C}\textbf{j} = 0$. ✓
 
 The anisotropic extension of the exchange factor transformation satisfies both fundamental requirements for physical correctness:
 
-1. **Non-Negativity**: All elements of $\textbf{K}$, $\textbf{A}$, $\textbf{R}$, and consequently all radiative quantities ($\textbf{j}$, $\textbf{e}$, $\textbf{g}_a$, $\textbf{r}$), are non-negative for physically valid inputs (@thm-aniso-nonnegative).
+1. **Non-Negativity**: All elements of $\mathbf{K}$, $\mathbf{A}$, $\mathbf{R}$, and consequently all radiative quantities ($\mathbf{j}$, $\mathbf{e}$, $\mathbf{g}_a$, $\mathbf{r}$), are non-negative for physically valid inputs (@thm-aniso-nonnegative).
 
 2. **Energy Conservation**: The sum of source fluxes equals zero at steady state, ensuring global energy balance (@thm-aniso-conservation, @thm-aniso-conservation-nonuniform).
 
@@ -345,26 +345,26 @@ The anisotropic extension of the exchange factor transformation satisfies both f
 The critical insight enabling these results is that the row-stochastic normalization procedure preserves the fundamental identity:
 
 $$
-\textbf{F}(\textbf{1} - \textbf{b}) = (\textbf{I} - \textbf{K})\textbf{1}
+\mathbf{F}(\mathbf{1} - \mathbf{b}) = (\mathbf{I} - \mathbf{K})\mathbf{1}
 $$
 
 This identity is the cornerstone of the isotropic formulation's mathematical structure. By maintaining this relationship in the anisotropic case, the row-stochastic normalization ensures that:
 
-- The eigenvalue structure of $\textbf{A} + \textbf{R}$ is preserved
-- The nullspace property of $\textbf{C}$ is maintained  
+- The eigenvalue structure of $\mathbf{A} + \mathbf{R}$ is preserved
+- The nullspace property of $\mathbf{C}$ is maintained  
 - Energy conservation follows automatically for uniform (or appropriately mixed) boundary conditions
 
 ### Comparison with Isotropic Case
 
 | Property | Isotropic | Anisotropic | Status |
 |----------|-----------|-------------|--------|
-| $\textbf{K}$ structure | Column-constant | Full matrix | Generalized |
-| $\textbf{K} \geq 0$ | Trivial | Requires proof | ✓ Proven |
+| $\mathbf{K}$ structure | Column-constant | Full matrix | Generalized |
+| $\mathbf{K} \geq 0$ | Trivial | Requires proof | ✓ Proven |
 | Key identity | Direct | Via normalization | ✓ Proven |
 | Energy conservation | Direct | Via key identity | ✓ Proven |
 | Spectral properties | Known | Inherited | ✓ Preserved |
 
-The anisotropic extension represents a true generalization: it maintains all essential properties while accommodating arbitrary directional distributions within the physical constraint $\textbf{\Gamma} \in [0, 1]$.
+The anisotropic extension represents a true generalization: it maintains all essential properties while accommodating arbitrary directional distributions within the physical constraint $\mathbf{\Gamma} \in [0, 1]$.
 
 ## Conclusion
 

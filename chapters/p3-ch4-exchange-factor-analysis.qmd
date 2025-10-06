@@ -582,7 +582,7 @@ Since $1-b > 0$, the following property is obtained: $\mathbf{1}^T \mathbf{C} = 
 
 :::
 
-::: {.theorem data-title"Energy Conservation - Non-Uniform Reflection-Scattering Coefficients" #thm:mixed_rows}
+::: {.theorem data-title="Energy Conservation - Non-Uniform Reflection-Scattering Coefficients" #thm:mixed_rows}
 
 Let $\mathbf{F}$ be row stochastic, $0 \leq B_j < 1$ be column constant, and define the system matrices as given by the proposed exchange factor transformation.
 Consider a mixed system $\mathbf{M}\mathbf{j} = \mathbf{h}$ where:
