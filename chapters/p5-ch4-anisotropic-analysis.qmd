@@ -23,13 +23,13 @@ The proof proceeds by analyzing the inequality that must hold for $\mathbf{K}_{i
 From (@eq-k-simplified):
 
 $$
-\mathbf{K}[i,j] = \frac{\mathbf{K}_{\text{init}}[i,j]}{S[i]} - F[i,j] \cdot P[j] \left(1 - \frac{1}{S[i]}\right)
+\mathbf{K}[i,j] = \frac{\mathbf{K}_{\text{init}}[i,j]}{S[i]} - \mathbf{F}[i,j] \cdot P[j] \left(1 - \frac{1}{S[i]}\right)
 $$
 
-Substituting $\mathbf{K}_{\text{init}}[i,j] = F[i,j] \cdot \Gamma[i,j] \cdot (1-P[j])$:
+Substituting $\mathbf{K}_{\text{init}}[i,j] = \mathbf{F}[i,j] \cdot \Gamma[i,j] \cdot (1-P[j])$:
 
 $$
-\mathbf{K}[i,j] = \frac{F[i,j] \cdot \Gamma[i,j] \cdot (1-P[j])}{S[i]} - F[i,j] \cdot P[j] \left(1 - \frac{1}{S[i]}\right)
+\mathbf{K}[i,j] = \frac{\mathbf{F}[i,j] \cdot \Gamma[i,j] \cdot (1-P[j])}{S[i]} - \mathbf{F}[i,j] \cdot P[j] \left(1 - \frac{1}{S[i]}\right)
 $$
 
 **Step 2:** Multiply through by $S[i] > 0$ to establish the inequality.
@@ -37,7 +37,7 @@ $$
 For $\mathbf{K}_{ij} \geq 0$, we require:
 
 $$
-F[i,j] \cdot \Gamma[i,j] \cdot (1-P[j]) \geq F[i,j] \cdot P[j] \cdot (S[i] - 1)
+\mathbf{F}[i,j] \cdot \Gamma[i,j] \cdot (1-P[j]) \geq \mathbf{F}[i,j] \cdot P[j] \cdot (S[i] - 1)
 $$
 
 **Step 3:** Analyze the term $(S[i] - 1)$.
@@ -45,7 +45,7 @@ $$
 From equation (@eq-row-sums-expanded):
 
 $$
-S[i] - 1 = \sum_k F[i,k] \cdot (\Gamma[i,k] - 1) \cdot (1-P[k])
+S[i] - 1 = \sum_k \mathbf{F}[i,k] \cdot (\Gamma[i,k] - 1) \cdot (1-P[k])
 $$
 
 **Step 4:** Apply the constraint $\Gamma_{ik} \leq 1$.
@@ -56,16 +56,16 @@ $$
 \Gamma[i,k] - 1 \leq 0
 $$
 
-Since $F[i,k] \geq 0$ and $(1-P[k]) \geq 0$:
+Since $\mathbf{F}[i,k] \geq 0$ and $(1-P[k]) \geq 0$:
 
 $$
-F[i,k] \cdot (\Gamma[i,k] - 1) \cdot (1-P[k]) \leq 0 \quad \forall k
+\mathbf{F}[i,k] \cdot (\Gamma[i,k] - 1) \cdot (1-P[k]) \leq 0 \quad \forall k
 $$
 
 Therefore:
 
 $$
-S[i] - 1 = \sum_k F[i,k] \cdot (\Gamma[i,k] - 1) \cdot (1-P[k]) \leq 0
+S[i] - 1 = \sum_k \mathbf{F}[i,k] \cdot (\Gamma[i,k] - 1) \cdot (1-P[k]) \leq 0
 $$
 
 **Step 5:** Conclude non-negativity.
@@ -73,19 +73,19 @@ $$
 From Step 2, we need:
 
 $$
-F[i,j] \cdot \Gamma[i,j] \cdot (1-P[j]) \geq F[i,j] \cdot P[j] \cdot (S[i] - 1)
+\mathbf{F}[i,j] \cdot \Gamma[i,j] \cdot (1-P[j]) \geq \mathbf{F}[i,j] \cdot P[j] \cdot (S[i] - 1)
 $$
 
 Since we proved $S[i] - 1 \leq 0$ in Step 4:
 
 $$
-F[i,j] \cdot P[j] \cdot (S[i] - 1) \leq 0
+\mathbf{F}[i,j] \cdot P[j] \cdot (S[i] - 1) \leq 0
 $$
 
-And since $F[i,j] \cdot \Gamma[i,j] \cdot (1-P[j]) \geq 0$ (all factors are non-negative), we have:
+And since $\mathbf{F}[i,j] \cdot \Gamma[i,j] \cdot (1-P[j]) \geq 0$ (all factors are non-negative), we have:
 
 $$
-F[i,j] \cdot \Gamma[i,j] \cdot (1-P[j]) \geq 0 \geq F[i,j] \cdot P[j] \cdot (S[i] - 1)
+\mathbf{F}[i,j] \cdot \Gamma[i,j] \cdot (1-P[j]) \geq 0 \geq \mathbf{F}[i,j] \cdot P[j] \cdot (S[i] - 1)
 $$
 
 Therefore: $\mathbf{K}_{ij} \geq 0$ ✓
@@ -135,11 +135,11 @@ $$
 Therefore:
 
 $$
-\sum_j \mathbf{K}[i,j] = \sum_j \text{T}[i,j] - \sum_j F[i,j] \cdot P[j]
+\sum_j \mathbf{K}[i,j] = \sum_j \text{T}[i,j] - \sum_j \mathbf{F}[i,j] \cdot P[j]
 $$
 
 $$
-\sum_j \mathbf{K}[i,j] = 1 - \sum_j F[i,j] \cdot P[j]
+\sum_j \mathbf{K}[i,j] = 1 - \sum_j \mathbf{F}[i,j] \cdot P[j]
 $$
 
 **Step 2:** Express in terms of reflection-scattering coefficients.
@@ -147,7 +147,7 @@ $$
 Since $P[j] = 1 - b_j$:
 
 $$
-\sum_j \mathbf{K}[i,j] = 1 - \sum_j F[i,j] \cdot (1 - b_j)
+\sum_j \mathbf{K}[i,j] = 1 - \sum_j \mathbf{F}[i,j] \cdot (1 - b_j)
 $$
 
 **Step 3:** Compute $[(\mathbf{I} - \mathbf{K})\mathbf{1}]_i$.
@@ -159,11 +159,11 @@ $$
 Substituting from Step 2:
 
 $$
-[(\mathbf{I} - \mathbf{K})\mathbf{1}]_i = 1 - \left(1 - \sum_j F[i,j] \cdot (1 - b_j)\right)
+[(\mathbf{I} - \mathbf{K})\mathbf{1}]_i = 1 - \left(1 - \sum_j \mathbf{F}[i,j] \cdot (1 - b_j)\right)
 $$
 
 $$
-[(\mathbf{I} - \mathbf{K})\mathbf{1}]_i = \sum_j F[i,j] \cdot (1 - b_j)
+[(\mathbf{I} - \mathbf{K})\mathbf{1}]_i = \sum_j \mathbf{F}[i,j] \cdot (1 - b_j)
 $$
 
 **Step 4:** Recognize the right-hand side.
@@ -226,7 +226,24 @@ $$
 
 **Step 2:** Simplify using matrix definitions.
 
-The left side equals $\mathbf{A} + \mathbf{R}$ (from [Theorem @thm-spectral_radius_unity]):
+The left side equals $\mathbf{A} + \mathbf{R}$:
+
+From the definitions:
+
+$$
+\begin{aligned}
+\mathbf{A} &= \mathbf{P}(\mathbf{I}-\mathbf{K})^{-1}(\mathbf{F}-\mathbf{K}) \\
+\mathbf{R} &= \mathbf{P}(\mathbf{I}-\mathbf{K})^{-1}\mathbf{K}
+\end{aligned}
+$$ {#eq-aniso-ar-defs}
+
+it is obtained that:
+
+$$
+\mathbf{A} + \mathbf{R} = \mathbf{P}(\mathbf{I}-\mathbf{K})^{-1}\mathbf{F}
+$$ {#eq-aniso-a-plus-r}
+
+Therefore:
 
 $$
 (\mathbf{A} + \mathbf{R})(\mathbf{1} - \mathbf{b}) = \mathbf{P}\mathbf{1}
