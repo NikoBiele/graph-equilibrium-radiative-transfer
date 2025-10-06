@@ -42,7 +42,7 @@ $$
 
 **Step 3:** Analyze the term $(S[i] - 1)$.
 
-From [Equation XX]:
+From equation (@eq-row-sums-expanded):
 
 $$
 S[i] - 1 = \sum_k F[i,k] \cdot (\Gamma[i,k] - 1) \cdot (1-P[k])
@@ -126,16 +126,16 @@ where $\mathbf{b}$ is the vector of reflection-scattering coefficients.
 
 **Step 1:** Analyze the row sums of $\mathbf{K}$.
 
-From the row-stochastic property of rowsums_unity:
+From the row-stochastic property of $T$:
 
 $$
-\sum_j \text{rowsums\_unity}[i,j] = 1
+\sum_j \text{T}[i,j] = 1
 $$
 
 Therefore:
 
 $$
-\sum_j \mathbf{K}[i,j] = \sum_j \text{rowsums\_unity}[i,j] - \sum_j F[i,j] \cdot P[j]
+\sum_j \mathbf{K}[i,j] = \sum_j \text{T}[i,j] - \sum_j F[i,j] \cdot P[j]
 $$
 
 $$
