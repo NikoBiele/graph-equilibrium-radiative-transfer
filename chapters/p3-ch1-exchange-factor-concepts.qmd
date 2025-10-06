@@ -1,4 +1,4 @@
-# The Exchange Factor Transformation
+# The Exchange Factor Transformation {#sec-exchange_fact_trans}
 
 ## Introduction
 

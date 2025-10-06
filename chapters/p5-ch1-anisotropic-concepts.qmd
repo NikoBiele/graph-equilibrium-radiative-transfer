@@ -1,0 +1,227 @@
+# Anisotropic Extension of the Exchange Factor Transformation
+
+## Introduction
+
+The exchange factor transformation described in Chapter @sec-exchange_fact_trans enables analytical treatment of multiple reflection-scattering processes in radiative transfer by transforming the exchange factor matrix $\textbf{F}$ into absorption and reflection-scattering matrices $\textbf{A}$ and $\textbf{R}$. The method assumes isotropic reflection-scattering behavior, where the probability of reflection-scattering from element $j$ is independent of the incident element $i$. This is represented by a column-constant single reflection-scattering matrix $\textbf{B}$.
+
+However, many physical systems exhibit anisotropic reflection-scattering, where the probability and directional distribution of reflection-scattering depend on the incident direction. This chapter presents an extension of the exchange factor transformation that accommodates anisotropic reflection-scattering while preserving all fundamental properties: non-negativity, energy conservation, and analytical solvability.
+
+## Anisotropic Reflection-Scattering Matrix
+
+### Definition
+
+The anisotropic extension introduces a full matrix $\textbf{\Gamma}$ (Gamma) to characterize directional dependence of reflection-scattering:
+
+$$
+\textbf{\Gamma} \in \mathbb{R}^{N \times N}, \quad 0 \leq \Gamma_{ij} \leq 1 \quad \forall i,j
+$$ {#eq-gamma-bounds}
+
+where $\Gamma_{ij}$ represents the relative probability of reflection-scattering from element $j$ when radiation is incident from element $i$.
+
+### Physical Interpretation
+
+- $\Gamma_{ij} = 1$: Maximum reflection-scattering from $j$ due to incidence from $i$ (isotropic limit)
+- $\Gamma_{ij} = 0$: No reflection-scattering from $j$ due to incidence from $i$ (complete directional selectivity)
+- $0 < \Gamma_{ij} < 1$: Partial anisotropic reflection-scattering with directional preference
+
+### Relationship to Isotropic Case
+
+When $\textbf{\Gamma} = \textbf{1}$ (all ones), the anisotropic formulation reduces exactly to the isotropic case, ensuring backward compatibility and providing a natural basis for proof by continuity arguments.
+
+## Construction of the Anisotropic Interaction Matrix
+
+The anisotropic interaction-reflection-scattering matrix $\textbf{K}$ is constructed through a multi-step process that ensures physical consistency.
+
+### Step 1: Initial Reflection-Scattering Distribution
+
+Define the initial reflection-scattering distribution matrix:
+
+$$
+B_{\text{init}}[i,j] = \Gamma[i,j] \cdot (1 - P[j])
+$$ {#eq-b-init}
+
+where $\textbf{P}$ is the diagonal emissivity matrix with entries $P[j] = 1 - b_j$, and $b_j$ is the reflection-scattering coefficient of element $j$.
+
+Each column $j$ is scaled by the reflection-scattering probability $(1-P[j]) = b_j$ of the receiving element.
+
+### Step 2: Interaction-Reflection-Scattering (Pre-Normalization)
+
+Compute the element-wise product of the exchange factor matrix and the initial reflection-scattering distribution:
+
+$$
+K_{\text{init}}[i,j] = F[i,j] \cdot B_{\text{init}}[i,j] = F[i,j] \cdot \Gamma[i,j] \cdot (1 - P[j])
+$$ {#eq-k-init}
+
+This represents the probability that radiation emitted from element $i$ interacts with element $j$ and is then reflected-scattered, before normalization.
+
+### Step 3: Enforce Probability Conservation
+
+Create a matrix that accounts for both reflection-scattering and absorption:
+
+$$
+\text{enforce\_unity}[i,j] = K_{\text{init}}[i,j] + F[i,j] \cdot P[j]
+$$ {#eq-enforce-unity}
+
+Each element either reflects-scatters ($\textbf{K}_{\text{init}}$) or is absorbed ($\textbf{F} \cdot \textbf{P}$).
+
+### Step 4: Compute Row Sums
+
+Calculate the row sums:
+
+$$
+S[i] = \sum_j \text{enforce\_unity}[i,j] = \sum_j (K_{\text{init}}[i,j] + F[i,j] \cdot P[j])
+$$ {#eq-row-sums}
+
+Expanding:
+
+$$
+S[i] = \sum_j F[i,j] \cdot (\Gamma[i,j] \cdot (1-P[j]) + P[j])
+$$ {#eq-row-sums-expanded}
+
+### Step 5: Normalize to Row-Stochastic
+
+Normalize the matrix to ensure row sums equal unity:
+
+$$
+\text{rowsums\_unity}[i,j] = \frac{\text{enforce\_unity}[i,j]}{S[i]}
+$$ {#eq-normalize}
+
+This creates a row-stochastic matrix, ensuring that total probability is conserved for radiation emitted from each element $i$.
+
+### Step 6: Final Interaction-Reflection-Scattering Matrix
+
+Extract the reflection-scattering component:
+
+$$
+K[i,j] = \text{rowsums\_unity}[i,j] - F[i,j] \cdot P[j]
+$$ {#eq-k-final}
+
+Substituting from @eq-normalize:
+
+$$
+K[i,j] = \frac{K_{\text{init}}[i,j] + F[i,j] \cdot P[j]}{S[i]} - F[i,j] \cdot P[j]
+$$ {#eq-k-explicit}
+
+Simplifying:
+
+$$
+K[i,j] = \frac{K_{\text{init}}[i,j]}{S[i]} - F[i,j] \cdot P[j] \left(1 - \frac{1}{S[i]}\right)
+$$ {#eq-k-simplified}
+
+## Properties of the Row Sum Normalization Factor
+
+### Bounds on S[i]
+
+From @eq-row-sums-expanded:
+
+$$
+S[i] = \sum_j F[i,j] \cdot (\Gamma[i,j] \cdot (1-P[j]) + P[j])
+$$
+
+Since $\textbf{F}$ is row-stochastic ($\sum_j F[i,j] = 1$), we can write:
+
+$$
+S[i] - 1 = \sum_j F[i,j] \cdot (\Gamma[i,j] \cdot (1-P[j]) + P[j] - 1)
+$$ {#eq-s-minus-one}
+
+Simplifying:
+
+$$
+S[i] - 1 = \sum_j F[i,j] \cdot (\Gamma[i,j] - 1) \cdot (1-P[j])
+$$ {#eq-s-minus-one-simple}
+
+Since $\Gamma[i,j] \leq 1$, $F[i,j] \geq 0$, and $(1-P[j]) \geq 0$:
+
+$$
+S[i] - 1 \leq 0 \implies S[i] \leq 1
+$$ {#eq-s-upper-bound}
+
+### Special Case: Γ = 1 (Isotropic)
+
+When $\textbf{\Gamma} = \textbf{1}$ (all ones), we have:
+
+$$
+S[i] = \sum_j F[i,j] \cdot ((1-P[j]) + P[j]) = \sum_j F[i,j] = 1
+$$
+
+Therefore, the normalization does nothing, and:
+
+$$
+K[i,j] = F[i,j] - F[i,j] \cdot P[j] = F[i,j] \cdot (1-P[j])
+$$
+
+This recovers the isotropic case exactly: $\textbf{K} = \textbf{F} \circ \textbf{B}$, where $\textbf{B}$ is the column-constant matrix of reflection-scattering coefficients.
+
+## Subsequent Transformation
+
+Once $\textbf{K}$ is constructed, the remainder of the exchange factor transformation proceeds identically to the isotropic case:
+
+### Steady-State Path Matrix
+
+$$
+\textbf{S}_\infty = (\textbf{I} - \textbf{K})^{-1} \textbf{F}
+$$ {#eq-s-infinity}
+
+### Absorption and Reflection-Scattering Matrices
+
+$$
+\textbf{A} = \textbf{P}(\textbf{I}-\textbf{K})^{-1}(\textbf{F}-\textbf{K})
+$$ {#eq-a-matrix}
+
+$$
+\textbf{R} = \textbf{P}(\textbf{I}-\textbf{K})^{-1}\textbf{K}
+$$ {#eq-r-matrix}
+
+Or equivalently, using the Hadamard product notation:
+
+$$
+\textbf{A} = (\textbf{1} - \textbf{B})^T \circ \textbf{S}_\infty \circ (\textbf{1} - \textbf{B})
+$$ {#eq-a-hadamard}
+
+$$
+\textbf{R} = (\textbf{1} - \textbf{B})^T \circ \textbf{S}_\infty \circ \textbf{B}
+$$ {#eq-r-hadamard}
+
+Note: In the anisotropic case, $\textbf{B}$ is no longer column-constant, but the definitions remain valid.
+
+### System Matrices
+
+$$
+\textbf{C} = \textbf{I} - \textbf{A}^T - \textbf{R}^T
+$$ {#eq-c-matrix}
+
+$$
+\textbf{D} = \textbf{I} - \textbf{R}^T
+$$ {#eq-d-matrix}
+
+### Solution
+
+The mixed boundary system is solved as:
+
+$$
+\textbf{M}\textbf{j} = \textbf{h}
+$$ {#eq-system}
+
+where $\textbf{M}$ is assembled row-by-row from $\textbf{C}$ (for known sources) and $\textbf{D}$ (for known emissive powers), and $\textbf{j}$ is the total radiant power vector.
+
+## Advantages of the Anisotropic Extension
+
+1. **Physical Fidelity**: Captures directional dependence of reflection-scattering, enabling more accurate modeling of real materials and surfaces.
+
+2. **Analytical Framework**: Maintains the analytical structure of the exchange factor transformation, avoiding iterative Monte Carlo methods.
+
+3. **Backward Compatibility**: Reduces exactly to the isotropic case when $\textbf{\Gamma} = \textbf{1}$, ensuring consistency with established methods.
+
+4. **Preserved Properties**: Non-negativity and energy conservation are guaranteed (see chapter @sec-exchange_fact_anisotropic_extend for proofs).
+
+5. **Flexibility**: Accommodates any anisotropic distribution within the constraint $0 \leq \Gamma_{ij} \leq 1$, providing maximum modeling flexibility.
+
+## Physical Applications
+
+### Specular-Diffuse Surfaces, Anisotropic Scattering in Participating Media and Surface Microstructure
+
+For surfaces with specular components, media with anisotropic scattering phase functions (e.g., Mie scattering, Henyey-Greenstein, i.e. (i,j,k)-three-index dependencies) and surfaces with oriented microstructure (e.g., brushed metal, fibrous materials), more complex models are required.
+
+## Conclusion
+
+The anisotropic extension of the exchange factor transformation provides a mathematically rigorous and physically meaningful framework for modeling directional reflection-scattering in radiative transfer. By introducing the anisotropy matrix $\textbf{\Gamma}$ and employing row-stochastic normalization, the method preserves all essential properties while significantly expanding the range of physical phenomena that can be accurately modeled.

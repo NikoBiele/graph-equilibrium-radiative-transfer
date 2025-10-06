@@ -1,4 +1,4 @@
-# Exchange Factor Transformation Analysis
+# Exchange Factor Transformation Analysis {#sec-exchange_fact_analysis}
 
 ## Convergence Properties {#sec-convergence_props}
 
@@ -499,3 +499,117 @@ The irreducibility of the exchange factor matrix $\mathbf{F}$ is crucial for thi
 In radiative transfer applications, $\mathbf{F}$ represents connectivity within a physical domain.
 The matrix $\mathbf{F}$ is irreducible if and only if the underlying domain has no isolated regions, that is, for any two regions $i$ and $j$, there exists a sequence of direct sight lines connecting them.
 This physical connectivity condition naturally ensures the mathematical irreducibility required for the theorem.
+
+## Physical Correctness {#sec-physical_correct}
+
+For a physical model to be useful it should possess physical correctness. The conditions which guarantee physical correctness of results calculated with the proposed exchange factor transformation are described in the following subsections.
+
+### Non-Negative Radiation
+
+For radiative transfer, physical correctness means that the calculated rate of radiation must be non-negative, since negative radiation is not a physically meaningful quantity.
+
+::: {.theorem data-title="Non-negative Radiation" #thm-physical_correctness}
+
+Under the conditions established in the previous theorems, the exchange factor transformation guarantees physical correctness through non-negative radiation quantities:
+
+- Non-negative total radiant power: $\mathbf{j} = \mathbf{M}^{-1}\mathbf{h} \geq \mathbf{0}$ for non-negative source terms $\mathbf{h} \geq \mathbf{0}$
+- Non-negative reflected-scattered power: $\mathbf{r} = \mathbf{R}^T\mathbf{j} \geq \mathbf{0}$
+- Non-negative emissive power: $\mathbf{e} = (\mathbf{I}-\mathbf{R}^T)\mathbf{j} = \mathbf{q} + \mathbf{A}^T\mathbf{j} \geq \mathbf{0}$
+
+:::
+
+::: {.proof}
+
+**Part 1:** Non-negative total radiant power.
+
+From Theorems @thm-C_matrix, @thm-D_matrix and @thm-M_nonsingular, the mixed boundary matrix $\mathbf{M}$ is a non-singular M-matrix.
+By the fundamental property of M-matrices, $\mathbf{M}^{-1} \geq \mathbf{0}$.
+Therefore, for non-negative source terms $\mathbf{h} \geq \mathbf{0}$:
+$$
+\mathbf{j} = \mathbf{M}^{-1}\mathbf{h} \geq \mathbf{0}
+$$
+
+**Part 2:** Non-negative reflected-scattered power.
+
+Since $\mathbf{R} \geq \mathbf{0}$ by construction (representing physical reflection-scattering processes) and $\mathbf{j} \geq \mathbf{0}$ from Part 1:
+$$
+\mathbf{r} = \mathbf{R}^T\mathbf{j} \geq \mathbf{0}
+$$
+
+**Part 3:** Non-negative emissive power.
+
+The emissive power can be expressed in two equivalent forms due to internal consistency of the proposed exchange factor transformation:
+$$
+\mathbf{e} = (\mathbf{I}-\mathbf{R}^T)\mathbf{j} = \mathbf{q} + \mathbf{A}^T\mathbf{j}
+$$ {#eq-emissive_equivalence}
+
+Since $\mathbf{A} \geq \mathbf{0}$ by construction, $\mathbf{j} \geq \mathbf{0}$ from Part 1, and assuming non-negative prescribed source terms $\mathbf{q} \geq \mathbf{0}$:
+$$
+\mathbf{e} = \mathbf{q} + \mathbf{A}^T\mathbf{j} \geq \mathbf{0}
+$$
+
+The equivalence in equation @eq-emissive_equivalence reveals that the entries of $\mathbf{j}$ perfectly balance the entries of $\mathbf{I}-\mathbf{R}^T$, ensuring physical consistency.
+
+:::
+
+### Conservation of Energy
+
+At the steady state, energy conservation requires that the source fluxes $\mathbf{q}=\mathbf{C}\mathbf{j}$ calculated from any total radiant power solution vector $\mathbf{j}$ sum to a scalar of zero: $\mathbf{1}^T\mathbf{C}\mathbf{j} = 0$.
+This fundamental physical principle places constraints on the reflection-scattering coefficients and boundary conditions of the proposed exchange factor transformation.
+
+::: {.theorem data-title="Energy Conservation - Uniform Reflection-Scattering Coefficients" #thm-uniform_conservation}
+
+Let $\mathbf{F}$ be the row-stochastic exchange factor matrix, and let $\mathbf{b} = b\mathbf{1}$ be the uniform vector of coefficients for the column constant single reflection-scattering matrix $\mathbf{B}$ for some scalar $b \in [0,1)$, and define the remaining system matrices as given by the proposed exchange factor transformation.
+
+Then for any mixed system $\mathbf{M}\mathbf{j} = \mathbf{h}$ where $\mathbf{M}$ is assembled from rows of $\mathbf{C}$ and $\mathbf{D}$, the sum of the source fluxes equal zero, meaning the energy conservation property holds:
+
+$$
+\mathbf{1}^T \mathbf{C} \mathbf{j} = 0
+$$
+
+regardless of the choice of rows or non-negative boundary conditions in the mixed system.
+
+:::
+
+::: {.proof}
+For uniform $\mathbf{b} = b\mathbf{1}$, the eigenvalue condition $(\mathbf{1} - \mathbf{b})^T \mathbf{C} = \mathbf{0}^T$ of Theorem \ref{thm-C_matrix} becomes:
+
+$$
+(\mathbf{1} - b\mathbf{1})^T \mathbf{C} = (1-b)\mathbf{1}^T \mathbf{C} = \mathbf{0}^T
+$$
+
+Since $1-b > 0$, the following property is obtained: $\mathbf{1}^T \mathbf{C} = \mathbf{0}^T$. Therefore: $\mathbf{1}^T \mathbf{C} \mathbf{j} = \mathbf{0}^T \mathbf{j} = 0$ for any vector $\mathbf{j}$. This establishes energy conservation automatically, regardless of how the mixed system is constructed.
+
+:::
+
+::: {.theorem data-title"Energy Conservation - Non-Uniform Reflection-Scattering Coefficients" #thm:mixed_rows}
+
+Let $\mathbf{F}$ be row stochastic, $0 \leq B_j < 1$ be column constant, and define the system matrices as given by the proposed exchange factor transformation.
+Consider a mixed system $\mathbf{M}\mathbf{j} = \mathbf{h}$ where:
+
+- Rows $I$ of $\mathbf{M}$ are taken from $\mathbf{C}$ with corresponding uniform $\mathbf{h}_I = \mathbf{0}$
+- $\mathbf{B}$ can be non-uniform on rows $I$: $0 \leq \mathbf{B}_i < 1$ for all $i \in I$
+- Rows $J$ of $\mathbf{M}$ are taken from $\mathbf{D}$ with corresponding potentially non-uniform $\mathbf{h}_J \geq \mathbf{0}$ 
+- $\mathbf{B}$ is uniform on rows $J$: $\mathbf{B}_j = \gamma < 1$ for all $j \in J$
+
+Then the sum of the source fluxes equal zero, meaning the energy conservation property holds:
+
+$$
+\mathbf{1}^T \mathbf{C} \mathbf{j} = 0
+$$
+
+:::
+
+::: {.proof}
+
+The system $\mathbf{M}\mathbf{j} = \mathbf{h}$ yields $\mathbf{C}_I \mathbf{j} = \mathbf{0}$ and $\mathbf{D}_J \mathbf{j} = \mathbf{h}_J$.
+From @thm-C_matrix, it is known that $\mathbf{C}^T(\mathbf{1}-\mathbf{b}) = \mathbf{0}$, which implies $(\mathbf{1}-\mathbf{b})^T \mathbf{C} \mathbf{j} = 0$.
+Expanding this:
+
+$$
+(\mathbf{1}-\mathbf{b})^T \mathbf{C} \mathbf{j} = \sum_{i \in I}(1-\mathbf{b}_i)\mathbf{C}_{i \cdot}\mathbf{j} + \sum_{j \in J}(1-\gamma)\mathbf{C}_{j \cdot}\mathbf{j} = 0
+$$
+
+The constraint $\mathbf{C}_I \mathbf{j} = \mathbf{0}$ makes the first sum vanish, regardless of the values $\mathbf{b}_i$. Since $1-\gamma > 0$, it is obtained that $\sum_{j \in J}\mathbf{C}_{j \cdot}\mathbf{j} = 0$. Combined with $\sum_{i \in I}\mathbf{C}_{i \cdot}\mathbf{j} = 0$ from $\mathbf{C}_I \mathbf{j} = \mathbf{0}$, this yields $\mathbf{1}^T \mathbf{C} \mathbf{j} = 0$. This establishes energy conservation through the eigenvalue structure, where the mixed constraints create effective uniformity.
+
+:::
