@@ -10,7 +10,7 @@ The first requirement for physical correctness is that the interaction-reflectio
 
 ::: {.theorem data-title="Non-Negativity of K (Anisotropic Case)" #thm-aniso-nonnegative}
 
-For the anisotropic radiative transfer formulation with anisotropy matrix $\mathbf{\Gamma}$ satisfying $\mathbf{\Gamma}_{ij} \in [0, 1]$, the interaction-reflection-scattering matrix $\mathbf{K}$ constructed via row-stochastic normalization is guaranteed to be non-negative: $K_{ij} \geq 0$ for all $i, j$.
+For the anisotropic radiative transfer formulation with anisotropy matrix $\mathbf{\Gamma}$ satisfying $\mathbf{\Gamma}_{ij} \in [0, 1]$, the interaction-reflection-scattering matrix $\mathbf{K}$ constructed via row-stochastic normalization is guaranteed to be non-negative: $\mathbf{K}_{ij} \geq 0$ for all $i, j$.
 
 :::
 
@@ -23,49 +23,49 @@ The proof proceeds by analyzing the inequality that must hold for $\mathbf{K}_{i
 From (@eq-k-simplified):
 
 $$
-\mathbf{K}[i,j] = \frac{\mathbf{K}_{\text{init}}[i,j]}{S[i]} - \mathbf{F}[i,j] \cdot P[j] \left(1 - \frac{1}{S[i]}\right)
+\mathbf{K}_{ij} = \frac{\mathbf{K}_{\text{init}}_{ij}}{\mathbf{s}_i} - \mathbf{F}_{ij} \cdot \mathbf{P}_{jj} \left(1 - \frac{1}{\mathbf{s}_i}\right)
 $$
 
-Substituting $\mathbf{K}_{\text{init}}[i,j] = \mathbf{F}[i,j] \cdot \Gamma[i,j] \cdot (1-P[j])$:
+Substituting $\mathbf{K}_{\text{init}}_{ij} = \mathbf{F}_{ij} \cdot \mathbf{\Gamma}_{ij} \cdot (1-\mathbf{P}_{jj})$:
 
 $$
-\mathbf{K}[i,j] = \frac{\mathbf{F}[i,j] \cdot \Gamma[i,j] \cdot (1-P[j])}{S[i]} - \mathbf{F}[i,j] \cdot P[j] \left(1 - \frac{1}{S[i]}\right)
+\mathbf{K}_{ij} = \frac{\mathbf{F}_{ij} \cdot \mathbf{\Gamma}_{ij} \cdot (1-\mathbf{P}_{jj})}{\mathbf{s}_i} - \mathbf{F}_{ij} \cdot \mathbf{P}_{jj} \left(1 - \frac{1}{\mathbf{s}_i}\right)
 $$
 
-**Step 2:** Multiply through by $S[i] > 0$ to establish the inequality.
+**Step 2:** Multiply through by $\mathbf{s}_i > 0$ to establish the inequality.
 
 For $\mathbf{K}_{ij} \geq 0$, we require:
 
 $$
-\mathbf{F}[i,j] \cdot \Gamma[i,j] \cdot (1-P[j]) \geq \mathbf{F}[i,j] \cdot P[j] \cdot (S[i] - 1)
+\mathbf{F}_{ij} \cdot \mathbf{\Gamma}_{ij} \cdot (1-\mathbf{P}_{jj}) \geq \mathbf{F}_{ij} \cdot \mathbf{P}_{jj} \cdot (\mathbf{s}_i - 1)
 $$
 
-**Step 3:** Analyze the term $(S[i] - 1)$.
+**Step 3:** Analyze the term $(\mathbf{s}_i - 1)$.
 
 From equation (@eq-row-sums-expanded):
 
 $$
-S[i] - 1 = \sum_k \mathbf{F}[i,k] \cdot (\Gamma[i,k] - 1) \cdot (1-P[k])
+\mathbf{s}_i - 1 = \sum_k \mathbf{F}_{ik} \cdot (\mathbf{\Gamma}_{ik} - 1) \cdot (1-\mathbf{P}_{kk})
 $$
 
-**Step 4:** Apply the constraint $\Gamma_{ik} \leq 1$.
+**Step 4:** Apply the constraint $\mathbf{\Gamma}_{ik} \leq 1$.
 
-Since $\Gamma_{ik} \leq 1$ for all $i, k$:
-
-$$
-\Gamma[i,k] - 1 \leq 0
-$$
-
-Since $\mathbf{F}[i,k] \geq 0$ and $(1-P[k]) \geq 0$:
+Since $\mathbf{\Gamma}_{ik} \leq 1$ for all $i, k$:
 
 $$
-\mathbf{F}[i,k] \cdot (\Gamma[i,k] - 1) \cdot (1-P[k]) \leq 0 \quad \forall k
+\mathbf{\Gamma}_{ik} - 1 \leq 0
+$$
+
+Since $\mathbf{F}_{ik} \geq 0$ and $(1-\mathbf{P}_{kk}) \geq 0$:
+
+$$
+\mathbf{F}_{ik} \cdot (\mathbf{\Gamma}_{ik} - 1) \cdot (1-\mathbf{P}_{kk}) \leq 0 \quad \forall k
 $$
 
 Therefore:
 
 $$
-S[i] - 1 = \sum_k \mathbf{F}[i,k] \cdot (\Gamma[i,k] - 1) \cdot (1-P[k]) \leq 0
+\mathbf{s}_i - 1 = \sum_k \mathbf{F}_{ik} \cdot (\mathbf{\Gamma}_{ik} - 1) \cdot (1-\mathbf{P}_{kk}) \leq 0
 $$
 
 **Step 5:** Conclude non-negativity.
@@ -73,19 +73,19 @@ $$
 From Step 2, we need:
 
 $$
-\mathbf{F}[i,j] \cdot \Gamma[i,j] \cdot (1-P[j]) \geq \mathbf{F}[i,j] \cdot P[j] \cdot (S[i] - 1)
+\mathbf{F}_{ij} \cdot \mathbf{\Gamma}_{ij} \cdot (1-\mathbf{P}_{jj}) \geq \mathbf{F}_{ij} \cdot \mathbf{P}_{jj} \cdot (\mathbf{s}_i - 1)
 $$
 
-Since we proved $S[i] - 1 \leq 0$ in Step 4:
+Since we proved $\mathbf{s}_i - 1 \leq 0$ in Step 4:
 
 $$
-\mathbf{F}[i,j] \cdot P[j] \cdot (S[i] - 1) \leq 0
+\mathbf{F}_{ij} \cdot \mathbf{P}_{jj} \cdot (\mathbf{s}_i - 1) \leq 0
 $$
 
-And since $\mathbf{F}[i,j] \cdot \Gamma[i,j] \cdot (1-P[j]) \geq 0$ (all factors are non-negative), we have:
+And since $\mathbf{F}_{ij} \cdot \mathbf{\Gamma}_{ij} \cdot (1-\mathbf{P}_{jj}) \geq 0$ (all factors are non-negative), we have:
 
 $$
-\mathbf{F}[i,j] \cdot \Gamma[i,j] \cdot (1-P[j]) \geq 0 \geq \mathbf{F}[i,j] \cdot P[j] \cdot (S[i] - 1)
+\mathbf{F}_{ij} \cdot \mathbf{\Gamma}_{ij} \cdot (1-\mathbf{P}_{jj}) \geq 0 \geq \mathbf{F}_{ij} \cdot \mathbf{P}_{jj} \cdot (\mathbf{s}_i - 1)
 $$
 
 Therefore: $\mathbf{K}_{ij} \geq 0$ ✓
@@ -96,9 +96,9 @@ Therefore: $\mathbf{K}_{ij} \geq 0$ ✓
 
 ## Physical Interpretation
 
-The non-negativity proof reveals a fundamental constraint: the upper bound $\mathbf{Γ} \leq 1$ ensures $S[i] \leq 1$, which makes the normalization correction term non-positive, thereby guaranteeing $\mathbf{K}_{ij} \geq 0$.
+The non-negativity proof reveals a fundamental constraint: the upper bound $\mathbf{\Gamma} \leq 1$ ensures $\mathbf{s}_i \leq 1$, which makes the normalization correction term non-positive, thereby guaranteeing $\mathbf{K}_{ij} \geq 0$.
 
-**Importantly, no lower bound on Γ is required for non-negativity.** The full range $\mathbf{Γ} \in [0, 1]$ is permissible, providing maximum flexibility for representing anisotropic reflection-scattering distributions while maintaining physical validity.
+**Importantly, no lower bound on Γ is required for non-negativity.** The full range $\mathbf{\Gamma} \in [0, 1]$ is permissible, providing maximum flexibility for representing anisotropic reflection-scattering distributions while maintaining physical validity.
 
 :::
 
@@ -129,41 +129,41 @@ where $\mathbf{b}$ is the vector of reflection-scattering coefficients.
 From the row-stochastic property of $T$:
 
 $$
-\sum_j \text{T}[i,j] = 1
+\sum_j \text{T}_{ij} = 1
 $$
 
 Therefore:
 
 $$
-\sum_j \mathbf{K}[i,j] = \sum_j \text{T}[i,j] - \sum_j \mathbf{F}[i,j] \cdot P[j]
+\sum_j \mathbf{K}_{ij} = \sum_j \text{T}_{ij} - \sum_j \mathbf{F}_{ij} \cdot \mathbf{P}_{jj}
 $$
 
 $$
-\sum_j \mathbf{K}[i,j] = 1 - \sum_j \mathbf{F}[i,j] \cdot P[j]
+\sum_j \mathbf{K}_{ij} = 1 - \sum_j \mathbf{F}_{ij} \cdot \mathbf{P}_{jj}
 $$
 
 **Step 2:** Express in terms of reflection-scattering coefficients.
 
-Since $P[j] = 1 - b_j$:
+Since $\mathbf{P}_{jj} = 1 - b_j$:
 
 $$
-\sum_j \mathbf{K}[i,j] = 1 - \sum_j \mathbf{F}[i,j] \cdot (1 - b_j)
+\sum_j \mathbf{K}_{ij} = 1 - \sum_j \mathbf{F}_{ij} \cdot (1 - b_j)
 $$
 
 **Step 3:** Compute $[(\mathbf{I} - \mathbf{K})\mathbf{1}]_i$.
 
 $$
-[(\mathbf{I} - \mathbf{K})\mathbf{1}]_i = 1 - \sum_j \mathbf{K}[i,j]
+[(\mathbf{I} - \mathbf{K})\mathbf{1}]_i = 1 - \sum_j \mathbf{K}_{ij}
 $$
 
 Substituting from Step 2:
 
 $$
-[(\mathbf{I} - \mathbf{K})\mathbf{1}]_i = 1 - \left(1 - \sum_j \mathbf{F}[i,j] \cdot (1 - b_j)\right)
+[(\mathbf{I} - \mathbf{K})\mathbf{1}]_i = 1 - \left(1 - \sum_j \mathbf{F}_{ij} \cdot (1 - b_j)\right)
 $$
 
 $$
-[(\mathbf{I} - \mathbf{K})\mathbf{1}]_i = \sum_j \mathbf{F}[i,j] \cdot (1 - b_j)
+[(\mathbf{I} - \mathbf{K})\mathbf{1}]_i = \sum_j \mathbf{F}_{ij} \cdot (1 - b_j)
 $$
 
 **Step 4:** Recognize the right-hand side.
@@ -379,7 +379,6 @@ This identity is the cornerstone of the isotropic formulation's mathematical str
 | $\mathbf{K} \geq 0$ | Trivial | Requires proof | ✓ Proven |
 | Key identity | Direct | Via normalization | ✓ Proven |
 | Energy conservation | Direct | Via key identity | ✓ Proven |
-| Spectral properties | Known | Inherited | ✓ Preserved |
 
 The anisotropic extension represents a true generalization: it maintains all essential properties while accommodating arbitrary directional distributions within the physical constraint $\mathbf{\Gamma} \in [0, 1]$.
 

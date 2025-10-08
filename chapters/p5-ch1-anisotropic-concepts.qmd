@@ -11,16 +11,16 @@ However, many physical systems exhibit anisotropic reflection-scattering, where 
 The anisotropic extension introduces a full matrix $\mathbf{\Gamma}$ (Gamma) to characterize directional dependence of reflection-scattering:
 
 $$
-\mathbf{\Gamma} \in \mathbb{R}^{N \times N}, \quad 0 \leq \Gamma_{ij} \leq 1 \quad \forall \; i,j
+\mathbf{\Gamma} \in \mathbb{R}^{N \times N}, \quad 0 \leq \mathbf{\Gamma}_{ij} \leq 1 \quad \forall \; ij
 $$ {#eq-gamma-bounds}
 
 where $\Gamma_{ij}$ represents the relative probability of reflection-scattering from element $j$ when radiation is incident from element $i$.
 
 ### Physical Interpretation
 
-- $\Gamma_{ij} = 1$: Maximum reflection-scattering from $j$ due to incidence from $i$ (isotropic limit)
-- $\Gamma_{ij} = 0$: No reflection-scattering from $j$ due to incidence from $i$ (complete directional selectivity)
-- $0 < \Gamma_{ij} < 1$: Partial anisotropic reflection-scattering with directional preference
+- $\mathbf{\Gamma}_{ij} = 1$: Maximum reflection-scattering from $j$ due to incidence from $i$ (isotropic limit)
+- $\mathbf{\Gamma}_{ij} = 0$: No reflection-scattering from $j$ due to incidence from $i$ (complete directional selectivity)
+- $0 < \mathbf{\Gamma}_{ij} < 1$: Partial anisotropic reflection-scattering with directional preference
 
 When $\mathbf{\Gamma} = \mathbf{1}$ (all ones), the anisotropic formulation reduces exactly to the isotropic case, ensuring backward compatibility and providing a natural basis for proof by continuity arguments.
 
@@ -28,114 +28,114 @@ When $\mathbf{\Gamma} = \mathbf{1}$ (all ones), the anisotropic formulation redu
 
 The anisotropic interaction-reflection-scattering matrix $\mathbf{K}$ is constructed through a multi-step process that ensures physical consistency.
 
-### Step 1: Initial Reflection-Scattering Distribution
+**Step 1:** Initial Reflection-Scattering Distribution
 
 Define the initial reflection-scattering distribution matrix:
 
 $$
-\mathbf{B}_{\text{init}}[i,j] = \mathbf{\Gamma}[i,j] \cdot (1 - \mathbf{P}[j])
+\mathbf{B}_{\text{init}}_{ij} = \mathbf{\Gamma}_{ij} \cdot (1 - \mathbf{P}_{jj})
 $$ {#eq-b-init}
 
-where $\mathbf{P}$ is the diagonal emissivity matrix with entries $P[j] = 1 - \mathbf{b}_j$, and $\mathbf{b}_j$ is the reflection-scattering coefficient of element $j$.
+where $\mathbf{P}$ is the diagonal emissivity matrix with entries $\mathbf{P}_{jj} = 1 - \mathbf{b}_j$, and $\mathbf{b}_j$ is the reflection-scattering coefficient of element $j$.
 
-Each column $j$ is scaled by the reflection-scattering probability $(1-\mathbf{P}[j]) = \mathbf{b}_j$ of the receiving element.
+Each column $j$ is scaled by the reflection-scattering probability $(1-\mathbf{P}_{jj}) = \mathbf{b}_j$ of the receiving element.
 
-### Step 2: Interaction-Reflection-Scattering (Pre-Normalization)
+**Step 2:** Interaction-Reflection-Scattering (Pre-Normalization)
 
 Compute the element-wise product of the exchange factor matrix and the initial reflection-scattering distribution:
 
 $$
-\mathbf{K}_{\text{init}}[i,j] = \mathbf{F}[i,j] \cdot \mathbf{B}_{\text{init}}[i,j] = \mathbf{F}[i,j] \cdot \mathbf{\Gamma}[i,j] \cdot (1 - \mathbf{P}[j])
+\mathbf{K}_{\text{init}}_{ij} = \mathbf{F}_{ij} \cdot \mathbf{B}_{\text{init}}_{ij} = \mathbf{F}_{ij} \cdot \mathbf{\Gamma}_{ij} \cdot (1 - \mathbf{P}_{jj})
 $$ {#eq-k-init}
 
 This represents the probability that radiation emitted from element $i$ interacts with element $j$ and is then reflected-scattered, before normalization.
 
-### Step 3: Enforce Probability Conservation
+**Step 3:** Enforce Probability Conservation
 
 Create a matrix that accounts for both reflection-scattering and absorption:
 
 $$
-\mathbf{U}[i,j] = K_{\text{init}}[i,j] + F[i,j] \cdot P[j]
+\mathbf{U}_{ij} = \mathbf{K}_{\text{init}}_{ij} + \mathbf{F}_{ij} \cdot \mathbf{P}_{jj}
 $$ {#eq-enforce-unity}
 
 Each element either reflects-scatters ($\mathbf{K}_{\text{init}}$) or is absorbed ($\mathbf{F} \cdot \mathbf{P}$).
 
-### Step 4: Compute Row Sums
+**Step 4:** Compute Row Sums
 
 Calculate the row sums:
 
 $$
-S[i] = \sum_j \text{U}[i,j] = \sum_j (K_{\text{init}}[i,j] + F[i,j] \cdot P[j])
+\mathbf{s}_i = \sum_j \text{U}_{ij} = \sum_j (K_{\text{init}}_{ij} + \mathbf{F}_{ij} \cdot \mathbf{P}_{jj})
 $$ {#eq-row-sums}
 
 Expanding:
 
 $$
-S[i] = \sum_j F[i,j] \cdot (\Gamma[i,j] \cdot (1-P[j]) + P[j])
+\mathbf{s}_i = \sum_j \mathbf{F}_{ij} \cdot (\Gamma_{ij} \cdot (1-\mathbf{P}_{jj}) + \mathbf{P}_{jj})
 $$ {#eq-row-sums-expanded}
 
-### Step 5: Normalize to Row-Stochastic
+**Step 5:** Normalize to Row-Stochastic
 
 Normalize the matrix to ensure row sums equal unity:
 
 $$
-\text{T}[i,j] = \frac{\mathbf{U}[i,j]}{S[i]}
+\text{T}_{ij} = \frac{\mathbf{U}_{ij}}{\mathbf{s}_i}
 $$ {#eq-normalize}
 
 This creates a row-stochastic matrix, ensuring that total probability is conserved for radiation emitted from each element $i$.
 
-### Step 6: Final Interaction-Reflection-Scattering Matrix
+**Step 6:** Final Interaction-Reflection-Scattering Matrix
 
 Extract the reflection-scattering component:
 
 $$
-K[i,j] = \text{T}[i,j] - F[i,j] \cdot P[j]
+K_{ij} = \text{T}_{ij} - \mathbf{F}_{ij} \cdot \mathbf{P}_{jj}
 $$ {#eq-k-final}
 
 Substituting from @eq-normalize:
 
 $$
-K[i,j] = \frac{K_{\text{init}}[i,j] + F[i,j] \cdot P[j]}{S[i]} - F[i,j] \cdot P[j]
+K_{ij} = \frac{K_{\text{init}}_{ij} + \mathbf{F}_{ij} \cdot \mathbf{P}_{jj}}{\mathbf{s}_i} - \mathbf{F}_{ij} \cdot \mathbf{P}_{jj}
 $$ {#eq-k-explicit}
 
 Simplifying:
 
 $$
-K[i,j] = \frac{K_{\text{init}}[i,j]}{S[i]} - F[i,j] \cdot P[j] \left(1 - \frac{1}{S[i]}\right)
+K_{ij} = \frac{K_{\text{init}}_{ij}}{\mathbf{s}_i} - \mathbf{F}_{ij} \cdot \mathbf{P}_{jj} \left(1 - \frac{1}{\mathbf{s}_i}\right)
 $$ {#eq-k-simplified}
 
 ## Properties of the Row Sum Normalization Factor
 
-### Bounds on S[i]
+### Bounds on s
 
 From @eq-row-sums-expanded:
 
 $$
-S[i] = \sum_j F[i,j] \cdot (\Gamma[i,j] \cdot (1-P[j]) + P[j])
+\mathbf{s}_i = \sum_j \mathbf{F}_{ij} \cdot (\Gamma_{ij} \cdot (1-\mathbf{P}_{jj}) + \mathbf{P}_{jj})
 $$
 
-Since $\mathbf{F}$ is row-stochastic ($\sum_j F[i,j] = 1$), we can write:
+Since $\mathbf{F}$ is row-stochastic ($\sum_j \mathbf{F}_{ij} = 1$), we can write:
 
 $$
-S[i] - 1 = \sum_j F[i,j] \cdot (\Gamma[i,j] \cdot (1-P[j]) + P[j] - 1)
+\mathbf{s}_i - 1 = \sum_j \mathbf{F}_{ij} \cdot (\Gamma_{ij} \cdot (1-\mathbf{P}_{jj}) + \mathbf{P}_{jj} - 1)
 $$ {#eq-s-minus-one}
 
 Simplifying:
 
 $$
-S[i] - 1 = \sum_j F[i,j] \cdot (\Gamma[i,j] - 1) \cdot (1-P[j])
+\mathbf{s}_i - 1 = \sum_j \mathbf{F}_{ij} \cdot (\Gamma_{ij} - 1) \cdot (1-\mathbf{P}_{jj})
 $$ {#eq-s-minus-one-simple}
 
-Since $\Gamma[i,j] \leq 1$, $F[i,j] \geq 0$, and $(1-P[j]) \geq 0$:
+Since $\Gamma_{ij} \leq 1$, $\mathbf{F}_{ij} \geq 0$, and $(1-\mathbf{P}_{jj}) \geq 0$:
 
 $$
-S[i] - 1 \leq 0 \implies S[i] \leq 1
+\mathbf{s}_i - 1 \leq 0 \implies \mathbf{s}_i \leq 1
 $$ {#eq-s-upper-bound}
 
 Furthermore, the lower bound $\mathbf{P}_{jj} = 1-\mathbf{b}_j > 0$ creates the lower bound $S > 0$, leading to the full bounds on $S$
 
 $$
-0 < S \leq 1
+0 < \mathbf{s}_i \leq 1
 $$
 
 which prevents division by zero in equation (@eq-k-explicit) and (@eq-k-simplified)
@@ -145,20 +145,20 @@ which prevents division by zero in equation (@eq-k-explicit) and (@eq-k-simplifi
 When $\mathbf{\Gamma} = \mathbf{1}$ (all ones), we have:
 
 $$
-S[i] = \sum_j F[i,j] \cdot ((1-P[j]) + P[j]) = \sum_j F[i,j] = 1
+\mathbf{s}_i = \sum_j \mathbf{F}_{ij} \cdot ((1-\mathbf{P}_{jj}) + \mathbf{P}_{jj}) = \sum_j \mathbf{F}_{ij} = 1
 $$
 
 Therefore, the normalization does nothing, and:
 
 $$
-K[i,j] = F[i,j] - F[i,j] \cdot P[j] = F[i,j] \cdot (1-P[j])
+K_{ij} = \mathbf{F}_{ij} - \mathbf{F}_{ij} \cdot \mathbf{P}_{jj} = \mathbf{F}_{ij} \cdot (1-\mathbf{P}_{jj})
 $$
 
 This recovers the isotropic case exactly: $\mathbf{K} = \mathbf{F} \circ \mathbf{B}$, where $\mathbf{B}$ is the column-constant matrix of reflection-scattering coefficients.
 
 ## Subsequent Transformation
 
-Once $\mathbf{K}$ is constructed, the remainder of the exchange factor transformation proceeds identically to the isotropic case:
+Once $\mathbf{K}$ is constructed, the remainder of the exchange factor transformation proceeds almost identically to the isotropic case:
 
 The steady-state path matrix is given by:
 
@@ -208,7 +208,7 @@ where $\mathbf{M}$ is assembled row-by-row from $\mathbf{C}$ (for known sources)
 
 ## Physical Applications
 
-For surfaces with specular components, media with anisotropic scattering phase functions (e.g., Mie scattering, Henyey-Greenstein, i.e. (i,j,k)-three-index dependencies) and surfaces with oriented microstructure (e.g., brushed metal, fibrous materials), more complex models are required.
+For surfaces with specular components, media with anisotropic scattering phase functions (e.g., Mie scattering, Henyey-Greenstein, i.e. (ij,k)-three-index dependencies) and surfaces with oriented microstructure (e.g., brushed metal, fibrous materials), more complex models are required.
 
 ## Conclusion
 
