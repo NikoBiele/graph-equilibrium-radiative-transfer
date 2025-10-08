@@ -33,7 +33,7 @@ The anisotropic interaction-reflection-scattering matrix $\mathbf{K}$ is constru
 Define the initial reflection-scattering distribution matrix:
 
 $$
-\mathbf{B}_{\text{init}}_{ij} = \mathbf{\Gamma}_{ij} \cdot (1 - \mathbf{P}_{jj})
+\mathbf{B}_{\mathrm{init},ij} = \mathbf{\Gamma}_{ij} \cdot (1 - \mathbf{P}_{jj})
 $$ {#eq-b-init}
 
 where $\mathbf{P}$ is the diagonal emissivity matrix with entries $\mathbf{P}_{jj} = 1 - \mathbf{b}_j$, and $\mathbf{b}_j$ is the reflection-scattering coefficient of element $j$.
@@ -45,7 +45,7 @@ Each column $j$ is scaled by the reflection-scattering probability $(1-\mathbf{P
 Compute the element-wise product of the exchange factor matrix and the initial reflection-scattering distribution:
 
 $$
-\mathbf{K}_{\text{init}}_{ij} = \mathbf{F}_{ij} \cdot \mathbf{B}_{\text{init}}_{ij} = \mathbf{F}_{ij} \cdot \mathbf{\Gamma}_{ij} \cdot (1 - \mathbf{P}_{jj})
+\mathbf{K}_{\mathrm{init},ij} = \mathbf{F}_{ij} \cdot \mathbf{B}_{\mathrm{init},ij} = \mathbf{F}_{ij} \cdot \mathbf{\Gamma}_{ij} \cdot (1 - \mathbf{P}_{jj})
 $$ {#eq-k-init}
 
 This represents the probability that radiation emitted from element $i$ interacts with element $j$ and is then reflected-scattered, before normalization.
@@ -55,17 +55,17 @@ This represents the probability that radiation emitted from element $i$ interact
 Create a matrix that accounts for both reflection-scattering and absorption:
 
 $$
-\mathbf{U}_{ij} = \mathbf{K}_{\text{init}}_{ij} + \mathbf{F}_{ij} \cdot \mathbf{P}_{jj}
+\mathbf{U}_{ij} = \mathbf{K}_{\mathrm{init},ij} + \mathbf{F}_{ij} \cdot \mathbf{P}_{jj}
 $$ {#eq-enforce-unity}
 
-Each element either reflects-scatters ($\mathbf{K}_{\text{init}}$) or is absorbed ($\mathbf{F} \cdot \mathbf{P}$).
+Each element either reflects-scatters ($\mathbf{K}_{\mathrm{init}}$) or is absorbed ($\mathbf{F} \cdot \mathbf{P}$).
 
 **Step 4:** Compute Row Sums
 
 Calculate the row sums:
 
 $$
-\mathbf{s}_i = \sum_j \text{U}_{ij} = \sum_j (K_{\text{init}}_{ij} + \mathbf{F}_{ij} \cdot \mathbf{P}_{jj})
+\mathbf{s}_i = \sum_j \mathbf{U}_{ij} = \sum_j (K_{\mathrm{init},ij} + \mathbf{F}_{ij} \cdot \mathbf{P}_{jj})
 $$ {#eq-row-sums}
 
 Expanding:
@@ -79,7 +79,7 @@ $$ {#eq-row-sums-expanded}
 Normalize the matrix to ensure row sums equal unity:
 
 $$
-\text{T}_{ij} = \frac{\mathbf{U}_{ij}}{\mathbf{s}_i}
+\mathbf{T}_{ij} = \frac{\mathbf{U}_{ij}}{\mathbf{s}_i}
 $$ {#eq-normalize}
 
 This creates a row-stochastic matrix, ensuring that total probability is conserved for radiation emitted from each element $i$.
@@ -89,19 +89,19 @@ This creates a row-stochastic matrix, ensuring that total probability is conserv
 Extract the reflection-scattering component:
 
 $$
-K_{ij} = \text{T}_{ij} - \mathbf{F}_{ij} \cdot \mathbf{P}_{jj}
+K_{ij} = \mathbf{T}_{ij} - \mathbf{F}_{ij} \cdot \mathbf{P}_{jj}
 $$ {#eq-k-final}
 
 Substituting from @eq-normalize:
 
 $$
-K_{ij} = \frac{K_{\text{init}}_{ij} + \mathbf{F}_{ij} \cdot \mathbf{P}_{jj}}{\mathbf{s}_i} - \mathbf{F}_{ij} \cdot \mathbf{P}_{jj}
+K_{ij} = \frac{K_{\mathrm{init},ij} + \mathbf{F}_{ij} \cdot \mathbf{P}_{jj}}{\mathbf{s}_i} - \mathbf{F}_{ij} \cdot \mathbf{P}_{jj}
 $$ {#eq-k-explicit}
 
 Simplifying:
 
 $$
-K_{ij} = \frac{K_{\text{init}}_{ij}}{\mathbf{s}_i} - \mathbf{F}_{ij} \cdot \mathbf{P}_{jj} \left(1 - \frac{1}{\mathbf{s}_i}\right)
+K_{ij} = \frac{K_{\mathrm{init},ij}}{\mathbf{s}_i} - \mathbf{F}_{ij} \cdot \mathbf{P}_{jj} \left(1 - \frac{1}{\mathbf{s}_i}\right)
 $$ {#eq-k-simplified}
 
 ## Properties of the Row Sum Normalization Factor

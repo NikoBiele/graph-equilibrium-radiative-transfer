@@ -23,10 +23,10 @@ The proof proceeds by analyzing the inequality that must hold for $\mathbf{K}_{i
 From (@eq-k-simplified):
 
 $$
-\mathbf{K}_{ij} = \frac{\mathbf{K}_{\text{init}}_{ij}}{\mathbf{s}_i} - \mathbf{F}_{ij} \cdot \mathbf{P}_{jj} \left(1 - \frac{1}{\mathbf{s}_i}\right)
+\mathbf{K}_{ij} = \frac{\mathbf{K}_{\mathrm{init},ij}}{\mathbf{s}_i} - \mathbf{F}_{ij} \cdot \mathbf{P}_{jj} \left(1 - \frac{1}{\mathbf{s}_i}\right)
 $$
 
-Substituting $\mathbf{K}_{\text{init}}_{ij} = \mathbf{F}_{ij} \cdot \mathbf{\Gamma}_{ij} \cdot (1-\mathbf{P}_{jj})$:
+Substituting $\mathbf{K}_{\mathrm{init},ij} = \mathbf{F}_{ij} \cdot \mathbf{\Gamma}_{ij} \cdot (1-\mathbf{P}_{jj})$:
 
 $$
 \mathbf{K}_{ij} = \frac{\mathbf{F}_{ij} \cdot \mathbf{\Gamma}_{ij} \cdot (1-\mathbf{P}_{jj})}{\mathbf{s}_i} - \mathbf{F}_{ij} \cdot \mathbf{P}_{jj} \left(1 - \frac{1}{\mathbf{s}_i}\right)
@@ -129,13 +129,13 @@ where $\mathbf{b}$ is the vector of reflection-scattering coefficients.
 From the row-stochastic property of $T$:
 
 $$
-\sum_j \text{T}_{ij} = 1
+\sum_j \mathbf{T}_{ij} = 1
 $$
 
 Therefore:
 
 $$
-\sum_j \mathbf{K}_{ij} = \sum_j \text{T}_{ij} - \sum_j \mathbf{F}_{ij} \cdot \mathbf{P}_{jj}
+\sum_j \mathbf{K}_{ij} = \sum_j \mathbf{T}_{ij} - \sum_j \mathbf{F}_{ij} \cdot \mathbf{P}_{jj}
 $$
 
 $$
