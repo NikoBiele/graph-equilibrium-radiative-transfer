@@ -144,10 +144,10 @@ $$
 
 **Step 2:** Express in terms of reflection-scattering coefficients.
 
-Since $\mathbf{P}_{jj} = 1 - b_j$:
+Since $\mathbf{P}_{jj} = 1 - \mathbf{b}_j$:
 
 $$
-\sum_j \mathbf{K}_{ij} = 1 - \sum_j \mathbf{F}_{ij} \cdot (1 - b_j)
+\sum_j \mathbf{K}_{ij} = 1 - \sum_j \mathbf{F}_{ij} \cdot (1 - \mathbf{b}_j)
 $$
 
 **Step 3:** Compute $[(\mathbf{I} - \mathbf{K})\mathbf{1}]_i$.
@@ -159,11 +159,11 @@ $$
 Substituting from Step 2:
 
 $$
-[(\mathbf{I} - \mathbf{K})\mathbf{1}]_i = 1 - \left(1 - \sum_j \mathbf{F}_{ij} \cdot (1 - b_j)\right)
+[(\mathbf{I} - \mathbf{K})\mathbf{1}]_i = 1 - \left(1 - \sum_j \mathbf{F}_{ij} \cdot (1 - \mathbf{b}_j)\right)
 $$
 
 $$
-[(\mathbf{I} - \mathbf{K})\mathbf{1}]_i = \sum_j \mathbf{F}_{ij} \cdot (1 - b_j)
+[(\mathbf{I} - \mathbf{K})\mathbf{1}]_i = \sum_j \mathbf{F}_{ij} \cdot (1 - \mathbf{b}_j)
 $$
 
 **Step 4:** Recognize the right-hand side.
@@ -329,7 +329,7 @@ Consider a mixed system $\mathbf{M}\mathbf{j} = \mathbf{h}$ where:
 - Rows $I$ of $\mathbf{M}$ are taken from $\mathbf{C}$ with corresponding $\mathbf{h}_I = \mathbf{0}$
 - Reflection-scattering coefficients on rows $I$ can be non-uniform: $0 \leq b_i < 1$ for all $i \in I$
 - Rows $J$ of $\mathbf{M}$ are taken from $\mathbf{D}$ with corresponding $\mathbf{h}_J \geq \mathbf{0}$
-- Reflection-scattering coefficients on rows $J$ are uniform: $b_j = \gamma < 1$ for all $j \in J$
+- Reflection-scattering coefficients on rows $J$ are uniform: $\mathbf{b}_j = \gamma < 1$ for all $j \in J$
 
 Then the energy conservation property holds:
 

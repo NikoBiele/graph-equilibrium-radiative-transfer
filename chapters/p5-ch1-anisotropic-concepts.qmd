@@ -14,7 +14,7 @@ $$
 \mathbf{\Gamma} \in \mathbb{R}^{N \times N}, \quad 0 \leq \mathbf{\Gamma}_{ij} \leq 1 \quad \forall \; ij
 $$ {#eq-gamma-bounds}
 
-where $\Gamma_{ij}$ represents the relative probability of reflection-scattering from element $j$ when radiation is incident from element $i$.
+where $\mathbf{\Gamma}_{ij}$ represents the relative probability of reflection-scattering from element $j$ when radiation is incident from element $i$.
 
 ### Physical Interpretation
 
@@ -65,13 +65,13 @@ Each element either reflects-scatters ($\mathbf{K}_{\mathrm{init}}$) or is absor
 Calculate the row sums:
 
 $$
-\mathbf{s}_i = \sum_j \mathbf{U}_{ij} = \sum_j (K_{\mathrm{init},ij} + \mathbf{F}_{ij} \cdot \mathbf{P}_{jj})
+\mathbf{s}_i = \sum_j \mathbf{U}_{ij} = \sum_j (\mathbf{K}_{\mathrm{init},ij} + \mathbf{F}_{ij} \cdot \mathbf{P}_{jj})
 $$ {#eq-row-sums}
 
 Expanding:
 
 $$
-\mathbf{s}_i = \sum_j \mathbf{F}_{ij} \cdot (\Gamma_{ij} \cdot (1-\mathbf{P}_{jj}) + \mathbf{P}_{jj})
+\mathbf{s}_i = \sum_j \mathbf{F}_{ij} \cdot (\mathbf{\Gamma}_{ij} \cdot (1-\mathbf{P}_{jj}) + \mathbf{P}_{jj})
 $$ {#eq-row-sums-expanded}
 
 **Step 5:** Normalize to Row-Stochastic
@@ -89,19 +89,19 @@ This creates a row-stochastic matrix, ensuring that total probability is conserv
 Extract the reflection-scattering component:
 
 $$
-K_{ij} = \mathbf{T}_{ij} - \mathbf{F}_{ij} \cdot \mathbf{P}_{jj}
+\mathbf{K}_{ij} = \mathbf{T}_{ij} - \mathbf{F}_{ij} \cdot \mathbf{P}_{jj}
 $$ {#eq-k-final}
 
 Substituting from @eq-normalize:
 
 $$
-K_{ij} = \frac{K_{\mathrm{init},ij} + \mathbf{F}_{ij} \cdot \mathbf{P}_{jj}}{\mathbf{s}_i} - \mathbf{F}_{ij} \cdot \mathbf{P}_{jj}
+\mathbf{K}_{ij} = \frac{\mathbf{K}_{\mathrm{init},ij} + \mathbf{F}_{ij} \cdot \mathbf{P}_{jj}}{\mathbf{s}_i} - \mathbf{F}_{ij} \cdot \mathbf{P}_{jj}
 $$ {#eq-k-explicit}
 
 Simplifying:
 
 $$
-K_{ij} = \frac{K_{\mathrm{init},ij}}{\mathbf{s}_i} - \mathbf{F}_{ij} \cdot \mathbf{P}_{jj} \left(1 - \frac{1}{\mathbf{s}_i}\right)
+\mathbf{K}_{ij} = \frac{\mathbf{K}_{\mathrm{init},ij}}{\mathbf{s}_i} - \mathbf{F}_{ij} \cdot \mathbf{P}_{jj} \left(1 - \frac{1}{\mathbf{s}_i}\right)
 $$ {#eq-k-simplified}
 
 ## Properties of the Row Sum Normalization Factor
@@ -111,22 +111,22 @@ $$ {#eq-k-simplified}
 From @eq-row-sums-expanded:
 
 $$
-\mathbf{s}_i = \sum_j \mathbf{F}_{ij} \cdot (\Gamma_{ij} \cdot (1-\mathbf{P}_{jj}) + \mathbf{P}_{jj})
+\mathbf{s}_i = \sum_j \mathbf{F}_{ij} \cdot (\mathbf{\Gamma}_{ij} \cdot (1-\mathbf{P}_{jj}) + \mathbf{P}_{jj})
 $$
 
 Since $\mathbf{F}$ is row-stochastic ($\sum_j \mathbf{F}_{ij} = 1$), we can write:
 
 $$
-\mathbf{s}_i - 1 = \sum_j \mathbf{F}_{ij} \cdot (\Gamma_{ij} \cdot (1-\mathbf{P}_{jj}) + \mathbf{P}_{jj} - 1)
+\mathbf{s}_i - 1 = \sum_j \mathbf{F}_{ij} \cdot (\mathbf{\Gamma}_{ij} \cdot (1-\mathbf{P}_{jj}) + \mathbf{P}_{jj} - 1)
 $$ {#eq-s-minus-one}
 
 Simplifying:
 
 $$
-\mathbf{s}_i - 1 = \sum_j \mathbf{F}_{ij} \cdot (\Gamma_{ij} - 1) \cdot (1-\mathbf{P}_{jj})
+\mathbf{s}_i - 1 = \sum_j \mathbf{F}_{ij} \cdot (\mathbf{\Gamma}_{ij} - 1) \cdot (1-\mathbf{P}_{jj})
 $$ {#eq-s-minus-one-simple}
 
-Since $\Gamma_{ij} \leq 1$, $\mathbf{F}_{ij} \geq 0$, and $(1-\mathbf{P}_{jj}) \geq 0$:
+Since $\mathbf{\Gamma}_{ij} \leq 1$, $\mathbf{F}_{ij} \geq 0$, and $(1-\mathbf{P}_{jj}) \geq 0$:
 
 $$
 \mathbf{s}_i - 1 \leq 0 \implies \mathbf{s}_i \leq 1
@@ -151,7 +151,7 @@ $$
 Therefore, the normalization does nothing, and:
 
 $$
-K_{ij} = \mathbf{F}_{ij} - \mathbf{F}_{ij} \cdot \mathbf{P}_{jj} = \mathbf{F}_{ij} \cdot (1-\mathbf{P}_{jj})
+\mathbf{K}_{ij} = \mathbf{F}_{ij} - \mathbf{F}_{ij} \cdot \mathbf{P}_{jj} = \mathbf{F}_{ij} \cdot (1-\mathbf{P}_{jj})
 $$
 
 This recovers the isotropic case exactly: $\mathbf{K} = \mathbf{F} \circ \mathbf{B}$, where $\mathbf{B}$ is the column-constant matrix of reflection-scattering coefficients.
@@ -204,7 +204,7 @@ where $\mathbf{M}$ is assembled row-by-row from $\mathbf{C}$ (for known sources)
 
 4. **Preserved Properties**: Non-negativity and energy conservation are guaranteed (see chapter @sec-exchange_fact_anisotropic_extend for proofs).
 
-5. **Flexibility**: Accommodates any anisotropic distribution within the constraint $0 \leq \Gamma_{ij} \leq 1$, providing maximum modeling flexibility.
+5. **Flexibility**: Accommodates any anisotropic distribution within the constraint $0 \leq \mathbf{\Gamma}_{ij} \leq 1$, providing maximum modeling flexibility.
 
 ## Physical Applications
 
