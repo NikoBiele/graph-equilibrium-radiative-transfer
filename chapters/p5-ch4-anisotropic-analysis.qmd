@@ -102,6 +102,352 @@ The non-negativity proof reveals a fundamental constraint: the upper bound $\mat
 
 :::
 
+::: {.theorem data-title="K ≤ F for the Columnwise Anisotropic Construction"}
+
+Let $\mathbf{F}$ be a row-stochastic exchange factor matrix, and let $\mathbf{b}$ be a vector of reflection-scattering coefficients with $b_j \in [0,1)$ for all $j$. Let $\mathbf{P}$ be the diagonal emissivity matrix with $P_j = 1 - b_j$.
+
+Define the anisotropic reflection-scattering matrix with columnwise constraints:
+
+$$
+\mathbf{B}_{\mathrm{init},ij} = b_j + r_{ij} \cdot (1 - b_j)
+$$ {#eq-binit-columnwise}
+
+where $r_{ij} \in [0, 1]$ for all $i, j$.
+
+Following the normalization procedure:
+
+1. Form the unnormalized interaction matrix: $\mathbf{K}_{\mathrm{init},ij} = \mathbf{F}_{ij} \cdot \mathbf{B}_{\mathrm{init},ij}$
+2. Account for both reflection-scattering and absorption: $\mathbf{U}_{ij} = \mathbf{K}_{\mathrm{init},ij} + \mathbf{F}_{ij} \cdot P_j$
+3. Compute row sums: $s_i = \sum_k \mathbf{U}_{i,k}$
+4. Normalize to row-stochastic: $\mathbf{T}_{ij} = \mathbf{U}_{ij} / s_i$
+5. Extract the reflection-scattering component: $\mathbf{K}_{ij} = \mathbf{T}_{ij} - \mathbf{F}_{ij} \cdot P_j$
+
+Then $\mathbf{K}_{ij} \leq \mathbf{F}_{ij}$ for all $i, j$.
+:::
+
+::: {.proof}
+
+We will prove that the columnwise construction guarantees $\mathbf{K}_{ij} \leq \mathbf{F}_{ij}$ by showing that the inequality holds in the worst case, and that all other cases are less restrictive.
+
+**Part 1:** Derive an expression for $\mathbf{K}_{ij}$
+
+Starting from step 2 of the normalization procedure, we can write $\mathbf{U}_{ij}$ as:
+
+$$
+\mathbf{U}_{ij} = \mathbf{F}_{ij} \cdot \mathbf{B}_{\mathrm{init},ij} + \mathbf{F}_{ij} \cdot P_j
+$$
+
+Factoring:
+
+$$
+\mathbf{U}_{ij} = \mathbf{F}_{ij} \cdot (\mathbf{B}_{\mathrm{init},ij} + P_j)
+$$
+
+From step 4, the normalized matrix is:
+
+$$
+\mathbf{T}_{ij} = \frac{\mathbf{U}_{ij}}{s_i} = \frac{\mathbf{F}_{ij} \cdot (\mathbf{B}_{\mathrm{init},ij} + P_j)}{s_i}
+$$
+
+From step 5, the interaction-reflection-scattering matrix is:
+
+$$
+\begin{aligned}
+\mathbf{K}_{ij} &= \mathbf{T}_{ij} - \mathbf{F}_{ij} \cdot P_j \\
+&= \frac{\mathbf{F}_{ij} \cdot (\mathbf{B}_{\mathrm{init},ij} + P_j)}{s_i} - \mathbf{F}_{ij} \cdot P_j
+\end{aligned}
+$$
+
+Factoring out $\mathbf{F}_{ij}$:
+
+$$
+\mathbf{K}_{ij} = \mathbf{F}_{ij} \cdot \left[\frac{\mathbf{B}_{\mathrm{init},ij} + P_j}{s_i} - P_j\right]
+$$
+
+To combine the terms, we write:
+
+$$
+\mathbf{K}_{ij} = \mathbf{F}_{ij} \cdot \left[\frac{\mathbf{B}_{\mathrm{init},ij} + P_j - s_i \cdot P_j}{s_i}\right]
+$$
+
+Simplifying the numerator:
+
+$$
+\mathbf{K}_{ij} = \mathbf{F}_{ij} \cdot \frac{\mathbf{B}_{\mathrm{init},ij} + P_j \cdot (1 - s_i)}{s_i}
+$$ {#eq-k-expression}
+
+**Part 2:** Establish the condition for $\mathbf{K}_{ij} \leq \mathbf{F}_{ij}$
+
+We want to prove that $\mathbf{K}_{ij} \leq \mathbf{F}_{ij}$ for all $i, j$.
+
+For entries where $\mathbf{F}_{ij} = 0$, we have:
+
+$$
+\mathbf{K}_{ij} = 0 \cdot \frac{\mathbf{B}_{\mathrm{init},ij} + P_j \cdot (1 - s_i)}{s_i} = 0 = \mathbf{F}_{ij}
+$$
+
+So the inequality holds trivially when $\mathbf{F}_{ij} = 0$.
+
+For entries where $\mathbf{F}_{ij} > 0$, we can divide both sides by $\mathbf{F}_{ij}$:
+
+$$
+\frac{\mathbf{B}_{\mathrm{init},ij} + P_j \cdot (1 - s_i)}{s_i} \leq 1
+$$
+
+Multiplying both sides by $s_i > 0$:
+
+$$
+\mathbf{B}_{\mathrm{init},ij} + P_j \cdot (1 - s_i) \leq s_i
+$$
+
+Rearranging:
+
+$$
+\mathbf{B}_{\mathrm{init},ij} \leq s_i - P_j \cdot (1 - s_i)
+$$
+
+Expanding the right side:
+
+$$
+\mathbf{B}_{\mathrm{init},ij} \leq s_i - P_j + P_j \cdot s_i
+$$
+
+Factoring:
+
+$$
+\mathbf{B}_{\mathrm{init},ij} \leq s_i \cdot (1 + P_j) - P_j
+$$ {#eq-condition-P}
+
+Since $P_j = 1 - b_j$, we have $1 + P_j = 1 + (1 - b_j) = 2 - b_j$, giving:
+
+$$
+\mathbf{B}_{\mathrm{init},ij} \leq s_i \cdot (2 - b_j) - (1 - b_j)
+$$ {#eq-main-condition}
+
+This is the condition we need to verify.
+
+**Part 3:** Substitute the columnwise construction
+
+From the construction formula (@eq-binit-columnwise):
+
+$$
+\mathbf{B}_{\mathrm{init},ij} = b_j + r_{ij} \cdot (1 - b_j)
+$$
+
+Substituting into condition (@eq-main-condition):
+
+$$
+b_j + r_{ij} \cdot (1 - b_j) \leq s_i \cdot (2 - b_j) - (1 - b_j)
+$$
+
+Adding $(1 - b_j)$ to both sides:
+
+$$
+b_j + r_{ij} \cdot (1 - b_j) + (1 - b_j) \leq s_i \cdot (2 - b_j)
+$$
+
+Since $b_j + (1 - b_j) = 1$:
+
+$$
+1 + r_{ij} \cdot (1 - b_j) \leq s_i \cdot (2 - b_j)
+$$ {#eq-simplified-condition}
+
+This is the inequality we need to prove holds for all $i, j$.
+
+**Part 4:** Determine the bounds on $s_i$
+
+From step 3 of the normalization procedure:
+
+$$
+s_i = \sum_k \mathbf{U}_{ik} = \sum_k \mathbf{F}_{ik} \cdot (\mathbf{B}_{\mathrm{init},ik} + P_k)
+$$
+
+Substituting the columnwise construction:
+
+$$
+s_i = \sum_k \mathbf{F}_{ik} \cdot (b_k + r_{ik} \cdot (1 - b_k) + P_k)
+$$
+
+Since $P_k = 1 - b_k$:
+
+$$
+s_i = \sum_k \mathbf{F}_{ik} \cdot (b_k + r_{ik} \cdot (1 - b_k) + 1 - b_k)
+$$
+
+Simplifying the terms inside:
+
+$$
+b_k + r_{ik} \cdot (1 - b_k) + 1 - b_k = 1 + r_{ik} \cdot (1 - b_k)
+$$
+
+Therefore:
+
+$$
+s_i = \sum_k \mathbf{F}_{ik} \cdot (1 + r_{ik} \cdot (1 - b_k))
+$$
+
+Since $\mathbf{F}$ is row-stochastic with $\sum_k \mathbf{F}_{ik} = 1$:
+
+$$
+s_i = \sum_k \mathbf{F}_{ik} + \sum_k \mathbf{F}_{ik} \cdot r_{ik} \cdot (1 - b_k)
+$$
+
+$$
+s_i = 1 + \sum_k \mathbf{F}_{ik} \cdot r_{ik} \cdot (1 - b_k)
+$$ {#eq-si-formula}
+
+Now we establish bounds on $s_i$. Since $r_{ik} \in [0, 1]$, $\mathbf{F}_{ik} \geq 0$, and $(1 - b_k) > 0$:
+
+The minimum value occurs when all $r_{ik} = 0$:
+
+$$
+s_i \geq 1 + \sum_k \mathbf{F}_{ik} \cdot 0 \cdot (1 - b_k) = 1
+$$
+
+The maximum value occurs when all $r_{ik} = 1$:
+
+$$
+\begin{aligned}
+s_i &\leq 1 + \sum_k \mathbf{F}_{ik} \cdot 1 \cdot (1 - b_k) \\
+&= 1 + \sum_k \mathbf{F}_{ik} \cdot (1 - b_k) \\
+&= 1 + \sum_k \mathbf{F}_{ik} - \sum_k \mathbf{F}_{ik} \cdot b_k \\
+&= 1 + 1 - \sum_k \mathbf{F}_{ik} \cdot b_k \\
+&= 2 - \sum_k \mathbf{F}_{ik} \cdot b_k
+\end{aligned}
+$$
+
+Since $b_k \geq 0$:
+
+$$
+s_i \leq 2 - 0 = 2
+$$
+
+Therefore:
+
+$$
+1 \leq s_i \leq 2
+$$ {#eq-si-bounds}
+
+**Part 5:** Verify the inequality in the worst case
+
+The inequality (@eq-simplified-condition) we need to prove is:
+
+$$
+1 + r_{ij} \cdot (1 - b_j) \leq s_i \cdot (2 - b_j)
+$$
+
+The left-hand side (LHS) is maximized when $r_{ij}$ is largest:
+- Maximum LHS occurs when $r_{ij} = 1$
+- Maximum LHS $= 1 + 1 \cdot (1 - b_j) = 1 + 1 - b_j = 2 - b_j$
+
+The right-hand side (RHS) is minimized when $s_i$ is smallest:
+- Minimum RHS occurs when $s_i = 1$
+- Minimum RHS $= 1 \cdot (2 - b_j) = 2 - b_j$
+
+In the worst case (maximum LHS and minimum RHS):
+
+$$
+\text{LHS}_{\max} = 2 - b_j = 2 - b_j = \text{RHS}_{\min}
+$$
+
+Therefore, the inequality holds with equality in the worst case.
+
+**Part 6:** Verify the inequality holds generally
+
+We have shown that in the worst case, LHS $=$ RHS. Now we show that in all other cases, LHS $<$ RHS (strict inequality).
+
+**Case 1:** $s_i > 1$
+
+When $s_i > 1$, the RHS increases:
+
+$$
+\text{RHS} = s_i \cdot (2 - b_j) > 1 \cdot (2 - b_j) = 2 - b_j
+$$
+
+Since the maximum possible LHS is $2 - b_j$:
+
+$$
+\text{LHS} \leq 2 - b_j < s_i \cdot (2 - b_j) = \text{RHS}
+$$
+
+**Case 2:** $r_{ij} < 1$
+
+When $r_{ij} < 1$, the LHS decreases:
+
+$$
+\text{LHS} = 1 + r_{ij} \cdot (1 - b_j) < 1 + 1 \cdot (1 - b_j) = 2 - b_j
+$$
+
+Since the minimum possible RHS is $2 - b_j$:
+
+$$
+\text{LHS} < 2 - b_j \leq s_i \cdot (2 - b_j) = \text{RHS}
+$$
+
+**Case 3:** Both $s_i > 1$ and $r_{ij} < 1$
+
+In this case, both effects combine:
+- LHS is reduced from its maximum
+- RHS is increased from its minimum
+
+Therefore: $\text{LHS} < \text{LHS}_{\max} = \text{RHS}_{\min} < \text{RHS}$
+
+This gives a strict inequality $\mathbf{K}_{ij} < \mathbf{F}_{ij}$.
+
+**Conclusion**
+
+We have shown that:
+1. When $\mathbf{F}_{ij} = 0$: $\mathbf{K}_{ij} = 0 = \mathbf{F}_{ij}$ ✓
+2. When $\mathbf{F}_{ij} > 0$ and worst case ($s_i = 1$, $r_{ij} = 1$): $\mathbf{K}_{ij} = \mathbf{F}_{ij}$ ✓
+3. When $\mathbf{F}_{ij} > 0$ and not worst case: $\mathbf{K}_{ij} < \mathbf{F}_{ij}$ ✓
+
+Therefore, the columnwise construction $\mathbf{B}_{\mathrm{init},ij} = b_j + r_{ij} \cdot (1 - b_j)$ with $r_{ij} \in [0, 1]$ guarantees that $\mathbf{K}_{ij} \leq \mathbf{F}_{ij}$ for all $i, j$. $\square$
+
+:::
+
+::: {.theorem data-title="Corollary: Anisotropy Matrix Constraint"}
+
+The columnwise construction (@eq-binit-columnwise) can be expressed in terms of an anisotropy matrix $\mathbf{\Gamma}$ as:
+
+$$
+\mathbf{B}_{\mathrm{init},ij} = b_j + \mathbf{\Gamma}_{ij} \cdot (1 - b_j)
+$$ {#eq-gamma-relation}
+
+where $\mathbf{\Gamma}_{ij} \in [0, 1]$ for all $i, j$ ensures $\mathbf{K} \leq \mathbf{F}$.
+
+When $\mathbf{\Gamma}_{ij} = 0$, element $j$ exhibits maximum anisotropy (minimum reflection-scattering) for radiation incident from element $i$.
+
+When $\mathbf{\Gamma}_{ij} = 1$, element $j$ exhibits isotropic behavior (maximum reflection-scattering) for radiation incident from element $i$.
+:::
+
+## Physical Interpretation
+
+The columnwise construction has several important physical properties:
+
+**Locality of constraints:** Each element $j$'s anisotropic behavior is governed only by its own reflection-scattering coefficient $b_j$, not by other elements in the system. This respects the physical independence of material properties across the domain.
+
+**High reflectivity limit:** As $b_j \to 1$ (highly reflective element), we have:
+
+$$
+\mathbf{B}_{\mathrm{init},ij} = b_j + \mathbf{\Gamma}_{ij} \cdot (1 - b_j) \to 1
+$$
+
+regardless of $\mathbf{\Gamma}_{ij}$. Highly reflective elements are forced toward isotropic behavior, which is physically reasonable since a perfect reflector cannot exhibit directional selectivity.
+
+**Low reflectivity limit:** As $b_j \to 0$ (weakly reflective element), we have:
+
+$$
+\mathbf{B}_{\mathrm{init},ij} = b_j + \mathbf{\Gamma}_{ij} \cdot (1 - b_j) \to \mathbf{\Gamma}_{ij}
+$$
+
+which spans the full range $[0, 1]$ as $\mathbf{\Gamma}_{ij}$ varies. Low-reflectivity elements have complete anisotropic freedom.
+
+**Effective reflection-scattering coefficient:** For a given element $j$ with reflection coefficient $b_j$, the effective reflection-scattering coefficient for radiation incident from element $i$ is $\mathbf{B}_{\mathrm{init},ij}$, which ranges from:
+- Minimum: $b_j$ (when $\mathbf{\Gamma}_{ij} = 0$)
+- Maximum: $1$ (when $\mathbf{\Gamma}_{ij} = 1$)
+
+The anisotropy factor $\mathbf{\Gamma}_{ij}$ controls a smooth interpolation between these extremes, providing intuitive control over directional reflection-scattering effects.
+
 ## Energy Conservation for the Anisotropic Formulation
 
 The second requirement for physical correctness is conservation of energy at steady state. At equilibrium, the sum of all source fluxes must equal zero: $\mathbf{1}^T\mathbf{C}\mathbf{j} = 0$.
