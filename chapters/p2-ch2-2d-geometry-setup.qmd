@@ -99,7 +99,7 @@ using RayTraceHeatTransfer
 using StaticArrays
 using GeometryBasics
 
-faces_1 = RayTraceHeatTransfer.PolyFace2D{Float64,Float64}[] # create a vector to hold parts
+faces_1 = RayTraceHeatTransfer.PolyFace2D{Float64}[] # create a vector to hold parts
 
 # build the first part
 vertices1 = SVector(
@@ -109,7 +109,10 @@ vertices1 = SVector(
     Point2(0.0, 1.0),
 )
 solidWall1 = SVector(true, true, true, true) # all walls are impenetrable
-face1 = RayTraceHeatTransfer.PolyFace2D{Float64,Float64}(vertices1, solidWall1)
+n_spectral_bins = 1 # number of spectral (wavelength) bins
+kappa = 1.0 # local absorption coefficient (vector for spectral bins > 1)
+sigma_s = 0.0 # local scattering coefficient (vector for spectral bins > 1)
+face1 = RayTraceHeatTransfer.PolyFace2D{Float64}(vertices1, solidWall1, n_spectral_bins, kappa, sigma_s)
 
 # set the physical properties and state
 face1.T_in_w = [1000.0, 0.0, 0.0, 0.0] # known wall temperatures
@@ -117,8 +120,6 @@ face1.q_in_w = [0.0, 0.0, 0.0, 0.0] # wall fluxes not used when temperature is s
 face1.T_in_g = -1.0 # unknown gas temperature
 face1.q_in_g = 0.0 # known gas flux (radiative equilibrium)
 face1.epsilon = [1.0, 1.0, 1.0, 1.0] # wall emissivities
-face1.kappa_g = 1.0 # local absorption coefficient
-face1.sigma_s_g = 0.0 # local scattering coefficient
 
 push!(faces_1, face1) # push the first part into the vector for meshing
 ```
@@ -160,7 +161,7 @@ using RayTraceHeatTransfer
 using StaticArrays
 using GeometryBasics
 
-faces_2 = RayTraceHeatTransfer.PolyFace2D{Float64,Float64}[] # create a vector to hold parts
+faces_2 = RayTraceHeatTransfer.PolyFace2D{Float64}[] # create a vector to hold parts
 ```
 
 **Rectangle 1**
@@ -176,7 +177,7 @@ vertices1 = SVector(
     Point2(0.0, 1.0),
 )
 solidWall1 = SVector(true, true, false, true) # top wall is open
-face1 = RayTraceHeatTransfer.PolyFace2D{Float64,Float64}(vertices1, solidWall1)
+face1 = RayTraceHeatTransfer.PolyFace2D{Float64}(vertices1, solidWall1, n_spectral_bins, kappa, sigma_s)
 
 # set the physical properties and state
 face1.T_in_w = [1000.0, 0.0, 0.0, 0.0] # known wall temperatures
@@ -184,8 +185,6 @@ face1.q_in_w = [0.0, 0.0, 0.0, 0.0] # wall fluxes not used when temperature is s
 face1.T_in_g = -1.0 # unknown gas temperature
 face1.q_in_g = 0.0 # known gas flux (radiative equilibrium)
 face1.epsilon = [1.0, 1.0, 1.0, 1.0] # wall emissivities
-face1.kappa_g = 1.0 # local absorption coefficient
-face1.sigma_s_g = 0.0 # local scattering coefficient
 
 push!(faces_2, face1) # push the first part into the vector for meshing
 ```
@@ -203,7 +202,7 @@ vertices2 = SVector(
     Point2(0.0, 2.0),
 )
 solidWall2 = SVector(false, false, true, true) # two walls are open
-face2 = RayTraceHeatTransfer.PolyFace2D{Float64,Float64}(vertices2, solidWall2)
+face2 = RayTraceHeatTransfer.PolyFace2D{Float64}(vertices2, solidWall2, n_spectral_bins, kappa, sigma_s)
 
 # set the physical properties and state
 face2.T_in_w = [0.0, 0.0, 0.0, 0.0] # known wall temperatures
@@ -211,8 +210,6 @@ face2.q_in_w = [0.0, 0.0, 0.0, 0.0] # wall fluxes not used when temperature is s
 face2.T_in_g = -1.0 # unknown gas temperature
 face2.q_in_g = 0.0 # known gas flux (radiative equilibrium)
 face2.epsilon = [1.0, 1.0, 1.0, 1.0] # wall emissivities
-face2.kappa_g = 1.0 # local absorption coefficient
-face2.sigma_s_g = 0.0 # local scattering coefficient
 
 push!(faces_2, face2) # push the second part into the vector for meshing
 ```
@@ -230,7 +227,7 @@ vertices3 = SVector(
     Point2(1.0, 2.0),
 )
 solidWall3 = SVector(true, true, true, false) # two walls are open
-face3 = RayTraceHeatTransfer.PolyFace2D{Float64,Float64}(vertices3, solidWall3)
+face3 = RayTraceHeatTransfer.PolyFace2D{Float64}(vertices3, solidWall3, n_spectral_bins, kappa, sigma_s)
 
 # set the physical properties and state
 face3.T_in_w = [0.0, 0.0, 0.0, 0.0] # known wall temperatures
@@ -238,8 +235,6 @@ face3.q_in_w = [0.0, 0.0, 0.0, 0.0] # wall fluxes not used when temperature is s
 face3.T_in_g = -1.0 # unknown gas temperature
 face3.q_in_g = 0.0 # known gas flux (radiative equilibrium)
 face3.epsilon = [1.0, 1.0, 1.0, 1.0] # wall emissivities
-face3.kappa_g = 1.0 # local absorption coefficient
-face3.sigma_s_g = 0.0 # local scattering coefficient
 
 push!(faces_2, face3) # push the second part into the vector for meshing
 ```
@@ -307,7 +302,7 @@ Next, let's create the faces:
 #| output: false
 
 # Create faces
-faces_1 = PolyFace2D{Float64,Float64}[]
+faces_1 = PolyFace2D{Float64}[]
 
 # Central pentagon (can be divided into triangles)
 for i in 1:5
@@ -317,14 +312,12 @@ for i in 1:5
         inner_points[mod1(i+1, 5)]
     )
     solidWalls = SVector(false, false, false)
-    face = PolyFace2D{Float64,Float64}(vertices, solidWalls)
+    face = PolyFace2D{Float64}(vertices, solidWalls, n_spectral_bins, kappa, sigma_s)
     face.T_in_w = [0.0, 0.0, 0.0]
     face.q_in_w = [0.0, 0.0, 0.0]
     face.T_in_g = -1.0
     face.q_in_g = 1000.0
     face.epsilon = [1.0, 1.0, 1.0]
-    face.kappa_g = 1.0 # local absorption coefficient
-    face.sigma_s_g = 0.0 # local scattering coefficient
 
     push!(faces_1, face)
 end
@@ -337,14 +330,12 @@ for i in 1:5
         inner_points[mod1(i+1, 5)]
     )
     solidWalls = SVector(true, true, false)
-    face = PolyFace2D{Float64,Float64}(vertices, solidWalls)
+    face = PolyFace2D{Float64,Float64}(vertices, solidWalls, n_spectral_bins, kappa, sigma_s)
     face.T_in_w = [0.0, 0.0, 0.0]
     face.q_in_w = [0.0, 0.0, 0.0]
     face.T_in_g = -1.0
     face.q_in_g = 1000.0
     face.epsilon = [1.0, 1.0, 1.0]
-    face.kappa_g = 1.0 # local absorption coefficient
-    face.sigma_s_g = 0.0 # local scattering coefficient
 
     push!(faces_1, face)
 end
