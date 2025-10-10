@@ -38,7 +38,7 @@ $$ {#eq-b-init}
 
 where $\mathbf{b}_j$ is the reflection-scattering coefficient of element $j$. This constraint ensures that highly reflecting-scattering element must remain near isotropic while less reflecting-scattering elements can have more anisotropic freedom.
 
-Each column $j$ is scaled by the reflection-scattering probability $(1-\mathbf{P}_{jj}) = \mathbf{b}_j$ of the receiving element.
+Each column $j$ of $\mathbf{\Gamma}_{ij}$ is scaled by $1-\mathbf{b}_j$ of the receiving element.
 
 **Step 2:** Interaction-Reflection-Scattering (Pre-Normalization)
 
