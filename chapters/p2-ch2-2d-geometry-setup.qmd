@@ -330,7 +330,7 @@ for i in 1:5
         inner_points[mod1(i+1, 5)]
     )
     solidWalls = SVector(true, true, false)
-    face = PolyFace2D{Float64,Float64}(vertices, solidWalls, n_spectral_bins, kappa, sigma_s)
+    face = PolyFace2D{Float64}(vertices, solidWalls, n_spectral_bins, kappa, sigma_s)
     face.T_in_w = [0.0, 0.0, 0.0]
     face.q_in_w = [0.0, 0.0, 0.0]
     face.T_in_g = -1.0
