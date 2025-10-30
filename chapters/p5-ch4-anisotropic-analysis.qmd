@@ -29,6 +29,7 @@ c \leq \frac{b_j}{\Delta_i(1-b_j) - (2\Gamma_{ij}-1)m_j}
 $$
 
 whenever the denominator is positive, where:
+
 - $\Delta_i = \sum_k F_{ik}(2\Gamma_{ik}-1)m_k$
 - $m_j = \min(b_j, 1-b_j)$
 
@@ -412,6 +413,7 @@ The anisotropic extension preserves all essential physical properties:
 | Energy conservation (mixed) | General case | ✓ @thm-energy-conservation-mixed |
 
 The method provides:
+
 - **Maximum flexibility**: Element-wise control with optimal bounds on $c$
 - **Physical validity**: Guaranteed through proper coefficient selection
 - **Energy conservation**: Automatic for uniform and mixed boundary conditions

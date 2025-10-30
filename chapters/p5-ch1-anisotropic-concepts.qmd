@@ -39,12 +39,14 @@ $$
 $$ {#eq-b-init}
 
 where:
+
 - $\mathbf{b}_j$ is the baseline reflection-scattering coefficient of element $j$
 - $\mathbf{\Gamma}_{ij} \in [0,1]$ controls directional anisotropy
 - $c > 0$ is a scaling coefficient that determines the strength of anisotropic perturbations
 - $\min(\mathbf{b}_j, 1-\mathbf{b}_j)$ limits the perturbation range to maintain physical validity
 
 This parameterization maps:
+
 - $\mathbf{\Gamma}_{ij} = 0 \rightarrow$ maximum downward perturbation: $\mathbf{B}_{\mathrm{init},ij} = \mathbf{b}_j - c\min(\mathbf{b}_j, 1-\mathbf{b}_j)$
 - $\mathbf{\Gamma}_{ij} = 0.5 \rightarrow$ baseline (isotropic): $\mathbf{B}_{\mathrm{init},ij} = \mathbf{b}_j$
 - $\mathbf{\Gamma}_{ij} = 1 \rightarrow$ maximum upward perturbation: $\mathbf{B}_{\mathrm{init},ij} = \mathbf{b}_j + c\min(\mathbf{b}_j, 1-\mathbf{b}_j)$
