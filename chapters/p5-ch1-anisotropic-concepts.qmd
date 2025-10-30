@@ -205,7 +205,7 @@ where $\mathbf{M}$ is assembled row-by-row from $\mathbf{C}$ (for known sources)
 
 4. **Preserved Properties**: Non-negativity ($\mathbf{K} \geq 0$) and physical bounds ($\mathbf{K} \leq \mathbf{F}$) are guaranteed by proper choice of the scaling coefficient $c$ (see Chapter @sec-exchange_fact_anisotropic_extend_analysis for proofs).
 
-5. **Maximum Flexibility**: The analytical bounds on $c$ provide the maximum possible anisotropic variation while maintaining physical validity. For typical radiative transfer problems with $N \sim 1000$ elements, the exact bounds can provide 100-200× more freedom than conservative estimates.
+5. **Maximum Flexibility**: The analytical bounds on $c$ provide the maximum possible anisotropic variation while maintaining physical validity.
 
 6. **Element-Wise Control**: Full $N \times N$ degrees of freedom in $\mathbf{B}_{\mathrm{init}}$ allow each incident-receiver pair to have independent anisotropic behavior.
 

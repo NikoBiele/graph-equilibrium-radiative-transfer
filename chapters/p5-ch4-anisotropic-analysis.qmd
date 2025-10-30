@@ -277,9 +277,9 @@ All subsequent eigenvalue properties from the isotropic case carry over directly
 
 For a system with uniform reflection-scattering coefficients $\mathbf{b} = b\mathbf{1}$ where $b \in [0,1)$, the system matrix $\mathbf{C}$ satisfies:
 
-$
+$$
 \mathbf{1}^T\mathbf{C}\mathbf{j} = 0
-$
+$$
 
 for any solution $\mathbf{j}$ of the mixed boundary system $\mathbf{M}\mathbf{j} = \mathbf{h}$.
 
@@ -289,43 +289,43 @@ for any solution $\mathbf{j}$ of the mixed boundary system $\mathbf{M}\mathbf{j}
 
 **Step 1:** From @thm-key-identity, left-multiply by $(\mathbf{I}-\mathbf{K})^{-1}$:
 
-$
+$$
 (\mathbf{I}-\mathbf{K})^{-1}\mathbf{F}(\mathbf{1}-\mathbf{b}) = \mathbf{1}
-$
+$$
 
 Left-multiply by $\mathbf{P} = (1-b)\mathbf{I}$ for uniform $b$:
 
-$
+$$
 \mathbf{P}(\mathbf{I}-\mathbf{K})^{-1}\mathbf{F}(\mathbf{1}-\mathbf{b}) = \mathbf{P}\mathbf{1} = (1-b)\mathbf{1}
-$
+$$
 
-**Step 2:** The left side equals $\mathbf{A} + \mathbf{R}$ from @eq-aniso-a-plus-r:
+**Step 2:** The left side equals $\mathbf{A} + \mathbf{R}$ from @eq-a-matrix and @eq-r-matrix:
 
-$
+$$
 (\mathbf{A} + \mathbf{R})(\mathbf{1}-\mathbf{b}) = (1-b)\mathbf{1} = (\mathbf{1}-\mathbf{b})
-$
+$$
 
-Therefore $(\mathbf{1}-\mathbf{b})$ is an eigenvector of $\mathbf{A}+\mathbf{R}$ with eigenvalue 1.
+Therefore $(\mathbf{1}-\mathbf{b})$ is an eigenvector of $\mathbf{A}+\mathbf{R}$ with real eigenvalue 1.
 
 **Step 3:** Taking the transpose:
 
-$
+$$
 (\mathbf{1}-\mathbf{b})^T(\mathbf{A}^T + \mathbf{R}^T) = (\mathbf{1}-\mathbf{b})^T
-$
+$$
 
-$
+$$
 (\mathbf{1}-\mathbf{b})^T(\mathbf{I} - \mathbf{A}^T - \mathbf{R}^T) = \mathbf{0}^T
-$
+$$
 
-$
+$$
 (\mathbf{1}-\mathbf{b})^T\mathbf{C} = \mathbf{0}^T
-$
+$$
 
 **Step 4:** For uniform $b$: $(1-b)\mathbf{1}^T\mathbf{C} = \mathbf{0}^T$, and since $(1-b) > 0$:
 
-$
+$$
 \mathbf{1}^T\mathbf{C} = \mathbf{0}^T
-$
+$$
 
 Therefore: $\mathbf{1}^T\mathbf{C}\mathbf{j} = 0$ ✓
 
@@ -354,9 +354,9 @@ Consider a mixed boundary system $\mathbf{M}\mathbf{j} = \mathbf{h}$ where:
 
 Then the energy conservation property holds:
 
-$
+$$
 \mathbf{1}^T\mathbf{C}\mathbf{j} = 0
-$
+$$
 
 :::
 
@@ -366,35 +366,35 @@ From @thm-energy-conservation, it holds that $(\mathbf{1}-\mathbf{b})^T\mathbf{C
 
 Partition the system by rows $I$ (known sources) and $J$ (known emissive powers):
 
-$
+$$
 \mathbf{1}^T\mathbf{C}\mathbf{j} = \mathbf{1}^T\mathbf{C}_I\mathbf{j} + \mathbf{1}^T\mathbf{C}_J\mathbf{j}
-$
+$$
 
 **Part 1:** For rows $I$ with $\mathbf{C}_I\mathbf{j} = \mathbf{0}$:
 
-$
+$$
 \mathbf{1}^T\mathbf{C}_I\mathbf{j} = \mathbf{1}^T\mathbf{0} = 0
-$
+$$
 
 **Part 2:** For rows $J$ with uniform $b_j = \gamma$:
 
 From $(\mathbf{1}-\mathbf{b})^T\mathbf{C} = \mathbf{0}^T$, considering only rows $J$:
 
-$
+$$
 (\mathbf{1}-\gamma\mathbf{1})^T\mathbf{C}_J\mathbf{j} = (1-\gamma)\mathbf{1}^T\mathbf{C}_J\mathbf{j} = 0
-$
+$$
 
 Since $(1-\gamma) > 0$:
 
-$
+$$
 \mathbf{1}^T\mathbf{C}_J\mathbf{j} = 0
-$
+$$
 
 **Conclusion:** Combining both parts:
 
-$
+$$
 \mathbf{1}^T\mathbf{C}\mathbf{j} = 0 + 0 = 0
-$
+$$
 
 Energy conservation holds for mixed boundary conditions. ✓
 
