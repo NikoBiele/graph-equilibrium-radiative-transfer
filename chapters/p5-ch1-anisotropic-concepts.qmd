@@ -51,10 +51,10 @@ This parameterization maps:
 - $\mathbf{\Gamma}_{ij} = 0.5 \rightarrow$ baseline (isotropic): $\mathbf{B}_{\mathrm{init},ij} = \mathbf{b}_j$
 - $\mathbf{\Gamma}_{ij} = 1 \rightarrow$ maximum upward perturbation: $\mathbf{B}_{\mathrm{init},ij} = \mathbf{b}_j + c\min(\mathbf{b}_j, 1-\mathbf{b}_j)$
 
-The coefficient $c$ must be chosen to guarantee that the final matrix $\mathbf{K}$ satisfies $0 \leq \mathbf{K}_{ij} \leq \mathbf{F}_{ij}$ for all elements. The maximum safe value $c_{\max}$ can be computed analytically from the constraint equations (see Chapter @sec-exchange_fact_anisotropic_extend_analysis for derivation). In practice, using 90-95% of the theoretical maximum provides numerical stability:
+The coefficient $c$ must be chosen to guarantee that the final matrix $\mathbf{K}$ satisfies $0 \leq \mathbf{K}_{ij} \leq \mathbf{F}_{ij}$ for all elements. The maximum safe value $c_{\max}$ can be computed analytically from the constraint equations (see Chapter @sec-exchange_fact_anisotropic_extend_analysis for derivation). In practice, using less than 100% of the theoretical maximum provides numerical stability:
 
 $$
-c = \alpha \cdot c_{\max}, \quad \alpha \in [0.9, 0.95]
+c = \alpha \cdot c_{\max}, \quad \alpha < 1
 $$ {#eq-c-safety}
 
 Note that $\mathbf{B}_{\mathrm{init},ij}$ can be negative for sufficiently large $c$, but the transformation guarantees that the final $\mathbf{K}$ remains physically valid.
