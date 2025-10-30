@@ -51,13 +51,37 @@ This parameterization maps:
 - $\mathbf{\Gamma}_{ij} = 0.5 \rightarrow$ baseline (isotropic): $\mathbf{B}_{\mathrm{init},ij} = \mathbf{b}_j$
 - $\mathbf{\Gamma}_{ij} = 1 \rightarrow$ maximum upward perturbation: $\mathbf{B}_{\mathrm{init},ij} = \mathbf{b}_j + c\min(\mathbf{b}_j, 1-\mathbf{b}_j)$
 
-The coefficient $c$ must be chosen to guarantee that the final matrix $\mathbf{K}$ satisfies $0 \leq \mathbf{K}_{ij} \leq \mathbf{F}_{ij}$ for all elements. The maximum safe value $c_{\max}$ can be computed analytically from the constraint equations (see Chapter @sec-exchange_fact_anisotropic_extend_analysis for derivation). In practice, using less than 100% of the theoretical maximum provides numerical stability:
+The coefficient $c$ must be chosen to guarantee that the final matrix $\mathbf{K}$ satisfies $0 \leq \mathbf{K}_{ij} \leq \mathbf{F}_{ij}$ for all elements. The maximum safe value $c_{\max}$ can be computed analytically from the constraint equations (see Chapter @sec-exchange_fact_anisotropic_extend_analysis for derivation). The maximum safe coefficient is:
 
 $$
-c = \alpha \cdot c_{\max}, \quad \alpha < 1
-$$ {#eq-c-safety}
+c_{\max} = \min\left(c_{\max,\text{nonneg}}, c_{\max,\text{leq F}}\right)
+$$
 
-Note that $\mathbf{B}_{\mathrm{init},ij}$ can be negative for sufficiently large $c$, but the transformation guarantees that the final $\mathbf{K}$ remains physically valid.
+where:
+
+$$
+c_{\max,\text{nonneg}} = \min_{i,j : \text{denom} > 0} \frac{b_j}{\Delta_i(1-b_j) - (2\Gamma_{ij}-1)m_j}
+$$
+
+$$
+c_{\max,\text{leq F}} = \min_{i,j : \text{denom} > 0} \frac{1-b_j}{(2\Gamma_{ij}-1)m_j - \Delta_i(2-b_j)}
+$$
+
+For numerical safety, a lower value is used: $c = \alpha \cdot c_{\max}$ with $\alpha < 1$.
+
+This guarantees $0 \leq \mathbf{K}_{ij} \leq \mathbf{F}_{ij}$ for all elements.
+
+::: {.callout-important}
+
+## Key Properties
+
+1. **Negative B allowed**: $\mathbf{B}_{\mathrm{init},ij}$ can be negative for sufficiently large $c$, but the transformation guarantees $\mathbf{K}_{ij} \geq 0$.
+
+2. **Element-wise freedom**: Full $N \times N$ degrees of freedom in $\mathbf{B}_{\mathrm{init}}$.
+
+3. **Optimal bounds**: Since the bounds on $c$ were derived analytically they provide maximum flexibility for any given $\mathbf{\Gamma}$. 
+
+:::
 
 **Step 2:** Interaction-Reflection-Scattering (Pre-Normalization)
 
@@ -77,7 +101,7 @@ $$
 \mathbf{U}_{ij} = \mathbf{K}_{\mathrm{init},ij} + \mathbf{F}_{ij} \cdot \mathbf{P}_{jj}
 $$ {#eq-enforce-unity}
 
-Each element either reflects-scatters ($\mathbf{K}_{\mathrm{init}}$) or is absorbed ($\mathbf{F} \cdot \mathbf{P}$).
+Each emitted ray either reflects-scatters ($\mathbf{K}_{\mathrm{init}}$) or is absorbed ($\mathbf{F} \cdot \mathbf{P}$).
 
 **Step 4:** Compute Row Sums
 

@@ -171,44 +171,6 @@ When the term in brackets is non-positive, the constraint is automatically satis
 
 :::
 
-### Computing the Safe Coefficient
-
-::: {.proof data-title="Proof of Theorem (Physical Bounds)"}
-
-Combining @lem-k-nonnegative and @lem-k-upper, the maximum safe coefficient is:
-
-$$
-c_{\max} = \min\left(c_{\max,\text{nonneg}}, c_{\max,\text{leq F}}\right)
-$$
-
-where:
-
-$$
-c_{\max,\text{nonneg}} = \min_{i,j : \text{denom} > 0} \frac{b_j}{\Delta_i(1-b_j) - (2\Gamma_{ij}-1)m_j}
-$$
-
-$$
-c_{\max,\text{leq F}} = \min_{i,j : \text{denom} > 0} \frac{1-b_j}{(2\Gamma_{ij}-1)m_j - \Delta_i(2-b_j)}
-$$
-
-For numerical safety, use $c = \alpha c_{\max}$ with $\alpha < 1$.
-
-This guarantees $0 \leq \mathbf{K}_{ij} \leq \mathbf{F}_{ij}$ for all elements. ✓
-
-:::
-
-::: {.callout-important}
-
-## Key Properties
-
-1. **Negative B allowed**: $\mathbf{B}_{\mathrm{init},ij}$ can be negative for sufficiently large $c$, but the transformation guarantees $\mathbf{K}_{ij} \geq 0$.
-
-2. **Element-wise freedom**: Full $N \times N$ degrees of freedom in $\mathbf{B}_{\mathrm{init}}$.
-
-3. **Optimal bounds**: Since the bounds on $c$ were derived analytically they provide maximum flexibility for any given $\mathbf{\Gamma}$. 
-
-:::
-
 ## Energy Conservation
 
 Having established physical bounds on $\mathbf{K}$, it is now proven that the construction preserves energy conservation through the key algebraic identity.
