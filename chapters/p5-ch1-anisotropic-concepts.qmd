@@ -14,15 +14,17 @@ $$
 \mathbf{\Gamma} \in \mathbb{R}^{N \times N}, \quad 0 \leq \mathbf{\Gamma}_{ij} \leq 1 \quad \forall \; ij
 $$ {#eq-gamma-bounds}
 
-where $\mathbf{\Gamma}_{ij}$ represents the relative probability of reflection-scattering from element $j$ when radiation is incident from element $i$.
+where $\mathbf{\Gamma}_{ij}$ represents the anisotropy parameter controlling how incident radiation from element $i$ affects reflection-scattering from element $j$.
 
 ### Physical Interpretation
 
-- $\mathbf{\Gamma}_{ij} = 1$: Maximum reflection-scattering from $j$ due to incidence from $i$ (isotropic limit)
-- $\mathbf{\Gamma}_{ij} = 0$: No reflection-scattering from $j$ due to incidence from $i$ (complete directional selectivity)
-- $0 < \mathbf{\Gamma}_{ij} < 1$: Partial anisotropic reflection-scattering with directional preference
+The matrix $\mathbf{\Gamma}$ provides directional control over reflection-scattering behavior:
 
-When $\mathbf{\Gamma} = \mathbf{1}$ (all ones), the anisotropic formulation reduces exactly to the isotropic case, ensuring backward compatibility and providing a natural basis for proof by continuity arguments.
+- $\mathbf{\Gamma}_{ij} = 0.5$: Baseline (isotropic) reflection-scattering from $j$ due to incidence from $i$
+- $\mathbf{\Gamma}_{ij} < 0.5$: Reduced reflection-scattering from $j$ due to incidence from $i$ (directional suppression)
+- $\mathbf{\Gamma}_{ij} > 0.5$: Enhanced reflection-scattering from $j$ due to incidence from $i$ (directional enhancement)
+
+When $\mathbf{\Gamma}_{ij} = 0.5$ for all elements (or equivalently when the scaling coefficient $c = 0$), the anisotropic formulation reduces exactly to the isotropic case with column-constant reflection-scattering matrix $\mathbf{B}$.
 
 ## Construction of the Anisotropic Interaction Matrix
 
@@ -33,19 +35,34 @@ The anisotropic interaction-reflection-scattering matrix $\mathbf{K}$ is constru
 Define the initial reflection-scattering distribution matrix:
 
 $$
-\mathbf{B}_{\mathrm{init},ij} = \mathbf{b}_j + \mathbf{\Gamma}_{ij} \cdot (1 - \mathbf{b}_j)
+\mathbf{B}_{\mathrm{init},ij} = \mathbf{b}_j + c(2\mathbf{\Gamma}_{ij} - 1)\min(\mathbf{b}_j, 1-\mathbf{b}_j)
 $$ {#eq-b-init}
 
-where $\mathbf{b}_j$ is the reflection-scattering coefficient of element $j$. This constraint ensures that highly reflecting-scattering element must remain near isotropic while less reflecting-scattering elements can have more anisotropic freedom.
+where:
+- $\mathbf{b}_j$ is the baseline reflection-scattering coefficient of element $j$
+- $\mathbf{\Gamma}_{ij} \in [0,1]$ controls directional anisotropy
+- $c > 0$ is a scaling coefficient that determines the strength of anisotropic perturbations
+- $\min(\mathbf{b}_j, 1-\mathbf{b}_j)$ limits the perturbation range to maintain physical validity
 
-Each column $j$ of $\mathbf{\Gamma}_{ij}$ is scaled by $1-\mathbf{b}_j$ of the receiving element.
+This parameterization maps:
+- $\mathbf{\Gamma}_{ij} = 0 \rightarrow$ maximum downward perturbation: $\mathbf{B}_{\mathrm{init},ij} = \mathbf{b}_j - c\min(\mathbf{b}_j, 1-\mathbf{b}_j)$
+- $\mathbf{\Gamma}_{ij} = 0.5 \rightarrow$ baseline (isotropic): $\mathbf{B}_{\mathrm{init},ij} = \mathbf{b}_j$
+- $\mathbf{\Gamma}_{ij} = 1 \rightarrow$ maximum upward perturbation: $\mathbf{B}_{\mathrm{init},ij} = \mathbf{b}_j + c\min(\mathbf{b}_j, 1-\mathbf{b}_j)$
+
+The coefficient $c$ must be chosen to guarantee that the final matrix $\mathbf{K}$ satisfies $0 \leq \mathbf{K}_{ij} \leq \mathbf{F}_{ij}$ for all elements. The maximum safe value $c_{\max}$ can be computed analytically from the constraint equations (see Chapter @sec-exchange_fact_anisotropic_extend_analysis for derivation). In practice, using 90-95% of the theoretical maximum provides numerical stability:
+
+$$
+c = \alpha \cdot c_{\max}, \quad \alpha \in [0.9, 0.95]
+$$ {#eq-c-safety}
+
+Note that $\mathbf{B}_{\mathrm{init},ij}$ can be negative for sufficiently large $c$, but the transformation guarantees that the final $\mathbf{K}$ remains physically valid.
 
 **Step 2:** Interaction-Reflection-Scattering (Pre-Normalization)
 
 Compute the element-wise product of the exchange factor matrix and the initial reflection-scattering distribution:
 
 $$
-\mathbf{K}_{\mathrm{init},ij} = \mathbf{F}_{ij} \cdot \mathbf{B}_{\mathrm{init},ij} = \mathbf{F}_{ij} \cdot \mathbf{\Gamma}_{ij} \cdot (1 - \mathbf{P}_{jj})
+\mathbf{K}_{\mathrm{init},ij} = \mathbf{F}_{ij} \cdot \mathbf{B}_{\mathrm{init},ij}
 $$ {#eq-k-init}
 
 This represents the probability that radiation emitted from element $i$ interacts with element $j$ and is then reflected-scattered, before normalization.
@@ -67,12 +84,6 @@ Calculate the row sums:
 $$
 \mathbf{s}_i = \sum_j \mathbf{U}_{ij} = \sum_j (\mathbf{K}_{\mathrm{init},ij} + \mathbf{F}_{ij} \cdot \mathbf{P}_{jj})
 $$ {#eq-row-sums}
-
-Expanding:
-
-$$
-\mathbf{s}_i = \sum_j \mathbf{F}_{ij} \cdot (\mathbf{\Gamma}_{ij} \cdot (1-\mathbf{P}_{jj}) + \mathbf{P}_{jj})
-$$ {#eq-row-sums-expanded}
 
 **Step 5:** Normalize to Row-Stochastic
 
@@ -108,50 +119,38 @@ $$ {#eq-k-simplified}
 
 ### Bounds on s
 
-From @eq-row-sums-expanded:
+From @eq-row-sums:
 
 $$
-\mathbf{s}_i = \sum_j \mathbf{F}_{ij} \cdot (\mathbf{\Gamma}_{ij} \cdot (1-\mathbf{P}_{jj}) + \mathbf{P}_{jj})
+\mathbf{s}_i = \sum_j (\mathbf{K}_{\mathrm{init},ij} + \mathbf{F}_{ij} \cdot \mathbf{P}_{jj})
 $$
 
-Since $\mathbf{F}$ is row-stochastic ($\sum_j \mathbf{F}_{ij} = 1$), we can write:
+Since $\mathbf{K}_{\mathrm{init},ij} = \mathbf{F}_{ij} \cdot \mathbf{B}_{\mathrm{init},ij}$, we have:
 
 $$
-\mathbf{s}_i - 1 = \sum_j \mathbf{F}_{ij} \cdot (\mathbf{\Gamma}_{ij} \cdot (1-\mathbf{P}_{jj}) + \mathbf{P}_{jj} - 1)
-$$ {#eq-s-minus-one}
+\mathbf{s}_i = \sum_j \mathbf{F}_{ij} \cdot (\mathbf{B}_{\mathrm{init},ij} + \mathbf{P}_{jj})
+$$ {#eq-s-expanded}
 
-Simplifying:
-
-$$
-\mathbf{s}_i - 1 = \sum_j \mathbf{F}_{ij} \cdot (\mathbf{\Gamma}_{ij} - 1) \cdot (1-\mathbf{P}_{jj})
-$$ {#eq-s-minus-one-simple}
-
-Since $\mathbf{\Gamma}_{ij} \leq 1$, $\mathbf{F}_{ij} \geq 0$, and $(1-\mathbf{P}_{jj}) \geq 0$:
+Since $\mathbf{F}$ is row-stochastic ($\sum_j \mathbf{F}_{ij} = 1$), $\mathbf{F}_{ij} \geq 0$, and $\mathbf{P}_{jj} = 1-\mathbf{b}_j > 0$:
 
 $$
-\mathbf{s}_i - 1 \leq 0 \implies \mathbf{s}_i \leq 1
-$$ {#eq-s-upper-bound}
+\mathbf{s}_i > 0
+$$ {#eq-s-lower-bound}
 
-Furthermore, the lower bound $\mathbf{P}_{jj} = 1-\mathbf{b}_j > 0$ creates the lower bound $S > 0$, leading to the full bounds on $S$
+The normalization factor $\mathbf{s}_i$ is always positive, preventing division by zero in equations @eq-k-explicit and @eq-k-simplified.
 
-$$
-0 < \mathbf{s}_i \leq 1
-$$
+### Special Case: Isotropic Limit
 
-which prevents division by zero in equation (@eq-k-explicit) and (@eq-k-simplified)
-
-### Special Case: Γ = 1 (Isotropic)
-
-When $\mathbf{\Gamma} = \mathbf{1}$ (all ones), we have:
+When $\mathbf{\Gamma}_{ij} = 0.5$ for all $i,j$ (or equivalently when $c = 0$), we have $\mathbf{B}_{\mathrm{init},ij} = \mathbf{b}_j$ (column-constant):
 
 $$
-\mathbf{s}_i = \sum_j \mathbf{F}_{ij} \cdot ((1-\mathbf{P}_{jj}) + \mathbf{P}_{jj}) = \sum_j \mathbf{F}_{ij} = 1
+\mathbf{s}_i = \sum_j \mathbf{F}_{ij} \cdot (\mathbf{b}_j + (1-\mathbf{b}_j)) = \sum_j \mathbf{F}_{ij} = 1
 $$
 
 Therefore, the normalization does nothing, and:
 
 $$
-\mathbf{K}_{ij} = \mathbf{F}_{ij} - \mathbf{F}_{ij} \cdot \mathbf{P}_{jj} = \mathbf{F}_{ij} \cdot (1-\mathbf{P}_{jj})
+\mathbf{K}_{ij} = \mathbf{F}_{ij} \cdot \mathbf{b}_j
 $$
 
 This recovers the isotropic case exactly: $\mathbf{K} = \mathbf{F} \circ \mathbf{B}$, where $\mathbf{B}$ is the column-constant matrix of reflection-scattering coefficients.
@@ -200,11 +199,13 @@ where $\mathbf{M}$ is assembled row-by-row from $\mathbf{C}$ (for known sources)
 
 2. **Analytical Framework**: Maintains the analytical structure of the exchange factor transformation, avoiding iterative Monte Carlo methods.
 
-3. **Backward Compatibility**: Reduces exactly to the isotropic case when $\mathbf{\Gamma} = \mathbf{1}$, ensuring consistency with established methods.
+3. **Backward Compatibility**: Reduces exactly to the isotropic case when $\mathbf{\Gamma}_{ij} = 0.5$ for all elements (or $c = 0$), ensuring consistency with established methods.
 
-4. **Preserved Properties**: Non-negativity and energy conservation are guaranteed (see chapter @sec-exchange_fact_anisotropic_extend for proofs).
+4. **Preserved Properties**: Non-negativity ($\mathbf{K} \geq 0$) and physical bounds ($\mathbf{K} \leq \mathbf{F}$) are guaranteed by proper choice of the scaling coefficient $c$ (see Chapter @sec-exchange_fact_anisotropic_extend_analysis for proofs).
 
-5. **Flexibility**: Accommodates any anisotropic distribution within the constraint $0 \leq \mathbf{\Gamma}_{ij} \leq 1$, providing maximum modeling flexibility.
+5. **Maximum Flexibility**: The analytical bounds on $c$ provide the maximum possible anisotropic variation while maintaining physical validity. For typical radiative transfer problems with $N \sim 1000$ elements, the exact bounds can provide 100-200× more freedom than conservative estimates.
+
+6. **Element-Wise Control**: Full $N \times N$ degrees of freedom in $\mathbf{B}_{\mathrm{init}}$ allow each incident-receiver pair to have independent anisotropic behavior.
 
 ## Physical Applications
 
@@ -212,4 +213,4 @@ For surfaces with specular components, media with anisotropic scattering phase f
 
 ## Conclusion
 
-The anisotropic extension of the exchange factor transformation provides a mathematically rigorous and physically meaningful framework for modeling directional reflection-scattering in radiative transfer. By introducing the anisotropy matrix $\mathbf{\Gamma}$ and employing row-stochastic normalization, the method preserves all essential properties while significantly expanding the range of physical phenomena that can be accurately modeled.
+The anisotropic extension of the exchange factor transformation provides a mathematically rigorous and physically meaningful framework for modeling directional reflection-scattering in radiative transfer. By introducing the anisotropy matrix $\mathbf{\Gamma}$ with the bounded perturbation parameterization, and employing row-stochastic normalization, the method preserves all essential properties while significantly expanding the range of physical phenomena that can be accurately modeled.

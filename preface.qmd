@@ -52,6 +52,11 @@ The author would like to acknowledge all of the great teachers, tutors and sourc
 This work was conducted independently outside of regular employment and without institutional support.
 The analytical methods, conclusions, and software presented here represent the author's personal research and do not reflect the views or positions of any current or former employers.
 
+## Declaration of Generative AI and AI-assisted Technologies in this Research.
+
+Throughout the process which lead to this book, Anthropic's Claude models have contributed several key insights.
+After using these tools/services, I have reviewed, extensively tested and validated all claims put forth and I take full responsibility for the content of this book.
+
 ---
 
 *This preface provides the roadmap for your journey through analytical radiative transfer. Part I begins with establishing the theoretical foundations.*

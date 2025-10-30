@@ -1,464 +1,222 @@
-# Anisotropic Extension Analysis {#sec-exchange_fact_anisotropic_extend}
+# Anisotropic Extension Analysis {#sec-exchange_fact_anisotropic_extend_analysis}
 
-This chapter establishes the physical correctness of the anisotropic exchange factor transformation by proving two fundamental properties:
-non-negativity of all radiative quantities and conservation of energy.
-These proofs demonstrate that the anisotropic extension preserves the mathematical rigor and physical validity of the original isotropic formulation.
+This chapter establishes the physical correctness of the anisotropic exchange factor transformation by proving that the final interaction-reflection-scattering matrix $\mathbf{K}$ satisfies the fundamental physical bounds: $0 \leq \mathbf{K}_{ij} \leq \mathbf{F}_{ij}$ for all elements. These bounds guarantee non-negativity (no negative probabilities) and energy conservation. It is then proven that the row-stochastic normalization preserves the key algebraic identity that ensures global energy balance.
 
-## Non-Negativity of the Anisotropic Interaction Matrix
+## Physical Bounds on the Interaction Matrix
 
-The first requirement for physical correctness is that the interaction-reflection-scattering matrix $\mathbf{K}$ must be non-negative, as negative probabilities are not physically meaningful.
+The construction of $\mathbf{K}$ through the anisotropic parameterization must satisfy strict element-wise bounds to be physically valid.
 
-::: {.theorem data-title="Non-Negativity of K (Anisotropic Case)" #thm-aniso-nonnegative}
+::: {.theorem data-title="Physical Bounds on K" #thm-physical-bounds}
 
-For the anisotropic radiative transfer formulation with anisotropy matrix $\mathbf{\Gamma}$ satisfying $\mathbf{\Gamma}_{ij} \in [0, 1]$, the interaction-reflection-scattering matrix $\mathbf{K}$ constructed via row-stochastic normalization is guaranteed to be non-negative: $\mathbf{K}_{ij} \geq 0$ for all $i, j$.
+For the anisotropic formulation with properly bounded scaling coefficient $c$, the interaction-reflection-scattering matrix $\mathbf{K}$ satisfies:
+
+$$
+0 \leq \mathbf{K}_{ij} \leq \mathbf{F}_{ij} \quad \forall \; i,j
+$$
+
+:::
+
+The proof proceeds through two lemmas establishing each inequality.
+
+### Lower Bound: Non-Negativity
+
+::: {.lemma data-title="Non-Negativity of K" #lem-k-nonnegative}
+
+For any element $(i,j)$, the constraint $\mathbf{K}_{ij} \geq 0$ is satisfied if:
+
+$$
+c \leq \frac{b_j}{\Delta_i(1-b_j) - (2\Gamma_{ij}-1)m_j}
+$$
+
+whenever the denominator is positive, where:
+- $\Delta_i = \sum_k F_{ik}(2\Gamma_{ik}-1)m_k$
+- $m_j = \min(b_j, 1-b_j)$
 
 :::
 
 ::: {.proof}
 
-The proof proceeds by analyzing the inequality that must hold for $\mathbf{K}_{ij} \geq 0$.
-
-**Step 1:** Express $\mathbf{K}_{ij}$ in terms of construction parameters.
-
-From (@eq-k-simplified):
+From @eq-k-simplified, it holds that:
 
 $$
 \mathbf{K}_{ij} = \frac{\mathbf{K}_{\mathrm{init},ij}}{\mathbf{s}_i} - \mathbf{F}_{ij} \cdot \mathbf{P}_{jj} \left(1 - \frac{1}{\mathbf{s}_i}\right)
 $$
 
-Substituting $\mathbf{K}_{\mathrm{init},ij} = \mathbf{F}_{ij} \cdot \mathbf{\Gamma}_{ij} \cdot (1-\mathbf{P}_{jj})$:
+Substituting $\mathbf{K}_{\mathrm{init},ij} = \mathbf{F}_{ij} \cdot \mathbf{B}_{\mathrm{init},ij}$ and $\mathbf{P}_{jj} = 1-b_j$:
 
 $$
-\mathbf{K}_{ij} = \frac{\mathbf{F}_{ij} \cdot \mathbf{\Gamma}_{ij} \cdot (1-\mathbf{P}_{jj})}{\mathbf{s}_i} - \mathbf{F}_{ij} \cdot \mathbf{P}_{jj} \left(1 - \frac{1}{\mathbf{s}_i}\right)
+\mathbf{K}_{ij} = \mathbf{F}_{ij} \left[\frac{\mathbf{B}_{\mathrm{init},ij}}{\mathbf{s}_i} - (1-b_j)\left(1 - \frac{1}{\mathbf{s}_i}\right)\right]
 $$
 
-**Step 2:** Multiply through by $\mathbf{s}_i > 0$ to establish the inequality.
-
-For $\mathbf{K}_{ij} \geq 0$, we require:
+Simplifying:
 
 $$
-\mathbf{F}_{ij} \cdot \mathbf{\Gamma}_{ij} \cdot (1-\mathbf{P}_{jj}) \geq \mathbf{F}_{ij} \cdot \mathbf{P}_{jj} \cdot (\mathbf{s}_i - 1)
+\mathbf{K}_{ij} = \mathbf{F}_{ij} \cdot \frac{\mathbf{B}_{\mathrm{init},ij} - (\mathbf{s}_i - 1)(1-b_j)}{\mathbf{s}_i}
 $$
 
-**Step 3:** Analyze the term $(\mathbf{s}_i - 1)$.
-
-From equation (@eq-row-sums-expanded):
+**Step 1:** For $\mathbf{K}_{ij} \geq 0$ (and $\mathbf{s}_i > 0$), it is necessary that:
 
 $$
-\mathbf{s}_i - 1 = \sum_k \mathbf{F}_{ik} \cdot (\mathbf{\Gamma}_{ik} - 1) \cdot (1-\mathbf{P}_{kk})
+\mathbf{B}_{\mathrm{init},ij} \geq (\mathbf{s}_i - 1)(1-b_j)
 $$
 
-**Step 4:** Apply the constraint $\mathbf{\Gamma}_{ik} \leq 1$.
-
-Since $\mathbf{\Gamma}_{ik} \leq 1$ for all $i, k$:
+**Step 2:** Express $\mathbf{s}_i$ from @eq-s-expanded:
 
 $$
-\mathbf{\Gamma}_{ik} - 1 \leq 0
+\mathbf{s}_i = \sum_k \mathbf{F}_{ik}(\mathbf{B}_{\mathrm{init},ik} + 1 - b_k)
 $$
 
-Since $\mathbf{F}_{ik} \geq 0$ and $(1-\mathbf{P}_{kk}) \geq 0$:
+Substituting $\mathbf{B}_{\mathrm{init},ik} = b_k + c(2\Gamma_{ik}-1)m_k$:
 
 $$
-\mathbf{F}_{ik} \cdot (\mathbf{\Gamma}_{ik} - 1) \cdot (1-\mathbf{P}_{kk}) \leq 0 \quad \forall k
+\mathbf{s}_i = \sum_k \mathbf{F}_{ik}(b_k + c(2\Gamma_{ik}-1)m_k + 1 - b_k)
 $$
 
-Therefore:
-
 $$
-\mathbf{s}_i - 1 = \sum_k \mathbf{F}_{ik} \cdot (\mathbf{\Gamma}_{ik} - 1) \cdot (1-\mathbf{P}_{kk}) \leq 0
+\mathbf{s}_i = \sum_k \mathbf{F}_{ik}(1 + c(2\Gamma_{ik}-1)m_k)
 $$
 
-**Step 5:** Conclude non-negativity.
-
-From Step 2, we need:
+Since $\sum_k \mathbf{F}_{ik} = 1$ (row-stochastic):
 
 $$
-\mathbf{F}_{ij} \cdot \mathbf{\Gamma}_{ij} \cdot (1-\mathbf{P}_{jj}) \geq \mathbf{F}_{ij} \cdot \mathbf{P}_{jj} \cdot (\mathbf{s}_i - 1)
+\mathbf{s}_i = 1 + c\sum_k \mathbf{F}_{ik}(2\Gamma_{ik}-1)m_k = 1 + c\Delta_i
 $$
 
-Since we proved $\mathbf{s}_i - 1 \leq 0$ in Step 4:
+**Step 3:** Substitute back into the constraint:
 
 $$
-\mathbf{F}_{ij} \cdot \mathbf{P}_{jj} \cdot (\mathbf{s}_i - 1) \leq 0
+b_j + c(2\Gamma_{ij}-1)m_j \geq c\Delta_i(1-b_j)
 $$
 
-And since $\mathbf{F}_{ij} \cdot \mathbf{\Gamma}_{ij} \cdot (1-\mathbf{P}_{jj}) \geq 0$ (all factors are non-negative), we have:
-
 $$
-\mathbf{F}_{ij} \cdot \mathbf{\Gamma}_{ij} \cdot (1-\mathbf{P}_{jj}) \geq 0 \geq \mathbf{F}_{ij} \cdot \mathbf{P}_{jj} \cdot (\mathbf{s}_i - 1)
+b_j \geq c[\Delta_i(1-b_j) - (2\Gamma_{ij}-1)m_j]
 $$
 
-Therefore: $\mathbf{K}_{ij} \geq 0$ ✓
+**Step 4:** When the term in brackets is positive:
+
+$$
+c \leq \frac{b_j}{\Delta_i(1-b_j) - (2\Gamma_{ij}-1)m_j}
+$$
+
+When the term in brackets is non-positive, the constraint is automatically satisfied for any $c \geq 0$. ✓
 
 :::
 
-::: {.callout-note}
+### Upper Bound: Physical Limit
 
-## Physical Interpretation
+::: {.lemma data-title="Upper Bound on K" #lem-k-upper}
 
-The non-negativity proof reveals a fundamental constraint: the upper bound $\mathbf{\Gamma} \leq 1$ ensures $\mathbf{s}_i \leq 1$, which makes the normalization correction term non-positive, thereby guaranteeing $\mathbf{K}_{ij} \geq 0$.
-
-**Importantly, no lower bound on Γ is required for non-negativity.** The full range $\mathbf{\Gamma} \in [0, 1]$ is permissible, providing maximum flexibility for representing anisotropic reflection-scattering distributions while maintaining physical validity.
-
-:::
-
-::: {.theorem data-title="K ≤ F for the Columnwise Anisotropic Construction"}
-
-Let $\mathbf{F}$ be a row-stochastic exchange factor matrix, and let $\mathbf{b}$ be a vector of reflection-scattering coefficients with $b_j \in [0,1)$ for all $j$. Let $\mathbf{P}$ be the diagonal emissivity matrix with $P_j = 1 - b_j$.
-
-Define the anisotropic reflection-scattering matrix with columnwise constraints:
+For any element $(i,j)$, the constraint $\mathbf{K}_{ij} \leq \mathbf{F}_{ij}$ is satisfied if:
 
 $$
-\mathbf{B}_{\mathrm{init},ij} = b_j + r_{ij} \cdot (1 - b_j)
-$$ {#eq-binit-columnwise}
+c \leq \frac{1-b_j}{(2\Gamma_{ij}-1)m_j - \Delta_i(2-b_j)}
+$$
 
-where $r_{ij} \in [0, 1]$ for all $i, j$.
+whenever the denominator is positive.
 
-Following the normalization procedure:
-
-1. Form the unnormalized interaction matrix: $\mathbf{K}_{\mathrm{init},ij} = \mathbf{F}_{ij} \cdot \mathbf{B}_{\mathrm{init},ij}$
-2. Account for both reflection-scattering and absorption: $\mathbf{U}_{ij} = \mathbf{K}_{\mathrm{init},ij} + \mathbf{F}_{ij} \cdot P_j$
-3. Compute row sums: $s_i = \sum_k \mathbf{U}_{i,k}$
-4. Normalize to row-stochastic: $\mathbf{T}_{ij} = \mathbf{U}_{ij} / s_i$
-5. Extract the reflection-scattering component: $\mathbf{K}_{ij} = \mathbf{T}_{ij} - \mathbf{F}_{ij} \cdot P_j$
-
-Then $\mathbf{K}_{ij} \leq \mathbf{F}_{ij}$ for all $i, j$.
 :::
 
 ::: {.proof}
 
-We will prove that the columnwise construction guarantees $\mathbf{K}_{ij} \leq \mathbf{F}_{ij}$ by showing that the inequality holds in the worst case, and that all other cases are less restrictive.
+**Step 1:** From the expression for $\mathbf{K}_{ij}$, it is necessary that:
 
-**Part 1:** Derive an expression for $\mathbf{K}_{ij}$
-
-Starting from step 2 of the normalization procedure, we can write $\mathbf{U}_{ij}$ as:
-
-$$
-\mathbf{U}_{ij} = \mathbf{F}_{ij} \cdot \mathbf{B}_{\mathrm{init},ij} + \mathbf{F}_{ij} \cdot P_j
-$$
-
-Factoring:
-
-$$
-\mathbf{U}_{ij} = \mathbf{F}_{ij} \cdot (\mathbf{B}_{\mathrm{init},ij} + P_j)
-$$
-
-From step 4, the normalized matrix is:
-
-$$
-\mathbf{T}_{ij} = \frac{\mathbf{U}_{ij}}{s_i} = \frac{\mathbf{F}_{ij} \cdot (\mathbf{B}_{\mathrm{init},ij} + P_j)}{s_i}
-$$
-
-From step 5, the interaction-reflection-scattering matrix is:
-
-$$
-\begin{aligned}
-\mathbf{K}_{ij} &= \mathbf{T}_{ij} - \mathbf{F}_{ij} \cdot P_j \\
-&= \frac{\mathbf{F}_{ij} \cdot (\mathbf{B}_{\mathrm{init},ij} + P_j)}{s_i} - \mathbf{F}_{ij} \cdot P_j
-\end{aligned}
-$$
-
-Factoring out $\mathbf{F}_{ij}$:
-
-$$
-\mathbf{K}_{ij} = \mathbf{F}_{ij} \cdot \left[\frac{\mathbf{B}_{\mathrm{init},ij} + P_j}{s_i} - P_j\right]
-$$
-
-To combine the terms, we write:
-
-$$
-\mathbf{K}_{ij} = \mathbf{F}_{ij} \cdot \left[\frac{\mathbf{B}_{\mathrm{init},ij} + P_j - s_i \cdot P_j}{s_i}\right]
-$$
-
-Simplifying the numerator:
-
-$$
-\mathbf{K}_{ij} = \mathbf{F}_{ij} \cdot \frac{\mathbf{B}_{\mathrm{init},ij} + P_j \cdot (1 - s_i)}{s_i}
-$$ {#eq-k-expression}
-
-**Part 2:** Establish the condition for $\mathbf{K}_{ij} \leq \mathbf{F}_{ij}$
-
-We want to prove that $\mathbf{K}_{ij} \leq \mathbf{F}_{ij}$ for all $i, j$.
-
-For entries where $\mathbf{F}_{ij} = 0$, we have:
-
-$$
-\mathbf{K}_{ij} = 0 \cdot \frac{\mathbf{B}_{\mathrm{init},ij} + P_j \cdot (1 - s_i)}{s_i} = 0 = \mathbf{F}_{ij}
-$$
-
-So the inequality holds trivially when $\mathbf{F}_{ij} = 0$.
-
-For entries where $\mathbf{F}_{ij} > 0$, we can divide both sides by $\mathbf{F}_{ij}$:
-
-$$
-\frac{\mathbf{B}_{\mathrm{init},ij} + P_j \cdot (1 - s_i)}{s_i} \leq 1
-$$
-
-Multiplying both sides by $s_i > 0$:
-
-$$
-\mathbf{B}_{\mathrm{init},ij} + P_j \cdot (1 - s_i) \leq s_i
-$$
-
-Rearranging:
-
-$$
-\mathbf{B}_{\mathrm{init},ij} \leq s_i - P_j \cdot (1 - s_i)
-$$
-
-Expanding the right side:
-
-$$
-\mathbf{B}_{\mathrm{init},ij} \leq s_i - P_j + P_j \cdot s_i
-$$
-
-Factoring:
-
-$$
-\mathbf{B}_{\mathrm{init},ij} \leq s_i \cdot (1 + P_j) - P_j
-$$ {#eq-condition-P}
-
-Since $P_j = 1 - b_j$, we have $1 + P_j = 1 + (1 - b_j) = 2 - b_j$, giving:
-
-$$
-\mathbf{B}_{\mathrm{init},ij} \leq s_i \cdot (2 - b_j) - (1 - b_j)
-$$ {#eq-main-condition}
-
-This is the condition we need to verify.
-
-**Part 3:** Substitute the columnwise construction
-
-From the construction formula (@eq-binit-columnwise):
-
-$$
-\mathbf{B}_{\mathrm{init},ij} = b_j + r_{ij} \cdot (1 - b_j)
 $$
-
-Substituting into condition (@eq-main-condition):
-
-$$
-b_j + r_{ij} \cdot (1 - b_j) \leq s_i \cdot (2 - b_j) - (1 - b_j)
-$$
-
-Adding $(1 - b_j)$ to both sides:
-
-$$
-b_j + r_{ij} \cdot (1 - b_j) + (1 - b_j) \leq s_i \cdot (2 - b_j)
-$$
-
-Since $b_j + (1 - b_j) = 1$:
-
-$$
-1 + r_{ij} \cdot (1 - b_j) \leq s_i \cdot (2 - b_j)
-$$ {#eq-simplified-condition}
-
-This is the inequality we need to prove holds for all $i, j$.
-
-**Part 4:** Determine the bounds on $s_i$
-
-From step 3 of the normalization procedure:
-
-$$
-s_i = \sum_k \mathbf{U}_{ik} = \sum_k \mathbf{F}_{ik} \cdot (\mathbf{B}_{\mathrm{init},ik} + P_k)
-$$
-
-Substituting the columnwise construction:
-
-$$
-s_i = \sum_k \mathbf{F}_{ik} \cdot (b_k + r_{ik} \cdot (1 - b_k) + P_k)
-$$
-
-Since $P_k = 1 - b_k$:
-
-$$
-s_i = \sum_k \mathbf{F}_{ik} \cdot (b_k + r_{ik} \cdot (1 - b_k) + 1 - b_k)
-$$
-
-Simplifying the terms inside:
-
-$$
-b_k + r_{ik} \cdot (1 - b_k) + 1 - b_k = 1 + r_{ik} \cdot (1 - b_k)
-$$
-
-Therefore:
-
+\frac{\mathbf{B}_{\mathrm{init},ij} - (\mathbf{s}_i - 1)(1-b_j)}{\mathbf{s}_i} \leq 1
 $$
-s_i = \sum_k \mathbf{F}_{ik} \cdot (1 + r_{ik} \cdot (1 - b_k))
-$$
-
-Since $\mathbf{F}$ is row-stochastic with $\sum_k \mathbf{F}_{ik} = 1$:
-
-$$
-s_i = \sum_k \mathbf{F}_{ik} + \sum_k \mathbf{F}_{ik} \cdot r_{ik} \cdot (1 - b_k)
-$$
-
-$$
-s_i = 1 + \sum_k \mathbf{F}_{ik} \cdot r_{ik} \cdot (1 - b_k)
-$$ {#eq-si-formula}
 
-Now we establish bounds on $s_i$. Since $r_{ik} \in [0, 1]$, $\mathbf{F}_{ik} \geq 0$, and $(1 - b_k) > 0$:
+Multiplying by $\mathbf{s}_i > 0$:
 
-The minimum value occurs when all $r_{ik} = 0$:
-
 $$
-s_i \geq 1 + \sum_k \mathbf{F}_{ik} \cdot 0 \cdot (1 - b_k) = 1
+\mathbf{B}_{\mathrm{init},ij} - (\mathbf{s}_i - 1)(1-b_j) \leq \mathbf{s}_i
 $$
-
-The maximum value occurs when all $r_{ik} = 1$:
 
 $$
-\begin{aligned}
-s_i &\leq 1 + \sum_k \mathbf{F}_{ik} \cdot 1 \cdot (1 - b_k) \\
-&= 1 + \sum_k \mathbf{F}_{ik} \cdot (1 - b_k) \\
-&= 1 + \sum_k \mathbf{F}_{ik} - \sum_k \mathbf{F}_{ik} \cdot b_k \\
-&= 1 + 1 - \sum_k \mathbf{F}_{ik} \cdot b_k \\
-&= 2 - \sum_k \mathbf{F}_{ik} \cdot b_k
-\end{aligned}
+\mathbf{B}_{\mathrm{init},ij} \leq \mathbf{s}_i + (\mathbf{s}_i - 1)(1-b_j)
 $$
 
-Since $b_k \geq 0$:
-
-$$
-s_i \leq 2 - 0 = 2
 $$
-
-Therefore:
-
+\mathbf{B}_{\mathrm{init},ij} \leq \mathbf{s}_i[1 + (1-b_j)] - (1-b_j)
 $$
-1 \leq s_i \leq 2
-$$ {#eq-si-bounds}
-
-**Part 5:** Verify the inequality in the worst case
-
-The inequality (@eq-simplified-condition) we need to prove is:
 
 $$
-1 + r_{ij} \cdot (1 - b_j) \leq s_i \cdot (2 - b_j)
+\mathbf{B}_{\mathrm{init},ij} \leq \mathbf{s}_i(2-b_j) - (1-b_j)
 $$
 
-The left-hand side (LHS) is maximized when $r_{ij}$ is largest:
-- Maximum LHS occurs when $r_{ij} = 1$
-- Maximum LHS $= 1 + 1 \cdot (1 - b_j) = 1 + 1 - b_j = 2 - b_j$
+**Step 2:** Substitute $\mathbf{s}_i = 1 + c\Delta_i$ and $\mathbf{B}_{\mathrm{init},ij} = b_j + c(2\Gamma_{ij}-1)m_j$:
 
-The right-hand side (RHS) is minimized when $s_i$ is smallest:
-- Minimum RHS occurs when $s_i = 1$
-- Minimum RHS $= 1 \cdot (2 - b_j) = 2 - b_j$
-
-In the worst case (maximum LHS and minimum RHS):
-
 $$
-\text{LHS}_{\max} = 2 - b_j = 2 - b_j = \text{RHS}_{\min}
+b_j + c(2\Gamma_{ij}-1)m_j \leq (1 + c\Delta_i)(2-b_j) - (1-b_j)
 $$
-
-Therefore, the inequality holds with equality in the worst case.
-
-**Part 6:** Verify the inequality holds generally
 
-We have shown that in the worst case, LHS $=$ RHS. Now we show that in all other cases, LHS $<$ RHS (strict inequality).
-
-**Case 1:** $s_i > 1$
-
-When $s_i > 1$, the RHS increases:
-
 $$
-\text{RHS} = s_i \cdot (2 - b_j) > 1 \cdot (2 - b_j) = 2 - b_j
+b_j + c(2\Gamma_{ij}-1)m_j \leq (2-b_j) + c\Delta_i(2-b_j) - (1-b_j)
 $$
-
-Since the maximum possible LHS is $2 - b_j$:
 
 $$
-\text{LHS} \leq 2 - b_j < s_i \cdot (2 - b_j) = \text{RHS}
+b_j + c(2\Gamma_{ij}-1)m_j \leq 1 + c\Delta_i(2-b_j)
 $$
 
-**Case 2:** $r_{ij} < 1$
-
-When $r_{ij} < 1$, the LHS decreases:
-
 $$
-\text{LHS} = 1 + r_{ij} \cdot (1 - b_j) < 1 + 1 \cdot (1 - b_j) = 2 - b_j
+c[(2\Gamma_{ij}-1)m_j - \Delta_i(2-b_j)] \leq 1 - b_j
 $$
 
-Since the minimum possible RHS is $2 - b_j$:
+**Step 3:** When the term in brackets is positive:
 
 $$
-\text{LHS} < 2 - b_j \leq s_i \cdot (2 - b_j) = \text{RHS}
+c \leq \frac{1-b_j}{(2\Gamma_{ij}-1)m_j - \Delta_i(2-b_j)}
 $$
-
-**Case 3:** Both $s_i > 1$ and $r_{ij} < 1$
-
-In this case, both effects combine:
-- LHS is reduced from its maximum
-- RHS is increased from its minimum
-
-Therefore: $\text{LHS} < \text{LHS}_{\max} = \text{RHS}_{\min} < \text{RHS}$
-
-This gives a strict inequality $\mathbf{K}_{ij} < \mathbf{F}_{ij}$.
-
-**Conclusion**
-
-We have shown that:
-1. When $\mathbf{F}_{ij} = 0$: $\mathbf{K}_{ij} = 0 = \mathbf{F}_{ij}$ ✓
-2. When $\mathbf{F}_{ij} > 0$ and worst case ($s_i = 1$, $r_{ij} = 1$): $\mathbf{K}_{ij} = \mathbf{F}_{ij}$ ✓
-3. When $\mathbf{F}_{ij} > 0$ and not worst case: $\mathbf{K}_{ij} < \mathbf{F}_{ij}$ ✓
 
-Therefore, the columnwise construction $\mathbf{B}_{\mathrm{init},ij} = b_j + r_{ij} \cdot (1 - b_j)$ with $r_{ij} \in [0, 1]$ guarantees that $\mathbf{K}_{ij} \leq \mathbf{F}_{ij}$ for all $i, j$. $\square$
+When the term in brackets is non-positive, the constraint is automatically satisfied for any $c \geq 0$. ✓
 
 :::
 
-::: {.theorem data-title="Corollary: Anisotropy Matrix Constraint"}
+### Computing the Safe Coefficient
 
-The columnwise construction (@eq-binit-columnwise) can be expressed in terms of an anisotropy matrix $\mathbf{\Gamma}$ as:
+::: {.proof data-title="Proof of Theorem (Physical Bounds)"}
+
+Combining @lem-k-nonnegative and @lem-k-upper, the maximum safe coefficient is:
 
 $$
-\mathbf{B}_{\mathrm{init},ij} = b_j + \mathbf{\Gamma}_{ij} \cdot (1 - b_j)
-$$ {#eq-gamma-relation}
+c_{\max} = \min\left(c_{\max,\text{nonneg}}, c_{\max,\text{leq F}}\right)
+$$
 
-where $\mathbf{\Gamma}_{ij} \in [0, 1]$ for all $i, j$ ensures $\mathbf{K} \leq \mathbf{F}$.
+where:
 
-When $\mathbf{\Gamma}_{ij} = 0$, element $j$ exhibits maximum anisotropy (minimum reflection-scattering) for radiation incident from element $i$.
+$$
+c_{\max,\text{nonneg}} = \min_{i,j : \text{denom} > 0} \frac{b_j}{\Delta_i(1-b_j) - (2\Gamma_{ij}-1)m_j}
+$$
 
-When $\mathbf{\Gamma}_{ij} = 1$, element $j$ exhibits isotropic behavior (maximum reflection-scattering) for radiation incident from element $i$.
+$$
+c_{\max,\text{leq F}} = \min_{i,j : \text{denom} > 0} \frac{1-b_j}{(2\Gamma_{ij}-1)m_j - \Delta_i(2-b_j)}
+$$
+
+For numerical safety, use $c = \alpha c_{\max}$ with $\alpha < 1$.
+
+This guarantees $0 \leq \mathbf{K}_{ij} \leq \mathbf{F}_{ij}$ for all elements. ✓
+
 :::
 
-## Physical Interpretation
+::: {.callout-important}
 
-The columnwise construction has several important physical properties:
+## Key Properties
 
-**Locality of constraints:** Each element $j$'s anisotropic behavior is governed only by its own reflection-scattering coefficient $b_j$, not by other elements in the system. This respects the physical independence of material properties across the domain.
+1. **Negative B allowed**: $\mathbf{B}_{\mathrm{init},ij}$ can be negative for sufficiently large $c$, but the transformation guarantees $\mathbf{K}_{ij} \geq 0$.
 
-**High reflectivity limit:** As $b_j \to 1$ (highly reflective element), we have:
+2. **Element-wise freedom**: Full $N \times N$ degrees of freedom in $\mathbf{B}_{\mathrm{init}}$.
 
-$$
-\mathbf{B}_{\mathrm{init},ij} = b_j + \mathbf{\Gamma}_{ij} \cdot (1 - b_j) \to 1
-$$
+3. **Optimal bounds**: Since the bounds on $c$ were derived analytically they provide maximum flexibility for any given $\mathbf{\Gamma}$. 
 
-regardless of $\mathbf{\Gamma}_{ij}$. Highly reflective elements are forced toward isotropic behavior, which is physically reasonable since a perfect reflector cannot exhibit directional selectivity.
+:::
 
-**Low reflectivity limit:** As $b_j \to 0$ (weakly reflective element), we have:
+## Energy Conservation
 
-$$
-\mathbf{B}_{\mathrm{init},ij} = b_j + \mathbf{\Gamma}_{ij} \cdot (1 - b_j) \to \mathbf{\Gamma}_{ij}
-$$
+Having established physical bounds on $\mathbf{K}$, it is now proven that the construction preserves energy conservation through the key algebraic identity.
 
-which spans the full range $[0, 1]$ as $\mathbf{\Gamma}_{ij}$ varies. Low-reflectivity elements have complete anisotropic freedom.
+### Preservation of the Fundamental Identity
 
-**Effective reflection-scattering coefficient:** For a given element $j$ with reflection coefficient $b_j$, the effective reflection-scattering coefficient for radiation incident from element $i$ is $\mathbf{B}_{\mathrm{init},ij}$, which ranges from:
-- Minimum: $b_j$ (when $\mathbf{\Gamma}_{ij} = 0$)
-- Maximum: $1$ (when $\mathbf{\Gamma}_{ij} = 1$)
+::: {.theorem data-title="Key Identity Preservation" #thm-key-identity}
 
-The anisotropy factor $\mathbf{\Gamma}_{ij}$ controls a smooth interpolation between these extremes, providing intuitive control over directional reflection-scattering effects.
-
-## Energy Conservation for the Anisotropic Formulation
-
-The second requirement for physical correctness is conservation of energy at steady state. At equilibrium, the sum of all source fluxes must equal zero: $\mathbf{1}^T\mathbf{C}\mathbf{j} = 0$.
-
-### Key Identity: The Foundation of Energy Conservation
-
-The proof of energy conservation relies on establishing that the fundamental eigenvalue relationship from the isotropic case is preserved in the anisotropic formulation.
-
-::: {.theorem data-title="Preservation of the Key Identity" #lem-key-identity}
-
-For the anisotropic formulation with row-stochastic normalization, the key identity holds:
+For the anisotropic formulation with row-stochastic normalization, the fundamental identity holds:
 
 $$
 \mathbf{F}(\mathbf{1} - \mathbf{b}) = (\mathbf{I} - \mathbf{K})\mathbf{1}
@@ -472,50 +230,30 @@ where $\mathbf{b}$ is the vector of reflection-scattering coefficients.
 
 **Step 1:** Analyze the row sums of $\mathbf{K}$.
 
-From the row-stochastic property of $T$:
-
-$$
-\sum_j \mathbf{T}_{ij} = 1
-$$
-
-Therefore:
+From @eq-k-final and the row-stochastic property of $\mathbf{T}$ (where $\sum_j \mathbf{T}_{ij} = 1$):
 
 $$
 \sum_j \mathbf{K}_{ij} = \sum_j \mathbf{T}_{ij} - \sum_j \mathbf{F}_{ij} \cdot \mathbf{P}_{jj}
 $$
 
 $$
-\sum_j \mathbf{K}_{ij} = 1 - \sum_j \mathbf{F}_{ij} \cdot \mathbf{P}_{jj}
+\sum_j \mathbf{K}_{ij} = 1 - \sum_j \mathbf{F}_{ij} \cdot (1-b_j)
 $$
 
-**Step 2:** Express in terms of reflection-scattering coefficients.
-
-Since $\mathbf{P}_{jj} = 1 - \mathbf{b}_j$:
-
-$$
-\sum_j \mathbf{K}_{ij} = 1 - \sum_j \mathbf{F}_{ij} \cdot (1 - \mathbf{b}_j)
-$$
-
-**Step 3:** Compute $[(\mathbf{I} - \mathbf{K})\mathbf{1}]_i$.
+**Step 2:** Express $(\mathbf{I} - \mathbf{K})\mathbf{1}$.
 
 $$
 [(\mathbf{I} - \mathbf{K})\mathbf{1}]_i = 1 - \sum_j \mathbf{K}_{ij}
 $$
 
-Substituting from Step 2:
+Substituting from Step 1:
 
 $$
-[(\mathbf{I} - \mathbf{K})\mathbf{1}]_i = 1 - \left(1 - \sum_j \mathbf{F}_{ij} \cdot (1 - \mathbf{b}_j)\right)
+[(\mathbf{I} - \mathbf{K})\mathbf{1}]_i = 1 - \left(1 - \sum_j \mathbf{F}_{ij}(1-b_j)\right)
 $$
 
 $$
-[(\mathbf{I} - \mathbf{K})\mathbf{1}]_i = \sum_j \mathbf{F}_{ij} \cdot (1 - \mathbf{b}_j)
-$$
-
-**Step 4:** Recognize the right-hand side.
-
-$$
-[(\mathbf{I} - \mathbf{K})\mathbf{1}]_i = [\mathbf{F}(\mathbf{1} - \mathbf{b})]_i
+[(\mathbf{I} - \mathbf{K})\mathbf{1}]_i = \sum_j \mathbf{F}_{ij}(1-b_j) = [\mathbf{F}(\mathbf{1}-\mathbf{b})]_i
 $$
 
 Therefore: $\mathbf{F}(\mathbf{1} - \mathbf{b}) = (\mathbf{I} - \mathbf{K})\mathbf{1}$ ✓
@@ -526,130 +264,69 @@ Therefore: $\mathbf{F}(\mathbf{1} - \mathbf{b}) = (\mathbf{I} - \mathbf{K})\math
 
 ## Critical Insight
 
-This theorem is the cornerstone of energy conservation for the anisotropic formulation.
-The row-stochastic normalization ensures that despite the full matrix structure of $\mathbf{K}$ (rather than the column-constant structure in the isotropic case), the fundamental relationship between $\mathbf{F}$, $\mathbf{K}$, and the reflection-scattering coefficients is preserved.
+This theorem is the cornerstone of energy conservation. The row-stochastic normalization ensures that despite the full matrix structure of $\mathbf{B}_{\mathrm{init}}$ (rather than column-constant), the fundamental relationship between $\mathbf{F}$, $\mathbf{K}$, and $\mathbf{b}$ is preserved.
 
-This means that **all subsequent eigenvalue properties of the isotropic case carry over directly to the anisotropic case**.
+All subsequent eigenvalue properties from the isotropic case carry over directly to the anisotropic case.
 
 :::
 
-### Energy Conservation Theorem
+### Energy Conservation for Uniform Systems
 
-::: {.theorem data-title="Energy Conservation (Anisotropic - Uniform Coefficients)" #thm-aniso-conservation}
+::: {.theorem data-title="Energy Conservation (Uniform Case)" #thm-energy-conservation}
 
-Let $\mathbf{F}$ be the row-stochastic exchange factor matrix, let $\mathbf{\Gamma}$ be the anisotropy matrix with $\mathbf{\Gamma}_{ij} \in [0, 1]$, and let $\mathbf{b} = b\mathbf{1}$ be the uniform vector of reflection-scattering coefficients for some scalar $b \in [0,1)$.
-Define the system matrices via the anisotropic exchange factor transformation.
+For a system with uniform reflection-scattering coefficients $\mathbf{b} = b\mathbf{1}$ where $b \in [0,1)$, the system matrix $\mathbf{C}$ satisfies:
 
-Then for any mixed system $\mathbf{M}\mathbf{j} = \mathbf{h}$ where $\mathbf{M}$ is assembled from rows of $\mathbf{C}$ and $\mathbf{D}$, the sum of the source fluxes equals zero:
+$
+\mathbf{1}^T\mathbf{C}\mathbf{j} = 0
+$
 
-$$
-\mathbf{1}^T \mathbf{C} \mathbf{j} = 0
-$$
-
-regardless of the choice of rows or non-negative boundary conditions in the mixed system.
+for any solution $\mathbf{j}$ of the mixed boundary system $\mathbf{M}\mathbf{j} = \mathbf{h}$.
 
 :::
 
 ::: {.proof}
 
-The proof follows directly from @lem-key-identity.
+**Step 1:** From @thm-key-identity, left-multiply by $(\mathbf{I}-\mathbf{K})^{-1}$:
 
-**Step 1:** Establish the eigenvalue relationship for $\mathbf{A} + \mathbf{R}$.
+$
+(\mathbf{I}-\mathbf{K})^{-1}\mathbf{F}(\mathbf{1}-\mathbf{b}) = \mathbf{1}
+$
 
-From @lem-key-identity: $\mathbf{F}(\mathbf{1} - \mathbf{b}) = (\mathbf{I} - \mathbf{K})\mathbf{1}$
+Left-multiply by $\mathbf{P} = (1-b)\mathbf{I}$ for uniform $b$:
 
-Left-multiply by $(\mathbf{I} - \mathbf{K})^{-1}$:
+$
+\mathbf{P}(\mathbf{I}-\mathbf{K})^{-1}\mathbf{F}(\mathbf{1}-\mathbf{b}) = \mathbf{P}\mathbf{1} = (1-b)\mathbf{1}
+$
 
-$$
-(\mathbf{I} - \mathbf{K})^{-1}\mathbf{F}(\mathbf{1} - \mathbf{b}) = \mathbf{1}
-$$
+**Step 2:** The left side equals $\mathbf{A} + \mathbf{R}$ from @eq-aniso-a-plus-r:
 
-Left-multiply by $\mathbf{P}$ (where $\mathbf{P} = (1-b)\mathbf{I}$ for uniform $b$):
+$
+(\mathbf{A} + \mathbf{R})(\mathbf{1}-\mathbf{b}) = (1-b)\mathbf{1} = (\mathbf{1}-\mathbf{b})
+$
 
-$$
-\mathbf{P}(\mathbf{I} - \mathbf{K})^{-1}\mathbf{F}(\mathbf{1} - \mathbf{b}) = \mathbf{P}\mathbf{1}
-$$
+Therefore $(\mathbf{1}-\mathbf{b})$ is an eigenvector of $\mathbf{A}+\mathbf{R}$ with eigenvalue 1.
 
-**Step 2:** Simplify using matrix definitions.
+**Step 3:** Taking the transpose:
 
-The left side equals $\mathbf{A} + \mathbf{R}$:
+$
+(\mathbf{1}-\mathbf{b})^T(\mathbf{A}^T + \mathbf{R}^T) = (\mathbf{1}-\mathbf{b})^T
+$
 
-From the definitions:
+$
+(\mathbf{1}-\mathbf{b})^T(\mathbf{I} - \mathbf{A}^T - \mathbf{R}^T) = \mathbf{0}^T
+$
 
-$$
-\begin{aligned}
-\mathbf{A} &= \mathbf{P}(\mathbf{I}-\mathbf{K})^{-1}(\mathbf{F}-\mathbf{K}) \\
-\mathbf{R} &= \mathbf{P}(\mathbf{I}-\mathbf{K})^{-1}\mathbf{K}
-\end{aligned}
-$$ {#eq-aniso-ar-defs}
+$
+(\mathbf{1}-\mathbf{b})^T\mathbf{C} = \mathbf{0}^T
+$
 
-it is obtained that:
+**Step 4:** For uniform $b$: $(1-b)\mathbf{1}^T\mathbf{C} = \mathbf{0}^T$, and since $(1-b) > 0$:
 
-$$
-\mathbf{A} + \mathbf{R} = \mathbf{P}(\mathbf{I}-\mathbf{K})^{-1}\mathbf{F}
-$$ {#eq-aniso-a-plus-r}
-
-Therefore:
-
-$$
-(\mathbf{A} + \mathbf{R})(\mathbf{1} - \mathbf{b}) = \mathbf{P}\mathbf{1}
-$$
-
-The right side simplifies:
-
-$$
-\mathbf{P}\mathbf{1} = (1-b)\mathbf{1} = \mathbf{1} - \mathbf{b}
-$$
-
-**Step 3:** Establish the eigenvalue property.
-
-$$
-(\mathbf{A} + \mathbf{R})(\mathbf{1} - \mathbf{b}) = (\mathbf{1} - \mathbf{b})
-$$
-
-Therefore, $(\mathbf{1} - \mathbf{b})$ is an eigenvector of $\mathbf{A} + \mathbf{R}$ with eigenvalue 1.
-
-**Step 4:** Derive the nullspace property of $\mathbf{C}$.
-
-Taking the transpose:
-
-$$
-(\mathbf{1} - \mathbf{b})^T(\mathbf{A}^T + \mathbf{R}^T) = (\mathbf{1} - \mathbf{b})^T
-$$
-
-Rearranging:
-
-$$
-(\mathbf{1} - \mathbf{b})^T(\mathbf{I} - \mathbf{A}^T - \mathbf{R}^T) = \mathbf{0}^T
-$$
-
-Therefore:
-
-$$
-(\mathbf{1} - \mathbf{b})^T\mathbf{C} = \mathbf{0}^T
-$$
-
-**Step 5:** Apply uniformity to obtain energy conservation.
-
-For uniform $\mathbf{b} = b\mathbf{1}$:
-
-$$
-(\mathbf{1} - b\mathbf{1})^T\mathbf{C} = (1-b)\mathbf{1}^T\mathbf{C} = \mathbf{0}^T
-$$
-
-Since $(1-b) > 0$:
-
-$$
+$
 \mathbf{1}^T\mathbf{C} = \mathbf{0}^T
-$$
+$
 
-Therefore, for any vector $\mathbf{j}$:
-
-$$
-\mathbf{1}^T\mathbf{C}\mathbf{j} = \mathbf{0}^T\mathbf{j} = 0
-$$
-
-This establishes energy conservation. ✓
+Therefore: $\mathbf{1}^T\mathbf{C}\mathbf{j} = 0$ ✓
 
 :::
 
@@ -657,84 +334,87 @@ This establishes energy conservation. ✓
 
 ## Equivalence to Isotropic Case
 
-Notice that this proof is **identical** to the proof for the isotropic case (see @thm-spectral_radius_unity). The only difference is that we first had to establish @lem-key-identity for the anisotropic formulation. Once that key relationship is proven, everything else follows exactly as before.
+This proof is identical to the isotropic case. The only requirement was establishing @thm-key-identity for the anisotropic formulation. Once that identity is proven, energy conservation follows automatically.
 
-This demonstrates the elegance of the row-stochastic normalization approach: it preserves the fundamental algebraic structure that guarantees energy conservation, regardless of the complexity of the anisotropic distribution $\mathbf{\Gamma}$.
+This demonstrates the elegance of the row-stochastic normalization: it preserves the fundamental algebraic structure regardless of the complexity of $\mathbf{\Gamma}$.
 
 :::
 
-### Non-Uniform Reflection-Scattering Coefficients
+### Energy Conservation for Mixed Boundary Conditions
 
-For completeness, we state the energy conservation result for mixed boundary conditions with non-uniform reflection-scattering coefficients.
+::: {.theorem data-title="Energy Conservation (Mixed Boundary Conditions)" #thm-energy-conservation-mixed}
 
-::: {.theorem data-title="Energy Conservation (Anisotropic - Mixed Boundary Conditions)" #thm-aniso-conservation-nonuniform}
-
-Let $\mathbf{F}$ be row-stochastic, let $\mathbf{\Gamma}_{ij} \in [0, 1]$, and define the system matrices via the anisotropic exchange factor transformation.
-Consider a mixed system $\mathbf{M}\mathbf{j} = \mathbf{h}$ where:
+Consider a mixed boundary system $\mathbf{M}\mathbf{j} = \mathbf{h}$ where:
 
 - Rows $I$ of $\mathbf{M}$ are taken from $\mathbf{C}$ with corresponding $\mathbf{h}_I = \mathbf{0}$
 - Reflection-scattering coefficients on rows $I$ can be non-uniform: $0 \leq b_i < 1$ for all $i \in I$
 - Rows $J$ of $\mathbf{M}$ are taken from $\mathbf{D}$ with corresponding $\mathbf{h}_J \geq \mathbf{0}$
-- Reflection-scattering coefficients on rows $J$ are uniform: $\mathbf{b}_j = \gamma < 1$ for all $j \in J$
+- Reflection-scattering coefficients on rows $J$ are uniform: $b_j = \gamma < 1$ for all $j \in J$
 
 Then the energy conservation property holds:
 
-$$
-\mathbf{1}^T \mathbf{C} \mathbf{j} = 0
-$$
+$
+\mathbf{1}^T\mathbf{C}\mathbf{j} = 0
+$
 
 :::
 
 ::: {.proof}
 
-The proof is identical to @thm-uniform_conservation for the isotropic case, using the eigenvalue relationship $(\mathbf{1} - \mathbf{b})^T\mathbf{C} = \mathbf{0}^T$ established in the proof of @thm-aniso-conservation.
+From @thm-energy-conservation, it holds that $(\mathbf{1}-\mathbf{b})^T\mathbf{C} = \mathbf{0}^T$.
 
-The constraint $\mathbf{C}_I\mathbf{j} = \mathbf{0}$ eliminates dependence on non-uniform coefficients in rows $I$, while uniformity on rows $J$ ensures that $(1-\gamma)\mathbf{1}^T\mathbf{C}_J\mathbf{j} = 0$, which implies $\mathbf{1}^T\mathbf{C}_J\mathbf{j} = 0$ since $(1-\gamma) > 0$.
+Partition the system by rows $I$ (known sources) and $J$ (known emissive powers):
 
-Combined, these yield $\mathbf{1}^T\mathbf{C}\mathbf{j} = 0$. ✓
+$
+\mathbf{1}^T\mathbf{C}\mathbf{j} = \mathbf{1}^T\mathbf{C}_I\mathbf{j} + \mathbf{1}^T\mathbf{C}_J\mathbf{j}
+$
+
+**Part 1:** For rows $I$ with $\mathbf{C}_I\mathbf{j} = \mathbf{0}$:
+
+$
+\mathbf{1}^T\mathbf{C}_I\mathbf{j} = \mathbf{1}^T\mathbf{0} = 0
+$
+
+**Part 2:** For rows $J$ with uniform $b_j = \gamma$:
+
+From $(\mathbf{1}-\mathbf{b})^T\mathbf{C} = \mathbf{0}^T$, considering only rows $J$:
+
+$
+(\mathbf{1}-\gamma\mathbf{1})^T\mathbf{C}_J\mathbf{j} = (1-\gamma)\mathbf{1}^T\mathbf{C}_J\mathbf{j} = 0
+$
+
+Since $(1-\gamma) > 0$:
+
+$
+\mathbf{1}^T\mathbf{C}_J\mathbf{j} = 0
+$
+
+**Conclusion:** Combining both parts:
+
+$
+\mathbf{1}^T\mathbf{C}\mathbf{j} = 0 + 0 = 0
+$
+
+Energy conservation holds for mixed boundary conditions. ✓
 
 :::
 
-## Summary of Physical Correctness
+## Summary
 
-The anisotropic extension of the exchange factor transformation satisfies both fundamental requirements for physical correctness:
+The anisotropic extension preserves all essential physical properties:
 
-1. **Non-Negativity**: All elements of $\mathbf{K}$, $\mathbf{A}$, $\mathbf{R}$, and consequently all radiative quantities ($\mathbf{j}$, $\mathbf{e}$, $\mathbf{g}_a$, $\mathbf{r}$), are non-negative for physically valid inputs (@thm-aniso-nonnegative).
+| Property | Requirement | Status |
+|----------|-------------|--------|
+| $\mathbf{K} \geq 0$ | Non-negativity | ✓ @thm-physical-bounds |
+| $\mathbf{K} \leq \mathbf{F}$ | Physical bound | ✓ @thm-physical-bounds |
+| Key identity | Algebraic structure | ✓ @thm-key-identity |
+| Energy conservation (uniform) | Global balance | ✓ @thm-energy-conservation |
+| Energy conservation (mixed) | General case | ✓ @thm-energy-conservation-mixed |
 
-2. **Energy Conservation**: The sum of source fluxes equals zero at steady state, ensuring global energy balance (@thm-aniso-conservation, @thm-aniso-conservation-nonuniform).
+The method provides:
+- **Maximum flexibility**: Element-wise control with optimal bounds on $c$
+- **Physical validity**: Guaranteed through proper coefficient selection
+- **Energy conservation**: Automatic for uniform and mixed boundary conditions
+- **Computational efficiency**: Analytical solution via matrix inversion
 
-### Key Insight: Preservation of Algebraic Structure
-
-The critical insight enabling these results is that the row-stochastic normalization procedure preserves the fundamental identity:
-
-$$
-\mathbf{F}(\mathbf{1} - \mathbf{b}) = (\mathbf{I} - \mathbf{K})\mathbf{1}
-$$
-
-This identity is the cornerstone of the isotropic formulation's mathematical structure. By maintaining this relationship in the anisotropic case, the row-stochastic normalization ensures that:
-
-- The eigenvalue structure of $\mathbf{A} + \mathbf{R}$ is preserved
-- The nullspace property of $\mathbf{C}$ is maintained  
-- Energy conservation follows automatically for uniform (or appropriately mixed) boundary conditions
-
-### Comparison with Isotropic Case
-
-| Property | Isotropic | Anisotropic | Status |
-|----------|-----------|-------------|--------|
-| $\mathbf{K}$ structure | Column-constant | Full matrix | Generalized |
-| $\mathbf{K} \geq 0$ | Trivial | Requires proof | ✓ Proven |
-| Key identity | Direct | Via normalization | ✓ Proven |
-| Energy conservation | Direct | Via key identity | ✓ Proven |
-
-The anisotropic extension represents a true generalization: it maintains all essential properties while accommodating arbitrary directional distributions within the physical constraint $\mathbf{\Gamma} \in [0, 1]$.
-
-## Conclusion
-
-The anisotropic exchange factor transformation preserves the mathematical rigor and physical validity of the isotropic formulation. Through careful construction via row-stochastic normalization, the method guarantees:
-
-- **Non-negative radiative quantities** for all physically valid inputs
-- **Energy conservation** at steady state
-- **Analytical solvability** through matrix inversion
-- **Backward compatibility** with the isotropic case
-
-These properties make the anisotropic extension suitable for rigorous scientific computation in radiative transfer applications requiring directional resolution of reflection-scattering processes.
+The anisotropic formulation represents a true generalization that maintains mathematical rigor while accommodating arbitrary directional distributions within the physical constraint $0 \leq \mathbf{\Gamma}_{ij} \leq 1$.
