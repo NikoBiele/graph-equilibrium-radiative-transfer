@@ -7,7 +7,8 @@ project:
     - about.qmd
     - examples/index.qmd
     - examples/example-01.qmd
-
+    - examples/example-02.qmd
+    
 jupyter: julia-1.13
 
 website:

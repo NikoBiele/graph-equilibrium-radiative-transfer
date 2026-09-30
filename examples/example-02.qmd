@@ -1,0 +1,186 @@
+---
+title: "Example 2 — Spectral Greenhouse Atmosphere"
+---
+
+This example models a simplified planetary atmosphere to demonstrate the spectral solver. The atmosphere is transparent in the visible and opaque in the infrared, producing a greenhouse effect: solar radiation penetrates to the surface, while thermal emission from the warm surface is trapped by the absorbing gas. The equilibrium surface temperature, which is not prescribed, emerges far above the value for a transparent atmosphere.
+
+The geometry is a vertical stack of 20 sub-enclosures representing atmospheric layers, each with spectrally distinct absorption. A thin volume at the top emits at solar temperature, acting as the radiation source. The domain is wide relative to its height, approximating a 1D atmosphere.
+
+## Step 1: Define the atmosphere
+
+```{julia}
+using RayTraceHeatTransfer
+using GeometryBasics, StaticArrays
+
+atm_height   = 100_000.0     # atmosphere height (m)
+L            = atm_height    # normalization length
+N_layers     = 20            # atmospheric layers
+width        = 100.0         # normalized width (wide domain ≈ 1D)
+scale_height = 15_900.0      # density scale height (m)
+T_sun        = 5800.0        # solar temperature (K)
+q_solar      = 2 * 2600.0    # isotropic solar flux (both up and down) (W/m²)
+κ_vis        = 0.01          # visible absorption coefficient
+κ_ir         = 100.0         # infrared absorption coefficient
+λ_min        = 1e-9          # minimum wavelength (m)
+λ_max        = 1.0           # maximum wavelength (m)
+stretch      = 5.0;          # spatial layer clustering near surface
+```
+
+The spectral range spans from 1 nm to 1 m, wide enough to capture the full Planck distribution at all temperatures in the problem. An insufficient spectral range forces energy into edge bins and degrades the solution.
+
+## Step 2: Build the spectral bins and layer geometry
+
+`adaptiveSpectralBins` groups wavelengths sharing a κ-level into bins and refines until a Planck-weighted transmission-error bound meets `tol`; the bin count follows the κ range and tolerance, not the spectrum's complexity. Layers that differ by a scale factor share the bins via `scale_range`.
+
+```{julia}
+# Log-spaced spatial layers: thin near the surface where temperature
+# gradients are steepest, thick higher up where the atmosphere thins
+layer_param      = range(0.0, 1.0, length = N_layers + 1)
+layer_edges_norm = [(exp(stretch * t) - 1) / (exp(stretch) - 1) for t in layer_param]
+
+# Solar volume: a thin layer at the top whose emission matches the desired
+# irradiance. This avoids modifying the solver for spectral boundary fluxes.
+sun_layer_height = 1000.0     # 1 km thick
+κ_sun = q_solar * L / (4 * 5.670374419e-8 * T_sun^4 * sun_layer_height) # tuned absorption coefficient (emission)
+
+normalized_scale_height = scale_height / L
+
+# Reference spectrum (ρ = 1) on a fine wavelength grid
+λ = 10 .^ range(log10(λ_min), log10(λ_max), length = 20_001)
+κ_samples = [κ_vis + (κ_ir - κ_vis) / (1 + (4e-6 / x)^6) for x in λ]
+
+ρ_top = exp(-1.0 / normalized_scale_height) # density at top
+model = adaptiveSpectralBins(λ, κ_samples;
+    tol         = 1e-3, # or 1e-4 for higher accuracy
+    L_range     = (layer_edges_norm[2], 1.0),  # thinnest layer .. atmosphere height
+    T_range     = (150.0, T_sun),
+    scale_range = (ρ_top, 1.0))
+n_bins = length(model.κ_ref) # number of spectral bins
+```
+
+## Step 3: Assemble the atmospheric layers
+
+Each layer has a spectrally distinct absorption coefficient: a sigmoid transition around λ = 4 μm separates the transparent visible window (κ ≈ 0.01) from the opaque infrared (κ ≈ 100), scaled by the local atmospheric density. This spectral asymmetry is the mechanism behind the greenhouse effect.
+
+```{julia}
+faces     = PolyVolume2D{Float64}[]
+divisions = Tuple{Int,Int}[]
+
+for j in 1:N_layers
+    y_bot = layer_edges_norm[j]
+    y_top = layer_edges_norm[j + 1]
+    y_mid = (y_bot + y_top) / 2
+
+    verts = SVector(
+        Point2(0.0, y_bot), Point2(width, y_bot),
+        Point2(width, y_top), Point2(0.0, y_top)
+    )
+    solidwalls = SVector((j == 1), true, false, true) # transparent horizontal walls
+
+    # Exponential density decay
+    ρ = exp(-y_mid / normalized_scale_height)
+
+    # Spectral absorption: sigmoid from visible-transparent to IR-opaque
+    layer_κ = ρ .* model.κ_ref
+
+    face = PolyVolume2D{Float64}(verts, solidwalls, n_bins, 1.0, 0.0)
+    face.kappa_g   = layer_κ # local spectral absorption coefficients
+    face.sigma_s_g = fill(0.0, n_bins) # local spectral scattering coefficients
+    face.epsilon   = [fill(1.0, n_bins) for _ in 1:4]
+    face.T_in_g    = -1.0       # solve for gas temperature
+    face.q_in_g    = 0.0        # radiative equilibrium
+
+    if j == 1
+        face.T_in_w = [-1.0, 0.0, 0.0, 0.0]  # free surface, cold sides
+    else
+        face.T_in_w = [0.0, 0.0, 0.0, 0.0]   # cold boundaries
+    end
+    face.q_in_w = [0.0, 0.0, 0.0, 0.0] # source flux
+
+    push!(faces, face)
+    push!(divisions, (1, 2)) # each layer must be divided for the ray tracer to work
+end
+```
+
+In general, to solve for temperature, set `T = -1`. Then the solver uses the prescribed flux to solve for `T`. Any non-negative prescribed `T` will remain fixed, and the solver then determines the source flux `q`. At least one `T` in the domain must be fixed.
+
+## Step 4: Add the solar source and build the mesh
+
+```{julia}
+sun_h_norm = sun_layer_height / L
+verts_sun  = SVector(
+    Point2(0.0, 1.0), Point2(width, 1.0),
+    Point2(width, 1.0 + sun_h_norm), Point2(0.0, 1.0 + sun_h_norm)
+)
+
+face_sun = PolyVolume2D{Float64}(
+    verts_sun, SVector(false, true, true, true), n_bins, κ_sun, 0.0);
+face_sun.kappa_g   = fill(κ_sun, n_bins) # spectrally uniform absorption coefficient
+face_sun.sigma_s_g = fill(0.0, n_bins) # local spectral scattering coefficients
+face_sun.epsilon   = [fill(1.0, n_bins) for _ in 1:4] # black space (fully absorbing)
+face_sun.T_in_g    = T_sun # prescribed solar temperature
+face_sun.q_in_g    = 0.0 # uses temperature
+face_sun.T_in_w    = [0.0, 0.0, 0.0, 0.0] # cold space behind the sun (fully absorbing)
+face_sun.q_in_w    = [0.0, 0.0, 0.0, 0.0] # uses temperature
+
+push!(faces, face_sun)
+push!(divisions, (1, 2)) # each layer must be divided for the ray tracer to work
+
+mesh = RayTracingDomain2D(faces, divisions; verbose = false) # mesh the domain
+mesh.spectral_model = model;                                 # spectral model
+```
+
+Hand-chosen bands remain available as `PlanckBands(λ_edges)`.
+
+## Step 5: Ray trace, smooth and solve
+
+```{julia}
+mesh(2*10^6; method = :exchange, verbose = false)
+# smooth the ray tracing result to enforce energy conservation and reciprocity
+# opt-in to pure Dykstra smoothing
+smooth!(mesh; k_dykstra = 1000, verbose = false)
+solveEquilibrium!(mesh, mesh.F_smooth;
+    max_iters = 10_000, convergence_tol = 1e-14, verbose = false)
+```
+
+Ray tracing is performed independently for each spectral bin, computing separate exchange factor matrices that represent the wavelength-dependent extinction. The spectral equilibrium solver then iterates to find the temperature distribution that simultaneously satisfies energy conservation across all bins.
+
+## Step 6: Extract and plot the temperature profile
+
+```{julia}
+using Plots
+
+gas_temps = Float64[]                                   # temperatures from the ground upwards [K]
+altitudes = Float64[]                                   # matching altitudes [m]
+
+# The ground is the bottom wall (wall 1) of the lowest cell of the lowest layer.
+# Indexing: fine_mesh[layer][cell]; T_w[wall] is that wall's temperature from the solver.
+push!(gas_temps, mesh.fine_mesh[1][1].T_w[1])
+push!(altitudes, 0.0)
+
+# Every layer was meshed into 2 cells stacked vertically (divisions (1, 2)): visit them from the bottom up.
+for j in 1:N_layers                                     # atmospheric layers only; the solar layer on top is skipped
+    for k in 1:2                                        # lower cell, then upper cell
+        cell = mesh.fine_mesh[j][k]
+        push!(gas_temps, cell.T_g)                      # T_g: gas temperature from the solver
+        push!(altitudes, cell.midPoint[2] * L)          # cell-centre height: normalised y times the atmosphere height L
+    end
+end
+
+Plots.plot(gas_temps, altitudes ./ 1000,
+    linewidth = 2, color = :black, marker = :circle, markersize = 3,
+    ylabel = "Altitude / km", xlabel = "Temperature / K",
+    title = "Atmospheric temperature profile\n(spectral greenhouse effect)",
+    legend = false, dpi = 150,
+    guidefontsize = 12, tickfontsize = 10,
+    left_margin = 5Plots.mm, bottom_margin = 10Plots.mm,
+    right_margin = 15Plots.mm)
+```
+
+The surface temperature emerges well above the bare blackbody equilibrium, a direct consequence of the spectral asymmetry between incoming (visible) and outgoing (infrared) radiation. Temperature decreases monotonically with altitude as the atmosphere thins and becomes transparent.
+
+::: {.callout-note}
+This is a simplified radiative equilibrium model without convection, latent heat, or detailed molecular absorption bands. Nevertheless, it captures the essential greenhouse mechanism from first principles: the spectral solver enforces energy conservation across the full spectrum to machine precision, and the temperature profile emerges purely from the exchange of radiation between layers.
+:::
+
+The spectral solver is an unpublished extension of the grey GERT method described in [Bielefeld (2026)](https://arxiv.org/abs/2512.22157). It solves the coupled spectral equilibrium by iterating over Planck-weighted band contributions while preserving the exchange factor framework and its energy conservation guarantees.
