@@ -4,8 +4,9 @@ project:
   render:
     - index.qmd
     - papers.qmd
-    - examples/index.qmd
     - about.qmd
+    - examples/index.qmd
+    - examples/example-01.qmd
 
 jupyter: julia-1.13
 
