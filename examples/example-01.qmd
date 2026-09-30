@@ -170,7 +170,7 @@ println("Deviation from Crosbie & Schrenker: rms = ", round(rms_dev; sigdigits =
         ", max = ", round(max_dev; sigdigits = 2))                          # both in units of S, which runs from 0.09 to 0.63
 ```
 
-For 10⁷ rays on the 11 × 11 mesh the rms deviation is 5.1 × 10⁻⁴ and the maximum 1.2 × 10⁻³, on a source function that runs from 0.09 to 0.63. It is largest in the first row above the hot wall, where the source function changes most steeply. At this number of rays the deviation comes mostly from the mesh, not from the rays: each cell carries a single temperature. [Example 10](https://github.com/NikoBiele/RayTraceHeatTransfer.jl#example-10--convergence-in-rays-and-mesh) separates the two and shows the deviation shrinking at close to second order as the mesh is refined. The reference is tabulated to four decimals, so deviations below about 10⁻⁴ cannot be resolved by this comparison.
+For 10⁷ rays on the 11 × 11 mesh the rms deviation is 5.1 × 10⁻⁴ and the maximum 1.2 × 10⁻³, on a source function that runs from 0.09 to 0.63. It is largest in the first row above the hot wall, where the source function changes most steeply. At this number of rays the deviation comes mostly from the mesh, not from the rays: each cell carries a single temperature. [Example 10](example-10.qmd) separates the two and shows the deviation shrinking at close to second order as the mesh is refined. The reference is tabulated to four decimals, so deviations below about 10⁻⁴ cannot be resolved by this comparison.
 
 ## Step 6: Energy conservation, and why it is not the same as accuracy
 

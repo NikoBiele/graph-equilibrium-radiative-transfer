@@ -2,7 +2,7 @@
 title: "Examples"
 ---
 
-These examples show RayTraceHeatTransfer.jl at work, from a first grey problem to a million-element benchmark. They are moving here from the package README; until each has its own page, its link leads to its section there.
+These examples show RayTraceHeatTransfer.jl at work, from a first grey problem to a million-element benchmark.
 
 ## Participating media in 2D
 
@@ -21,5 +21,5 @@ These examples show RayTraceHeatTransfer.jl at work, from a first grey problem t
 
 ## Accuracy and scale
 
-- [Example 10 — Convergence in Rays and Mesh](https://github.com/NikoBiele/RayTraceHeatTransfer.jl#example-10--convergence-in-rays-and-mesh): how the solution converges with more rays and a finer mesh.
-- [Example 11 — Large Scale: a Million Elements](https://github.com/NikoBiele/RayTraceHeatTransfer.jl#example-11--large-scale-a-million-elements): a billion rays and a million elements, against the diffusion approximation.
+- [Example 10 — Convergence in Rays and Mesh](example-10.qmd): how the solution converges with more rays and a finer mesh.
+- [Example 11 — Large Scale: a Million Elements](example-11.qmd): a billion rays and a million elements, against the diffusion approximation.

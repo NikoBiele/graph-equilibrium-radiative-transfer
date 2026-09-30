@@ -1,0 +1,151 @@
+---
+title: "Example 10 — Convergence in Rays and Mesh"
+---
+
+[Example 1](example-01.qmd) compares a single solution with the reference. This example checks that the solution converges in both of the ways it can: towards exact exchange factors as the number of rays grows, and towards the exact temperature field as the mesh is refined. It compares three ways of computing the exchange factors: the counting tracer `:exchange` with pseudorandom sampling, the same tracer with Sobol sampling, and the pathlength tracer `:pathlength` with Sobol sampling. All three are smoothed before solving.
+
+::: {.callout-warning}
+Together the two studies trace about 7 × 10⁸ rays, most of them on the finest mesh. Expect tens of minutes with several threads.
+:::
+
+## From Example 1
+
+The mesh builder and the row-averaged Crosbie & Schrenker reference are those of [Example 1](example-01.qmd), repeated here so that this page runs on its own.
+
+```{julia}
+using RayTraceHeatTransfer
+using GeometryBasics, StaticArrays
+using ConvolutionInterpolations
+
+function build_mesh(Ndim)                          # the Example 1 geometry and boundary conditions
+    vertices = SVector(Point2(0.0, 0.0), Point2(1.0, 0.0), Point2(1.0, 1.0), Point2(0.0, 1.0))
+    face = PolyVolume2D{Float64}(vertices, SVector(true, true, true, true), 1, 1.0, 0.0)   # κ = 1, σₛ = 0
+    face.T_in_w  = [1000.0, 0.0, 0.0, 0.0]        # bottom hot, rest cold
+    face.epsilon = [1.0, 1.0, 1.0, 1.0]            # black walls
+    face.T_in_g  = -1.0                            # unknown gas temperature
+    face.q_in_g  = 0.0                             # radiative equilibrium
+    return RayTracingDomain2D([face], [(Ndim, Ndim)]; verbose = false)
+end
+
+# Crosbie & Schrenker (1984): optical depth from the hot wall, and the source function S there
+tau_ref = [0.0, 0.00611, 0.02037, 0.04251, 0.07216, 0.10884, 0.15194,
+           0.20076, 0.25449, 0.31225, 0.37309, 0.43602, 0.50000, 0.56398,
+           0.62691, 0.68775, 0.74551, 0.79924, 0.84806, 0.89116, 0.92784,
+           0.95749, 0.97963, 0.99390, 1.00000]
+S_ref   = [0.6293, 0.6198, 0.6017, 0.5767, 0.5460, 0.5108, 0.4724,
+           0.4323, 0.3919, 0.3525, 0.3153, 0.2810, 0.2500, 0.2224,
+           0.1981, 0.1768, 0.1584, 0.1424, 0.1287, 0.1171, 0.1073,
+           0.0992, 0.0930, 0.0885, 0.0863]
+S_ref_itp = convolution_interpolation(tau_ref, S_ref; kernel = :b13)   # the reference as a function of optical depth
+
+# Average of the reference over the row between optical depths a and b, by the midpoint rule
+function row_average(a, b; n = 1000)
+    width = (b - a) / n                                            # width of one subinterval
+    total = sum(S_ref_itp(a + (k - 0.5) * width) for k in 1:n)     # the reference at every subinterval midpoint
+    return total / n                                               # its mean over the row
+end
+```
+
+## Step 1: One solve, one number
+
+A single function builds the mesh, traces, smooths, solves and measures how far the centreline deviates from Crosbie & Schrenker. Two corrections make the comparison fair. A cell's value is an average over the cell, so the reference is averaged over each row, as in Example 1. The cell also averages across the centreline, where the solution has a ridge between the cold side walls, so a cell average lies below the value on the centreline. It differs from that value by h²/24 times the curvature across the centreline, and the second difference of the three middle columns approximates h² times that curvature, so the cross-stream average can be removed from the solution itself.
+
+```{julia}
+# Rms deviation of the centreline source function from Crosbie & Schrenker, for the Example 1
+# problem on an Ndim × Ndim mesh, traced with `rays` rays by the given tracer and sampler
+function centreline_deviation(Ndim, rays; method = :pathlength, sampler = :sobol)
+    mesh = build_mesh(Ndim)                                              # the Example 1 geometry and boundary conditions
+    mesh(rays; method = method, sampler = sampler, verbose = false)      # exchange factors by ray tracing
+    smooth!(mesh; verbose = false)                                       # enforce reciprocity and energy conservation
+    solveEquilibrium!(mesh, mesh.F_smooth; verbose = false)              # solve for the gas temperatures
+
+    T = reshape([cell.T_g for cell in mesh.fine_mesh[1]], Ndim, Ndim)    # temperatures as T[column, row], rows from the hot wall
+    S = (T ./ 1000.0) .^ 4                                               # dimensionless source function, T_hot = 1000 K
+    c = div(Ndim + 1, 2)                                                 # the centre column
+
+    # A cell average lies below the centreline value by h²/24 times the curvature across the
+    # centreline, which the second difference of the three middle columns approximates: remove it
+    S_centre = S[c, :] .- (S[c-1, :] .- 2 .* S[c, :] .+ S[c+1, :]) ./ 24
+
+    edges = range(0, 1, length = Ndim + 1)                               # optical depth at the row boundaries
+    S_ref_rows = [row_average(edges[j], edges[j+1]) for j in 1:Ndim]     # the reference averaged over each row
+    return sqrt(sum(abs2, S_centre .- S_ref_rows) / Ndim)                # rms deviation along the centreline
+end
+```
+
+## Step 2: Convergence in rays
+
+On the 11 × 11 mesh, each of the three configurations is traced with 2¹⁰ to 2¹⁸ rays per emitter. Powers of two suit Sobol sampling, whose points are best balanced in blocks of that size. As the number of rays grows, the deviation falls with the noise in the exchange factors, until it levels off at the discretisation error of the mesh, which no number of rays can remove. The configurations differ in how fast they reach that level.
+
+```{julia}
+# The three ways of computing the exchange factors: tracer, sampler, and a label for the figure
+configurations = [(:exchange,   :random, "exchange, pseudorandom"),
+                  (:exchange,   :sobol,  "exchange, Sobol"),
+                  (:pathlength, :sobol,  "pathlength, Sobol")]
+
+Ndim_rays        = 11                                        # the mesh for the ray study
+emitters         = 4Ndim_rays + Ndim_rays^2                  # 44 wall elements and 121 cells emit rays
+rays_per_emitter = [2^10, 2^12, 2^14, 2^16, 2^18]            # powers of two, which suit Sobol sampling
+
+# rms deviation for every configuration (rows) and number of rays per emitter (columns)
+ray_study = [centreline_deviation(Ndim_rays, emitters * r; method = m, sampler = s)
+             for (m, s, _) in configurations, r in rays_per_emitter]
+```
+
+## Step 3: Convergence in mesh
+
+The meshes have 7, 11, 15 and 21 cells per side, odd so that there is a centre column. Refining the mesh makes each exchange factor smaller and therefore relatively noisier at a fixed number of rays per emitter, so the rays per emitter grow with the number of cells. Growing them in proportion to the number of cells, from 2¹⁵ on the coarsest mesh to 2¹⁸ on the finest, keeps the noise in the temperatures roughly constant. The discretisation error, in contrast, keeps falling, so each configuration follows it down until the discretisation error meets that configuration's noise.
+
+```{julia}
+meshes                = [7, 11, 15, 21]                      # cells per side, odd so that there is a centre column
+mesh_rays_per_emitter = [2^15, 2^16, 2^17, 2^18]             # grows about as the number of cells, Ndim²
+mesh_emitters         = [4n + n^2 for n in meshes]           # wall elements and cells on each mesh
+
+# rms deviation for every configuration (rows) and mesh (columns)
+mesh_study = [centreline_deviation(n, e * r; method = m, sampler = s)
+              for (m, s, _) in configurations,
+                  (n, e, r) in zip(meshes, mesh_emitters, mesh_rays_per_emitter)]
+```
+
+## Step 4: The figure
+
+```{julia}
+using Plots
+
+colours = [:firebrick, :darkorange, :dodgerblue]                        # one colour per configuration
+
+# rms deviation against the number of rays per emitter, on the 11 × 11 mesh
+p1 = Plots.plot(xscale = :log10, yscale = :log10,
+    xticks = (rays_per_emitter, ["2¹⁰", "2¹²", "2¹⁴", "2¹⁶", "2¹⁸"]),  # label the ray counts as powers of two
+    xlabel = "Rays per emitter", ylabel = "Rms deviation of S",
+    ylims  = (2e-4, 1.01e-2),
+    yticks = ([2e-4, 5e-4, 1e-3, 5e-3, 1e-2], ["2×10⁻⁴", "5×10⁻⁴", "10⁻³", "5×10⁻³", "1×10⁻²"]), # plain labels on the log axis
+    title = "Convergence in rays (11 × 11)", legend = :topright)
+for (k, (_, _, label)) in enumerate(configurations)                     # one line per configuration
+    Plots.plot!(p1, rays_per_emitter, ray_study[k, :];
+        marker = :circle, color = colours[k], label = label)
+end
+ray_guide = ray_study[1, 1] .* (rays_per_emitter ./ rays_per_emitter[1]) .^ (-1 / 2)   # ∝ N^(−1/2), from the first point
+Plots.plot!(p1, rays_per_emitter, ray_guide;
+   linestyle = :dash, color = :gray, label = "∝ N^(−1/2)")
+display(p1)
+```
+
+```{julia}
+# rms deviation against the number of cells per side, rays growing with the mesh
+p2 = Plots.plot(xscale = :log10, yscale = :log10,
+    xticks = (meshes, string.(meshes)),                                 # label the meshes by cells per side
+    xlabel = "Cells per side", ylabel = "Rms deviation of S",
+    ylims  = (9.5e-5, 2.05e-3),
+    yticks = ([1e-4, 2e-4, 5e-4, 1e-3, 2e-3], ["1×10⁻⁴", "2×10⁻⁴", "5×10⁻⁴", "1×10⁻³", "2×10⁻³"]), # plain labels on the log axis
+    title = "Convergence in mesh", legend = :bottomleft)
+for (k, (_, _, label)) in enumerate(configurations)                     # one line per configuration
+    Plots.plot!(p2, meshes, mesh_study[k, :];
+        marker = :circle, color = colours[k], label = label)
+end
+mesh_guide = mesh_study[3, 2] .* (meshes ./ 11) .^ (-2)                  # ∝ h², through the pathlength point on 11 × 11
+Plots.plot!(p2, meshes, mesh_guide; linestyle = :dash, color = :gray, label = "∝ h²")
+display(p2)
+```
+
+On the 11 × 11 mesh (left), pseudorandom sampling converges as N^(−1/2), the textbook Monte Carlo rate, while Sobol sampling converges faster. Both Sobol configurations level off at about 3.4 × 10⁻⁴ from 2¹⁴ to 2¹⁶ rays per emitter onward: that is the discretisation error of the mesh, which more rays cannot reduce. The pathlength tracer reaches it first. Refining the mesh (right) lowers that level. With the pathlength tracer the deviation falls from 7.6 × 10⁻⁴ on 7 × 7 to 1.1 × 10⁻⁴ on 21 × 21, close to second order in the cell size h. Pseudorandom sampling stays two to five times higher on every mesh, because its noise rather than the mesh sets its error. Near 10⁻⁴ the comparison approaches its own limit, since the reference is tabulated to four decimals.
