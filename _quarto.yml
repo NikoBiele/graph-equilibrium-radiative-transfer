@@ -8,6 +8,7 @@ project:
     - examples/index.qmd
     - examples/example-01.qmd
     - examples/example-02.qmd
+    - examples/example-03.qmd
     
 jupyter: julia-1.13
 

@@ -1,0 +1,164 @@
+---
+title: "Example 3 — Line Spectrum vs Line-by-Line Reference"
+---
+
+A slab of gas between two black plates at 1000 K and 500 K, with a synthetic line spectrum: 400 Lorentzian lines on a weak continuum, absorption coefficients spanning five decades, from optically thin to thick across the 1 m slab. Fixed wavelength bands cannot resolve such a spectrum — a band straddling a line averages opaque and transparent wavelengths into a meaningless mean. Adaptive binning groups wavelengths by κ instead, so line cores, wings and continuum land in bins of their own regardless of where they sit in the spectrum, and one pathlength trace serves every bin.
+
+The result is checked against an independent line-by-line solution of the same slab: exact exponential-integral quadrature at every wavelength, radiative equilibrium by Newton on the cell temperatures, itself verified against Heaslet & Warming (1965) in the grey limit. The reference lives in `examples/lbl_slab_reference.jl` in the package repository and is exercised by the test suite.
+
+The formulation follows [Modest & Mazumder (2022)](https://doi.org/10.1016/C2018-0-03206-5), *Radiative Heat Transfer*, 4th ed., Ch. 13, with the grey benchmark values of [Heaslet & Warming (1965)](https://doi.org/10.1016/0017-9310(65)90083-9), Table 13.1 therein.
+
+## Step 1: Spectrum and reference solution
+
+```{julia}
+using RayTraceHeatTransfer
+using GeometryBasics, StaticArrays, Random
+include(joinpath(pkgdir(RayTraceHeatTransfer), "examples", "lbl_slab_reference.jl"))
+
+T1, T2 = 1000.0, 500.0                        # hot and cold plate temperatures [K]
+NX = 32                                       # number of cells across the slab
+
+# wavelength grid: 200 001 points, logarithmically spaced from 10 nm to 1 cm
+λ = 10 .^ range(log10(1e-8), log10(1e-2), length = 200_001)
+
+# 400 synthetic absorption lines with random centre, width and strength (fixed seed: reproducible)
+lines = let rng = MersenneTwister(1)
+    centres = 10 .^ (log10(1.5e-6) .+ (log10(30e-6) - log10(1.5e-6)) .* rand(rng, 400))   # 1.5–30 μm, uniform in log λ
+    peaks   = 10 .^ (log10(0.1) .+ 5.0 .* rand(rng, 400))                                  # peak strengths over five decades
+    widths  = 1e-4 .+ 2e-4 .* rand(rng, 400)                                               # half-widths, in decades of λ
+    collect(zip(centres, widths, peaks))                                                   # one (centre, half-width, peak) per line
+end
+
+# Absorption coefficient [1/m] at wavelength x: a weak continuum plus the sum of all lines.
+# Each line is a Lorentzian in log₁₀ λ: peak / (1 + (distance from the centre / half-width)²).
+function absorption(x)
+    line_sum = 0.0
+    for (centre, half_width, peak) in lines
+        distance = log10(x / centre)                       # distance from the line centre, in decades of λ
+        line_sum += peak / (1 + (distance / half_width)^2)
+    end
+    return 0.1 * (1e-3 + line_sum)                         # continuum 1e-3, overall scale 0.1
+end
+κ = [absorption(x) for x in λ]
+
+T_lbl, q_lbl, _ = lbl_slab_equilibrium(λ, κ, 1.0, T1, T2; Nx = NX)   # line-by-line reference, slab thickness 1 m
+ψ_lbl = q_lbl / (LBL_σ * (T1^4 - T2^4))       # net flux, normalised by the black-plate exchange
+```
+
+## Step 2: Adaptive bins
+
+```{julia}
+model = adaptiveSpectralBins(λ, κ; tol = 1e-2, L_range = (1 / NX, 3.0), T_range = (T2, T1))
+K = length(model.κ_ref)                       # number of bins
+```
+
+`tol` bounds the Planck-weighted transmission error of every bin over path lengths from one cell to a few slab thicknesses; the bin count is an output.
+
+## Step 3: Slab as a wide cavity
+
+The 2D solver has no plane-parallel mode, so the slab is a cavity 100,000 times wider than tall with cold, nearly non-reflecting sides; the centre column is the 1D solution.
+
+```{julia}
+W, NX_H = 100_000.0, 5                        # cavity width [m] and number of columns of cells
+verts = SVector(Point2(0.0, 0.0), Point2(W, 0.0), Point2(W, 1.0), Point2(0.0, 1.0))   # corners, counter-clockwise
+face  = PolyVolume2D{Float64}(verts, SVector(true, true, true, true), K, 1.0, 0.0)    # four solid walls, K spectral bins
+face.kappa_g   = copy(model.κ_ref)            # absorption coefficient of every bin [1/m]
+face.sigma_s_g = zeros(K)                     # no scattering
+face.epsilon   = [fill(1.0, K), fill(1.0, K), fill(1.0, K), fill(1.0, K)]   # black in every bin; wall order: bottom, right, top, left
+face.T_in_w    = [T1, 0.0, T2, 0.0]           # wall temperatures [K]: bottom T1, top T2, sides at 0 K
+face.q_in_w    = zeros(4)                     # wall sources, not used when the temperature is prescribed
+face.T_in_g    = -1.0                         # negative: the gas temperature is unknown ...
+face.q_in_g    = 0.0                          # ... and its net source is zero, i.e. radiative equilibrium
+
+mesh = RayTracingDomain2D([face], [(NX_H, NX)]; verbose = false)   # 5 columns × 32 rows of cells
+mesh.spectral_model = model;
+```
+
+## Step 4: Trace once, smooth, solve
+
+```{julia}
+mesh(10^7; method = :pathlength, chunk_rays = 10^7, verbose = false)  # one chunk: paths kept, re-binnable via `exchangeFactors!(mesh)`
+smooth!(mesh; k_dykstra = 200, k_ap = 10^4, verbose = false)          # smoothing: 200 Dykstra rounds, ≤ 10⁴ alternating projections
+solveEquilibrium!(mesh, mesh.F_smooth; max_iters = 20_000, convergence_tol = 1e-12, verbose = false)
+
+# The side walls disturb the columns next to them; the centre column of the wide
+# cavity is the 1D slab solution.
+i_centre = (NX_H + 1) ÷ 2                                   # index of the centre column (3 of 5)
+x_centre = (i_centre - 0.5) * W / NX_H                      # x-coordinate of its cell centres
+centre_cells = [cell for cell in mesh.fine_mesh[1]          # all cells of the first (and only) coarse face ...
+                if abs(cell.midPoint[1] - x_centre) < 1e-9 * W]   # ... whose centre lies in that column
+sort!(centre_cells, by = cell -> cell.midPoint[2])          # order them from the hot plate (y = 0) upwards
+
+T_pkg = [cell.T_g for cell in centre_cells]                 # T_g: gas temperature written by the solver
+
+bottom = centre_cells[1]                                    # the cell touching the hot plate
+# wall 1 of a cell is its bottom edge; q_w is that wall's net radiative power [W], area its length [m]
+ψ_pkg = (bottom.q_w[1] / bottom.area[1]) / (LBL_σ * (T1^4 - T2^4))   # net flux, normalised
+```
+
+## Step 5: Compare
+
+```{julia}
+using Plots
+
+# The model cuts the wavelength axis into pieces at `model.edges`; piece p belongs to bin `model.piece_bin[p]`.
+# For every wavelength sample: find the piece it falls in, then look up that piece's bin.
+n_spectral = length(model.piece_bin)
+piece = clamp.(searchsortedlast.(Ref(model.edges), λ), 1, n_spectral)  # index of the last edge ≤ λ, kept within 1:n_spectral
+bin   = model.piece_bin[piece]                                         # bin index of every wavelength sample
+sel   = 1e-6 .<= λ .<= 1e-4                                            # plot 1–100 μm only, where the lines are
+
+p1 = Plots.plot(λ[sel] .* 1e6, κ[sel]; line_z = bin[sel], color = :turbo, linewidth = 1,
+    xscale = :log10, yscale = :log10, xlabel = "Wavelength / μm", ylabel = "κ / m⁻¹",
+    colorbar_title = "bin", legend = false, title = "Spectrum coloured by adaptive bin")
+```
+
+```{julia}
+x_c = ((1:NX) .- 0.5) ./ NX
+p2 = Plots.plot(x_c, T_lbl; linewidth = 2, color = :black, label = "line-by-line",
+    xlabel = "x / L", ylabel = "Temperature / K", title = "Slab temperature profile")
+Plots.scatter!(p2, x_c, T_pkg; color = :red, markersize = 3, label = "$K bins, one trace")
+```
+
+The agreement of this run in numbers:
+
+```{julia}
+println("max |T − T_LBL| = ", round(maximum(abs.(T_pkg .- T_lbl)); digits = 2), " K,  ",
+        "ψ − ψ_LBL = ", round(ψ_pkg - ψ_lbl; sigdigits = 2))
+```
+
+Tightening the tolerance, against the line-by-line reference (ψ_LBL = 0.49718), at 10⁷ rays:
+
+| tol  | bins | pieces | bound  | max ΔT | ψ − ψ_LBL |
+|------|-----:|-------:|-------:|-------:|----------:|
+| 1e-2 |   20 |   1881 | 3.7e-3 | 0.30 K |   +1.3e-4 |
+| 1e-3 |   31 |   3449 | 9.3e-4 | 0.05 K |   −4.4e-5 |
+| 1e-4 |  128 |  17165 | 9.9e-5 | 0.01 K |   −3.4e-6 |
+
+The error follows the tolerance: each tenfold tightening lowers the temperature error five- to sixfold, and the flux error falls with it. Ten times more rays changes none of these numbers by more than 0.01 K, so at 10⁷ rays the sampling noise is already below the binning error, and the tolerance is the setting that decides the accuracy. Tighten `tol` until the error is small enough; more rays only help once it stops improving.
+
+All rows come from the same recorded paths. The number of bins is fixed when the faces are built, so each tolerance gets a new mesh, which takes over the paths instead of tracing again:
+
+```{julia}
+#| eval: false
+model2 = adaptiveSpectralBins(λ, κ; tol = 1e-3, L_range = (1 / NX, 3.0), T_range = (T2, T1))
+K2 = length(model2.κ_ref)                       # 31 bins
+
+# the number of spectral bins is fixed when a face is built, so the tighter model needs a new face ...
+face2 = PolyVolume2D{Float64}(verts, SVector(true, true, true, true), K2, 1.0, 0.0)
+face2.kappa_g   = copy(model2.κ_ref)            # one absorption coefficient per bin
+face2.sigma_s_g = zeros(K2)                     # no scattering
+face2.epsilon   = [fill(1.0, K2), fill(1.0, K2), fill(1.0, K2), fill(1.0, K2)]
+face2.T_in_w    = [T1, 0.0, T2, 0.0]            # same boundary conditions as before
+face2.q_in_w    = zeros(4)
+face2.T_in_g    = -1.0
+face2.q_in_g    = 0.0
+
+# ... and a new mesh with the same subdivision, hence the same element numbering
+mesh2 = RayTracingDomain2D([face2], [(NX_H, NX)])
+mesh2.spectral_model = model2
+mesh2.path_store = mesh.path_store              # take over the recorded paths: they are geometry only
+exchangeFactors!(mesh2)                         # F_raw for the 31 bins, without tracing again
+```
+
+Re-binning geometric rays takes much less time than repeating the trace itself.
