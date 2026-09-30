@@ -16,8 +16,8 @@ These examples show RayTraceHeatTransfer.jl at work, from a first grey problem t
 
 - [Example 6 — 3D Surface Enclosure](example-06.qmd): analytical view factors in a cube.
 - [Example 7 — Triangulated Icosphere](example-07.qmd): convergence on a sphere built from triangles.
-- [Example 8 — Mixed Triangular and Quadrilateral Faces](https://github.com/NikoBiele/RayTraceHeatTransfer.jl#example-8--mixed-triangular-and-quadrilateral-faces): meshes mixing both element shapes.
-- [Example 9 — Non-Convex Enclosure: an L-Shaped Duct](https://github.com/NikoBiele/RayTraceHeatTransfer.jl#example-9--non-convex-enclosure-an-l-shaped-duct): ray tracing where surfaces shadow each other.
+- [Example 8 — Mixed Triangular and Quadrilateral Faces](example-08.qmd): meshes mixing both element shapes.
+- [Example 9 — Non-Convex Enclosure: an L-Shaped Duct](example-09.qmd): ray tracing where surfaces shadow each other.
 
 ## Accuracy and scale
 

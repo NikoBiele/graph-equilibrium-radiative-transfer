@@ -75,7 +75,7 @@ The panel reports the element's global index and its superface, its area and mid
 
 Elements are numbered superface by superface. With `Ndim = 11` each quadrilateral face contributes 121 subfaces, so the hot face is elements 1–121 and the cold face 122–242. Hovering across the edge between two faces shows the index jumping between blocks. Triangular superfaces contribute blocks of a different length ([Example 7](example-07.qmd)), but the ordering rule is the same. These are the indices used in `domain3D.F_smooth` and in the system matrices.
 
-The scene can be zoomed and entered, so elements can be inspected from inside the enclosure — which can be useful in a non-convex geometry ([Example 9](https://github.com/NikoBiele/RayTraceHeatTransfer.jl#example-9--non-convex-enclosure-an-l-shaped-duct)).
+The scene can be zoomed and entered, so elements can be inspected from inside the enclosure — which can be useful in a non-convex geometry ([Example 9](example-09.qmd)).
 
 ## Step 4: Compute view factors
 
@@ -134,7 +134,7 @@ println("rms |T_MC - T_VF| = ", sqrt(sum(abs2, T_MC[free] - T_VF[free]) / length
 
 The two agree to an rms of 0.09 K on the side walls at this ray count, about 1 × 10⁻⁴ of their temperature, and the deviation keeps falling with the number of rays. That is the essential trade: view factors are machine precision and cost nothing to converge, while ray tracing pays for every digit.
 
-Ray tracing earns its cost where view factors cannot go at all: enclosures that are not convex, where surfaces shadow one another. See [Example 9](https://github.com/NikoBiele/RayTraceHeatTransfer.jl#example-9--non-convex-enclosure-an-l-shaped-duct).
+Ray tracing earns its cost where view factors cannot go at all: enclosures that are not convex, where surfaces shadow one another. See [Example 9](example-09.qmd).
 
 ## Reference
 

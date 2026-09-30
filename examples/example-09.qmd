@@ -1,0 +1,71 @@
+---
+title: "Example 9 — Non-Convex Enclosure: an L-Shaped Duct"
+---
+
+The reentrant corner of an L-shaped duct shadows one arm from the other. View factors have no occlusion test, so this geometry requires ray tracing.
+
+Three unit squares in cross-section, extruded to unit height. The *z* = 0 faces are held at 1000 K, the *z* = 1 faces at 0 K, and the eight side walls are in radiative equilibrium. All surfaces black.
+
+## Step 1: Geometry and boundary conditions
+
+The L-shaped caps are hexagons, split into three quadrilaterals each. The side walls follow the boundary cycle of the cross-section.
+
+```{julia}
+using RayTraceHeatTransfer, GLMakie, StatsBase
+
+xy = [0.0 0.0; 1.0 0.0; 2.0 0.0; 2.0 1.0;
+      1.0 1.0; 0.0 1.0; 1.0 2.0; 0.0 2.0]
+points = vcat(hcat(xy, zeros(8)), hcat(xy, ones(8)))   # z = 0 then z = 1
+
+faces = [ 1  2  5  6;  2  3  4  5;  6  5  7  8;    # 1–3   z = 0 caps
+          9 10 13 14; 10 11 12 13; 14 13 15 16;    # 4–6   z = 1 caps
+          1  2 10  9;  2  3 11 10;  3  4 12 11;    # 7–9   sides, 9 = x-arm end
+          4  5 13 12;  5  7 15 13;  7  8 16 15;    # 10–12 sides, 12 = y-arm end
+          8  6 14 16;  6  1  9 14]                 # 13–14 sides
+
+Ndim = 11
+domainL = RayTracingDomain3D_surfaces(points, faces, Ndim,
+              zeros(14), [fill(1000.0, 3); zeros(3); fill(-1.0, 8)], ones(14));
+```
+
+```{julia}
+#| echo: false
+Makie.inline!(true)   # draw figures into the page rather than a window
+```
+
+Winding does not matter — the constructor orients the faces and fixes the sign from the enclosed volume. Holes and non-manifold edges are rejected here.
+
+## Step 2: Trace, smooth and solve
+
+In an interactive Julia session the scene can be zoomed into the duct and the reentrant corner inspected from within by hovering; on this page the figure is a static image.
+
+```{julia}
+domainL(10^8; verbose = false)     # total rays, divided across the 1694 elements
+smooth!(domainL; verbose = false)
+solveEquilibrium!(domainL, domainL.F_smooth; verbose = false)
+
+# Zoom into the duct and inspect the reentrant corner from within:
+fig  = Figure(size = (1200, 700))
+ax   = LScene(fig[1, 1], scenekw = (camera = cam3d!, show_axis = true))
+info = Label(fig[1, 2], ""; tellheight = false, tellwidth = true,
+             halign = :left, justification = :left,
+             fontsize = 14, font = "DejaVu Sans Mono") # with info as in Example 6
+colsize!(fig.layout, 2, Relative(0.5))
+plotMesh(ax, domainL; field = :T, inspect = true, label = info)
+DataInspector(fig)
+fig
+```
+
+Rays are traced to first intersection only; reflections are handled by the solver, so `F_raw` is geometry alone. Smoothing starts from a reciprocity defect of order 10⁻² rather than [Example 6](example-06.qmd)'s 10⁻¹³ — sampling breaks reciprocity at the noise level, not at roundoff — and reaches 10⁻¹⁵ either way.
+
+The trace uses all threads by default, and the result does not depend on how many: it is fixed by the geometry, the ray count and `seeds`, a single integer selecting the realisation. Runs with different integers are statistically independent (see [Sampling and reproducibility](https://github.com/NikoBiele/RayTraceHeatTransfer.jl#sampling-and-reproducibility)).
+
+A ray either reaches a facet or it does not, so occlusion appears as exact structural zeros. The analytical method returns a substantial value for the same pair, having no notion of what lies between two polygons. Analytical view factors are exact and converge for free but cannot see around corners; ray tracing pays for every digit and has no geometric restriction. [Example 6](example-06.qmd) shows the two agreeing on a cube, which is what licenses trusting the tracer here.
+
+Rays are traced against a bounding volume hierarchy built with the binned surface area heuristic of Wald (2007), using the ray–triangle test of Möller and Trumbore (1997). This is what makes occlusion affordable: the cost of finding a ray's first intersection grows logarithmically rather than linearly in the number of surface elements.
+
+## References
+
+Möller, T. and Trumbore, B. (1997). Fast, minimum storage ray-triangle intersection. *Journal of Graphics Tools*, 2(1), 21–28.
+
+Wald, I. (2007). On fast construction of SAH-based bounding volume hierarchies. *Proceedings of the 2007 IEEE Symposium on Interactive Ray Tracing*, 33–40.

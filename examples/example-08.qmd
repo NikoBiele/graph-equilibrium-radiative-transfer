@@ -1,0 +1,62 @@
+---
+title: "Example 8 — Mixed Triangular and Quadrilateral Faces"
+---
+
+[Examples 6](example-06.qmd) and [7](example-07.qmd) are single-topology: the cube is all quadrilaterals, the icosphere all triangles. A 3D domain can mix the two.
+
+Since `faces` is a matrix, every row has the same width — a triangle is written as a four-vertex row with one vertex repeated. The repeated pair is detected at mesh time and the face is routed to the triangular mesher.
+
+The geometry here is a shed: a rectangular floor, two quadrilateral roof slopes, and two triangular gables.
+
+```{julia}
+using RayTraceHeatTransfer
+using GLMakie
+
+points = [
+    0.0  0.0  0.0;   # 1
+    2.0  0.0  0.0;   # 2
+    2.0  1.5  0.0;   # 3
+    0.0  1.5  0.0;   # 4
+    0.6  0.0  1.0;   # 5  ridge at y = 0
+    0.6  1.5  1.0    # 6  ridge at y = 1.5
+]
+
+faces = [
+    1 4 3 2;   # floor          (quad)
+    1 5 6 4;   # steep roof     (quad)
+    5 2 3 6;   # shallow roof   (quad)
+    1 2 5 5;   # gable y = 0    (triangle — apex vertex 5 repeated)
+    3 4 6 6    # gable y = 1.5  (triangle — apex vertex 6 repeated)
+]
+
+Ndim    = 7
+epsilon = ones(size(faces, 1))
+q_in_w  = zeros(size(faces, 1))
+T_in_w  = [1000.0, 300.0, -1.0, -1.0, -1.0]
+
+domain3D = ViewFactorDomain3D(points, faces, Ndim, q_in_w, T_in_w, epsilon);
+```
+
+```{julia}
+#| echo: false
+Makie.inline!(true)   # draw figures into the page rather than a window
+```
+
+```{julia}
+fig = Figure(size = (800, 700))
+ax  = LScene(fig[1, 1], scenekw = (camera = cam3d!, show_axis = true))
+plotMesh(ax, domain3D)
+fig
+```
+
+Repeated vertices may sit at any position in the row.
+
+The two topologies give different subcell counts at the same `Ndim`: a quadrilateral is divided into `Ndim²` cells, a triangle into `Ndim(Ndim+1)/2`.
+
+```{julia}
+[length(f.subFaces) for f in domain3D.facesMesh]   # [49, 49, 49, 28, 28]
+```
+
+Because block lengths differ, an element's superface can no longer be worked out arithmetically from its index. Hovering reports it directly, in an interactive Julia session: the floor is elements 1–49, and the first gable starts at 148.
+
+From here the domain proceeds exactly as in [Examples 6](example-06.qmd) and [7](example-07.qmd) — view factors, smoothing, then solve.
