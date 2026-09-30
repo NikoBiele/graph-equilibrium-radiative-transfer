@@ -1,0 +1,25 @@
+---
+title: "Examples"
+---
+
+These examples show RayTraceHeatTransfer.jl at work, from a first grey problem to a million-element benchmark. They are moving here from the package README; until each has its own page, its link leads to its section there.
+
+## Participating media in 2D
+
+- [Example 1 — 2D Grey Participating Medium](https://github.com/NikoBiele/RayTraceHeatTransfer.jl#example-1--2d-grey-participating-medium): the basic workflow, validated against Crosbie and Schrenker.
+- [Example 2 — Spectral Greenhouse Atmosphere](https://github.com/NikoBiele/RayTraceHeatTransfer.jl#example-2--spectral-greenhouse-atmosphere): a spectral problem with adaptive spectral bins.
+- [Example 3 — Line Spectrum vs Line-by-Line Reference](https://github.com/NikoBiele/RayTraceHeatTransfer.jl#example-3--line-spectrum-vs-line-by-line-reference): a synthetic line spectrum against an independent line-by-line solution.
+- [Example 4 — Anisotropic Scattering vs a Discrete-Ordinates Reference](https://github.com/NikoBiele/RayTraceHeatTransfer.jl#example-4--anisotropic-scattering-vs-a-discrete-ordinates-reference): directional scattering and reflection on angular bins.
+- [Example 5 — Circular Enclosure from Triangular Elements](https://github.com/NikoBiele/RayTraceHeatTransfer.jl#example-5--circular-enclosure-from-triangular-elements): curved geometry built from triangles.
+
+## Surfaces in 3D
+
+- [Example 6 — 3D Surface Enclosure](https://github.com/NikoBiele/RayTraceHeatTransfer.jl#example-6--3d-surface-enclosure): analytical view factors in a cube.
+- [Example 7 — Triangulated Icosphere](https://github.com/NikoBiele/RayTraceHeatTransfer.jl#example-7--triangulated-icosphere): convergence on a sphere built from triangles.
+- [Example 8 — Mixed Triangular and Quadrilateral Faces](https://github.com/NikoBiele/RayTraceHeatTransfer.jl#example-8--mixed-triangular-and-quadrilateral-faces): meshes mixing both element shapes.
+- [Example 9 — Non-Convex Enclosure: an L-Shaped Duct](https://github.com/NikoBiele/RayTraceHeatTransfer.jl#example-9--non-convex-enclosure-an-l-shaped-duct): ray tracing where surfaces shadow each other.
+
+## Accuracy and scale
+
+- [Example 10 — Convergence in Rays and Mesh](https://github.com/NikoBiele/RayTraceHeatTransfer.jl#example-10--convergence-in-rays-and-mesh): how the solution converges with more rays and a finer mesh.
+- [Example 11 — Large Scale: a Million Elements](https://github.com/NikoBiele/RayTraceHeatTransfer.jl#example-11--large-scale-a-million-elements): a billion rays and a million elements, against the diffusion approximation.

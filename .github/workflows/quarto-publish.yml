@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
@@ -32,29 +32,29 @@ jobs:
         uses: quarto-dev/quarto-actions/setup@v2
 
       - name: Install Julia
-        uses: julia-actions/setup-julia@v1
+        uses: julia-actions/setup-julia@v2
         with:
-          version: '1.10'
-      
+          version: '1.13'
+
       - name: Install OpenGL dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y xorg-dev mesa-utils xvfb libgl1 freeglut3-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libxext-dev
-    
+
       - name: Setup virtual display
         run: |
           Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
-          sleep 10  # Increase wait time
-          echo "DISPLAY=:99" >> $GITHUB_ENV  # Set as persistent env var
+          sleep 10
+          echo "DISPLAY=:99" >> $GITHUB_ENV
 
       - name: Test OpenGL
         run: |
-          DISPLAY=:99 glxinfo | head -20  # Verify OpenGL is working
+          DISPLAY=:99 glxinfo | head -20
         env:
           DISPLAY: :99
 
       - name: Cache Julia
-        uses: julia-actions/cache@v1
+        uses: julia-actions/cache@v2
 
       - name: Install Julia dependencies and kernel
         shell: julia --project=. {0}
@@ -62,10 +62,9 @@ jobs:
           using Pkg
           Pkg.instantiate()
           Pkg.update("RayTraceHeatTransfer")
-          Pkg.add("IJulia")
           Pkg.precompile()
           using IJulia
-          IJulia.installkernel("julia-1.10")
+          IJulia.installkernel("Julia")
         env:
           DISPLAY: :99
 
@@ -79,16 +78,11 @@ jobs:
         with:
           to: html
 
-      - name: Manually add favicon
-        run: |
-          cp favicon-transparent.ico _book/
-          find _book -name "*.html" -exec sed -i 's|</head>|  <link rel="icon" type="image/x-icon" href="/favicon-transparent.ico">\n</head>|' {} \;
-
       - name: Upload to GitHub Pages
         uses: actions/upload-pages-artifact@v3
         if: contains(github.ref, 'main')
         with:
-          path: _book
+          path: _site
 
       - name: Deploy to GitHub Pages
         id: deployment

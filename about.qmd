@@ -1,0 +1,15 @@
+---
+title: "About"
+---
+
+GERT and its software are developed by Nikolaj Maack Bielefeld, an independent computational physicist based in Vejle, Denmark. He holds an M.Sc. in Thermal Energy and Process Engineering from Aalborg University and works in energy systems consulting. The research is carried out independently, in evenings and at weekends, without external funding.
+
+- ORCID: [0009-0005-4385-6444](https://orcid.org/0009-0005-4385-6444)
+- GitHub: [NikoBiele](https://github.com/NikoBiele)
+- Email: [nikolajbielefeld@gmail.com](mailto:nikolajbielefeld@gmail.com)
+
+## Software
+
+- [RayTraceHeatTransfer.jl](https://github.com/NikoBiele/RayTraceHeatTransfer.jl): a registered Julia package for radiative heat transfer, and the implementation of the methods described on this site. It traces exchange factors by Monte Carlo, smooths them, and solves grey, spectral and directional problems in 2D participating media and 3D enclosures.
+- [ConvolutionInterpolations.jl](https://github.com/NikoBiele/ConvolutionInterpolations.jl): a registered Julia package for high-order interpolation on uniform and nonuniform grids in any dimension, with exact derivatives and integrals.
+- [convinterp](https://convinterp.org): a Python port of ConvolutionInterpolations.jl with a Rust core, available on PyPI.

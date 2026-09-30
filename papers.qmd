@@ -1,0 +1,29 @@
+---
+title: "Papers"
+---
+
+The methods behind GERT and RayTraceHeatTransfer.jl are published as preprints on arXiv. Each paper is self-contained and cites the version of the package that reproduces its results.
+
+## A Radiation Exchange Factor Formulation with Proven Non-Negativity and Unconditional Energy Conservation
+
+Nikolaj Maack Bielefeld · arXiv:2512.22157
+
+The foundational paper. It presents a matrix formulation of radiative energy balance on general domains, for media ranging from transparent to absorbing, emitting and scattering, and boundaries ranging from absorbing to reflecting. Starting from a first-interaction exchange factor matrix, the formulation separates what is absorbed from what is reflected or scattered at each step, and builds one linear system for any mix of prescribed temperatures and prescribed sources. The paper proves that this system has a unique, non-negative solution, and that energy is conserved to machine precision as an algebraic identity. It reproduces the textbook results for parallel plates and concentric cylinders exactly, agrees with the diffusion approximation and with Crosbie and Schrenker, and identifies a discrepancy in Noble's formulation of Hottel's zonal method.
+
+[Abstract](https://arxiv.org/abs/2512.22157) · [PDF](https://arxiv.org/pdf/2512.22157)
+
+```bibtex
+@misc{bielefeld2025formulation,
+  title         = {A Radiation Exchange Factor Formulation with Proven Non-Negativity
+                   and Unconditional Energy Conservation},
+  author        = {Bielefeld, Nikolaj Maack},
+  year          = {2025},
+  eprint        = {2512.22157},
+  archivePrefix = {arXiv},
+  primaryClass  = {physics.comp-ph}
+}
+```
+
+## In preparation
+
+**Geometric Projection Smoothing for Radiation Exchange Factors.** Monte Carlo exchange factors violate reciprocity and energy conservation through sampling noise. This paper projects them onto the set of matrices that satisfy both, with a proven convergence rate, and shows that the projection removes much of the noise while it enforces the physics.

@@ -1,132 +1,18 @@
-<p align="center">
-  <img src="assets/logo-transparent.png" alt="GERT logo" width="220"/>
-</p>
-
-# Overview {.unnumbered}
-
-This book presents the Graph Equilibrium Radiative Transfer (GERT) framework, a suite of analytical algorithms for computing equilibrium states on directed graphs.
-Radiative transfer is an important application in its own right, and also offers detailed validation opportunities.
-The GERT algorithms are general and extend beyond radiative transfer to equilibrium problems on directed graphs.
-
-::: {.callout-note}
-## 🚧 Book Under Development
-
-This book is currently being written and expanded.
-New chapters are added regularly as the content is developed and refined.
-The complete version will be available at **gert.net** upon completion.
-:::
-
-## Mathematical Framework
-
-The GERT methods treat radiative systems as stochastic graphs, where nodes represent surfaces or volumes, and edge weights represent energy transfer probabilities.
-Energy conservation is enforced through the requirement that outgoing probabilities from each node sum to 1 (row-stochastic matrices).
-
-Unlike Monte Carlo approaches, this linear algebraic structure allows results to be proven with mathematical certainty, establishing rigorous guarantees on accuracy, convergence, and physical correctness.
-
-## Analytical Solutions
-
-This book presents analytic methods for solving multiple scattering and absorption-reemission in radiative transfer systems.
-Given perfect optical knowledge of the domain, in the form of perfect row-stochastic exchange factors, these methods provide exact solutions to the energy redistribution problem.
-In reality, exchange factors do not perfectly match the domain in question.
-Exchange factors can be estimated numerically using Monte Carlo sampling for complex enclosures containing media which emit, absorb and scatter radiation (participating media).
-For convex transparent enclosures composed of polygon surfaces, the set of exchange factors can be computed analytically.
-In both cases, the exchange factors must satisfy both The First and The Second Law of Thermodynamics.
-This book presents a simple and effective algorithm to enforce these physical constraints (exchange factor smoothing, Part IV), with minimal distortion of the initial factors.
-
-Advantages of the methods presented here:
-
-- **Part III: Exchange Factor Transformation**
-    - Proven machine precision global energy conservation under specified conditions
-    - Proven non-negative radiation results
-    - Proven convergence conditions
-    - Faster than traditional multiple scattering Monte Carlo ray tracing
-        - Especially for high extinction media
-        - And for cases with several non-zero specified source fluxes (direct solve, no iteration)
-- **Part IV: Exchange Factor Smoothing**
-    - Simultaneously enforces The First and The Second Law of Thermodynamics to machine precision
-    - The convergence rate of the algorithm improves as the number of exchange factors scales
-    - Remains feasible and effective even for billions of exchange factors
-    - Guaranteed convergence rate via continued fractions proof
-- **Part V: Anisotropic Extension**
-    - Allowance for dependencies on the incident ray direction
-    - Relaxes the requirements to obtain machine precision energy conservation
-- **Part VI: Spectral Extension**
-    - Extension to spectral problems via spectral bins
-    - The convergence rate of the algorithm improves as the number of spectral bins scales
-    - An empirical expression for the approximate convergence rate
-
-These methods serve as a reference standard for validating more complex computational approaches.
-The author has successfully used them to build and validate a full two-dimensional multiple scattering Monte Carlo code.
-
-Limitations of the methods presented here:
-
-- The outgoing radiation distribution from each element is fixed by the exchange factors
-    - For this reason specular reflections are not possible
-    - Both emission and reflection-scattering share the same distribution
-        - For surfaces a diffuse Lambertian distribution is used
-        - For volumes a uniform spherical distribution is used
-- The methods presented here split the domain into discrete elements and spectral bins
-    - If continuous results are needed use of interpolation or other methods is necessary
-- Matrix methods suffer from computational memory limitations due to quadratic scaling
-    - The methods presented here have been tested on a 64 GB RAM workstation
-
-## Resources
-
-**Book Source Code:** Complete source for this book is available at [github.com/NikoBiele/graph-equilibrium-radiative-transfer](https://github.com/NikoBiele/graph-equilibrium-radiative-transfer)
-
-**Julia Package:** All methods are implemented in the registered package [RayTraceHeatTransfer.jl](https://github.com/NikoBiele/RayTraceHeatTransfer.jl)
-
-## Contents
-
-Navigate through the book using the sidebars, or jump directly to any part:
-
-**[Part I: Introduction and Overview](chapters/p1-ch1-fundamental-challenge.qmd)**  
-
-- [Fundamental Challenge](chapters/p1-ch1-fundamental-challenge.qmd)
-- [Grey Matrix Methods](chapters/p1-ch2-grey-matrix-methods.qmd)
-- [Exchange Factor Smoothing](chapters/p1-ch3-exchange-factor-smoothing.qmd)
-- [Anisotropic Extensions](chapters/p1-ch4-anisotropic-extensions.qmd)
-- [Spectral Extensions](chapters/p1-ch5-spectral-extensions.qmd)
-
-**[Part II: Domain and Geometry Setup](chapters/p2-ch1-geometry-concepts.qmd)**  
-
-- [Geometry Concepts](chapters/p2-ch1-geometry-concepts.qmd)
-- [2D Geometry Setup](chapters/p2-ch2-2d-geometry-setup.qmd)
-- [3D Geometry Setup](chapters/p2-ch3-3d-geometry-setup.qmd)
-
-**[Part III: Exchange Factor Transformation](chapters/p3-ch1-exchange-factor-concepts.qmd)**  
-
-- [Exchange Factor Concepts](chapters/p3-ch1-exchange-factor-concepts.qmd)
-- [Exchange Factor 2D Applications](chapters/p3-ch2-exchange-factor-2d-applications.qmd)
-- [Exchange Factor 3D Applications](chapters/p3-ch3-exchange-factor-3d-applications.qmd)
-- [Exchange Factor Analysis](chapters/p3-ch4-exchange-factor-analysis.qmd)
-
-**[Part IV: Exchange Factor Smoothing](chapters/p4-ch1-smoothing-concepts.qmd)**  
-
-- [Smoothing Concepts](chapters/p4-ch1-smoothing-concepts.qmd)
-- [Smoothing Demonstrations](chapters/p4-ch2-smoothing-demonstrations.qmd)
-- [Smoothing Analysis](chapters/p4-ch3-smoothing-analysis.qmd)
-
-**[Part V: Anisotropic Extension](chapters/p5-ch1-anisotropic-concepts.qmd)**  
-
-- [Anisotropic Concepts](chapters/p5-ch1-anisotropic-concepts.qmd)
-- [Anisotropic 2D Applications](chapters/p5-ch2-anisotropic-2d-applications.qmd)
-- [Anisotropic 3D Applications](chapters/p5-ch3-anisotropic-3d-applications.qmd)
-- [Anisotropic Analysis](chapters/p5-ch4-anisotropic-analysis.qmd)
-
-**[Part VI: Spectral Extension](chapters/p6-ch1-spectral-concepts.qmd)**  
-
-- [Spectral Concepts](chapters/p6-ch1-spectral-concepts.qmd)
-- [Spectral 2D Applications](chapters/p6-ch2-spectral-2d-applications.qmd)
-- [Spectral 3D Applications](chapters/p6-ch3-spectral-3d-applications.qmd)
-- [Spectral Analysis](chapters/p6-ch4-spectral-analysis.qmd)
-
-**[Part VII: Beyond Radiative Transfer](chapters/p7-ch1-directed-graphs.qmd)**  
-
-- [Directed Graphs](chapters/p7-ch1-directed-graphs.qmd)
-- [General Applications](chapters/p7-ch2-general-applications.qmd)
-- [Future Directions](chapters/p7-ch3-future-directions.qmd)
-
+---
+title: "Graph Equilibrium Radiative Transfer"
+subtitle: "Radiative heat transfer as an equilibrium on a graph"
 ---
 
-*Your journey into analytical radiative transfer starts here.*
+Graph Equilibrium Radiative Transfer (GERT) treats a radiating domain as a graph. Surfaces and volumes of participating medium are the nodes, and the exchange factors between them are the edges: the fraction of the radiation leaving one element that first interacts with another. Every row of this matrix sums to one, because all radiation leaving an element arrives somewhere.
+
+Ray tracing gives the exchange factors, following each ray only to its first interaction. Everything after that, every reflection, scattering event, absorption and re-emission, is resolved by a single linear system. Its solution is non-negative, and it conserves energy to machine precision as an algebraic identity, however well or badly the exchange factors were sampled. Monte Carlo sampling leaves the factors slightly out of balance with each other, so they are first projected onto the set of matrices that satisfy reciprocity and energy conservation exactly, which removes much of the sampling noise as well.
+
+![A million elements: the centreline of a 1000 m × 1 m domain with extinction coefficient 100 m⁻¹, meshed into 1001 × 1001 cells and traced with a billion rays. Raw Monte Carlo exchange factors (blue) scatter around the diffusion approximation (black); smoothed factors (orange) fall onto it, with 97.5 % of the deviation removed. Tracing, smoothing and solving took 1.8 minutes on a desktop PC.](assets/large_scale_grey_diffusion.png){fig-alt="Centreline source function against optical depth: a wide blue band of raw results around a straight black line, with the orange smoothed results lying on the line."}
+
+The methods are implemented in [RayTraceHeatTransfer.jl](https://github.com/NikoBiele/RayTraceHeatTransfer.jl), a registered Julia package. It handles grey, spectral and directional problems in two-dimensional participating media, and surface exchange in three-dimensional enclosures.
+
+## Where to go next
+
+- [Papers](papers.qmd): the theory, with proofs, published as preprints on arXiv.
+- [Examples](examples/index.qmd): worked problems with the package, each validated against an independent reference.
+- [About](about.qmd): the author and the software.

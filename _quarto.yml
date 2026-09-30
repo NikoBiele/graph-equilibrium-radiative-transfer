@@ -1,76 +1,33 @@
 project:
-  type: book
-  output-dir: _book
-
-jupyter: julia-1.10
-
-book:
-  title: "Graph Equilibrium Radiative Transfer"
-  subtitle: "Analytic Solutions and Computational Methods"
-  author: "Nikolaj Maack Bielefeld"
-  date: today
-  chapters:
+  type: website
+  output-dir: _site
+  render:
     - index.qmd
-    - preface.qmd
-    
-    - part: "Part I: Introduction and Overview"
-      chapters:
-        - chapters/p1-ch1-fundamental-challenge.qmd
-        - chapters/p1-ch2-grey-matrix-methods.qmd
-        - chapters/p1-ch3-exchange-factor-smoothing.qmd
-        - chapters/p1-ch4-anisotropic-extensions.qmd
-        - chapters/p1-ch5-spectral-extensions.qmd
-    
-    - part: "Part II: Domain and Geometry Setup"
-      chapters:
-        - chapters/p2-ch1-geometry-concepts.qmd
-        - chapters/p2-ch2-2d-geometry-setup.qmd
-        - chapters/p2-ch3-3d-geometry-setup.qmd
-    
-    - part: "Part III: Exchange Factor Transformation"
-      chapters:
-        - chapters/p3-ch1-exchange-factor-concepts.qmd
-        - chapters/p3-ch2-exchange-factor-2d-applications.qmd
-        - chapters/p3-ch3-exchange-factor-3d-applications.qmd
-        - chapters/p3-ch4-exchange-factor-analysis.qmd
-    
-    - part: "Part IV: Exchange Factor Smoothing"
-      chapters:
-        - chapters/p4-ch1-smoothing-concepts.qmd
-        - chapters/p4-ch2-smoothing-demonstrations.qmd
-        - chapters/p4-ch3-smoothing-analysis.qmd
-    
-    - part: "Part V: Anisotropic Extension"
-      chapters:
-        - chapters/p5-ch1-anisotropic-concepts.qmd
-        - chapters/p5-ch2-anisotropic-2d-applications.qmd
-        - chapters/p5-ch3-anisotropic-3d-applications.qmd
-        - chapters/p5-ch4-anisotropic-analysis.qmd
-    
-    - part: "Part VI: Spectral Extension"
-      chapters:
-        - chapters/p6-ch1-spectral-concepts.qmd
-        - chapters/p6-ch2-spectral-2d-applications.qmd
-        - chapters/p6-ch3-spectral-3d-applications.qmd
-        - chapters/p6-ch4-spectral-analysis.qmd
-    
-    - part: "Part VII: Beyond Radiative Transfer"
-      chapters:
-        - chapters/p7-ch1-directed-graphs.qmd
-        - chapters/p7-ch2-general-applications.qmd
-        - chapters/p7-ch3-future-directions.qmd
-    
-    - references.qmd
+    - papers.qmd
+    - examples/index.qmd
+    - about.qmd
 
+jupyter: julia-1.13
+
+website:
+  title: "Graph Equilibrium Radiative Transfer"
+  site-url: https://gert.net
+  favicon: favicon-transparent.ico
   navbar:
-    search: true
     logo: assets/logo-transparent.png
-    title: "Graph Equilibrium Radiative Transfer"
-    
-  sidebar:
-    style: "docked"
-    search: true
-    collapse-level: 1
+    left:
+      - href: index.qmd
+        text: Home
+      - href: papers.qmd
+        text: Papers
+      - href: examples/index.qmd
+        text: Examples
+      - href: about.qmd
+        text: About
+    right:
+      - icon: github
+        href: https://github.com/NikoBiele/RayTraceHeatTransfer.jl
+        aria-label: RayTraceHeatTransfer.jl on GitHub
 
 format:
   html:
@@ -78,34 +35,21 @@ format:
     css: styles.css
     toc: true
     toc-depth: 3
-    code-fold: false
     code-tools: true
     html-math-method: katex
-    number-sections: true
-    number-depth: 3
-    logo: assets/logo-transparent.png
-    include-in-header:
-      - text: |
-          <script>
-          document.addEventListener('DOMContentLoaded', function() {
-            // Extract chapter number from the span.chapter-number element
-            const chapterSpan = document.querySelector('.quarto-title .chapter-number');
-            if (chapterSpan) {
-              const chapterNum = chapterSpan.textContent.trim();
-              document.documentElement.style.setProperty('--chapter-number', '"' + chapterNum + '."');
-            }
-          });
-          </script>
     crossref:
-      chapters: true
       eq-prefix: "Eq."
       fig-prefix: "Fig."
       tbl-prefix: "Table"
       thm-prefix: "Theorem"
-    
+
 bibliography: references.bib
 link-citations: true
-reference-location: document
+
+date-modified: last-modified
+date-format: "D MMMM YYYY"
+language:
+  title-block-modified: "Last updated"
 
 execute:
   freeze: auto
