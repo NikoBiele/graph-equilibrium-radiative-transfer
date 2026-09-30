@@ -10,6 +10,9 @@ project:
     - examples/example-02.qmd
     - examples/example-03.qmd
     - examples/example-04.qmd
+    - examples/example-05.qmd
+    - examples/example-06.qmd
+    - examples/example-07.qmd
     
 jupyter: julia-1.13
 

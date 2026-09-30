@@ -1,0 +1,182 @@
+---
+title: "Example 7 — Triangulated Icosphere"
+---
+
+This example extends [Example 6](example-06.qmd) from axis-aligned quads to an arbitrary convex triangulated geometry: a unit sphere approximated by recursively subdividing a regular icosahedron. A small hot cap of triangles is placed at the north pole and a matching cold cap at the south pole; all remaining triangles are in radiative equilibrium.
+
+This example demonstrates three features of the package: arbitrary triangulated geometry (view factors are computed via Narayanaswamy (2015) for any closed convex polyhedron built from planar triangles), the separate mesh / view factor / smooth / solve steps that let the user inspect the mesh before committing to the expensive view factor computation, and — as the subdivision level rises — the clearest demonstration of what the smoothing step is for.
+
+## Step 1: Build and inspect the mesh
+
+The icosphere is constructed by a helper function `icosphere_mesh(level)` that returns `(points, faces)` at the requested subdivision level. The mesh is then passed to `ViewFactorDomain3D` along with boundary conditions: at this point the domain holds the geometry and boundary conditions but not yet any view factors.
+
+```{julia}
+using RayTraceHeatTransfer
+using GLMakie
+using LinearAlgebra
+
+include(joinpath(pkgdir(RayTraceHeatTransfer), "examples", "icosphere_mesh.jl"))   # defines icosphere_mesh
+
+subdivision_level = 2                               # 0 → 20 triangles, 1 → 80, 2 → 320, 3 → 1280
+points, faces = icosphere_mesh(subdivision_level)   # points: one row (x, y, z) per vertex; faces: three vertex indices per triangle
+n_tri = size(faces, 1)                              # number of triangles
+
+# Hot cap at the north pole and cold cap at the south pole:
+# the n_cap triangles whose centroids lie highest and lowest in z
+n_cap = 6
+centroids   = [vec(sum(points[faces[i, :], :], dims = 1)) ./ 3 for i in 1:n_tri]   # centroid of triangle i: mean of its three vertices
+z_centroids = [c[3] for c in centroids]                                             # height of every centroid
+hot_ids  = partialsortperm(z_centroids, 1:n_cap, rev = true)                        # indices of the n_cap highest triangles
+cold_ids = partialsortperm(z_centroids, 1:n_cap)                                    # indices of the n_cap lowest triangles
+
+# boundary conditions, one entry per triangle
+epsilon = ones(n_tri)                               # black surfaces
+q_in_w  = zeros(n_tri)                              # zero net source wherever the temperature is unknown
+T_in_w  = fill(-1.0, n_tri)                         # negative: temperature unknown, i.e. radiative equilibrium
+T_in_w[hot_ids]  .= 1000.0                          # hot cap [K]
+T_in_w[cold_ids] .=    0.0                          # cold cap [K]
+
+Ndim = 1                                            # subdivisions per triangle edge; 1 keeps every triangle as one element
+domain3D = ViewFactorDomain3D(points, faces, Ndim, q_in_w, T_in_w, epsilon);   # geometry and boundary conditions, no view factors yet
+```
+
+```{julia}
+#| echo: false
+Makie.inline!(true)   # draw figures into the page rather than a window
+```
+
+With `Ndim = 1` each triangle is a single element, so element `k` is triangle `k` of the `faces` matrix. Hovering is the direct way to confirm the caps landed where intended; it works in an interactive Julia session, while on this page the figure is a static image:
+
+```{julia}
+fig  = Figure(size = (1200, 700))
+ax   = LScene(fig[1, 1], scenekw = (camera = cam3d!, show_axis = true))
+info = Label(fig[1, 2], ""; tellheight = false, tellwidth = true,
+             halign = :left, justification = :left,
+             fontsize = 14, font = "DejaVu Sans Mono") # with info as in Example 6
+colsize!(fig.layout, 2, Relative(0.5))
+plotMesh(ax, domain3D; inspect = true, label = info)
+DataInspector(fig)
+fig
+```
+
+Inspecting the mesh before committing to the view factor computation is especially valuable for triangulated geometries, where the subcell count scales as `n_triangles²`, i.e. it grows quadratically with the number of geometric triangle elements.
+
+## Step 2: Compute view factors
+
+Once the mesh looks right, view factors are computed by calling the domain as a functor:
+
+```{julia}
+domain3D(; parallel = true, verbose = false)
+```
+
+This computes a view factor for every pair of subcells and is typically the most expensive step in the workflow. Rows are normalised on assembly, so `F_raw` conserves energy exactly; its reciprocity, as shown below, is another matter.
+
+## Step 3: Smooth
+
+```{julia}
+smooth!(domain3D; verbose = false);
+```
+
+## Step 4: Solve and visualise
+
+```{julia}
+solveEquilibrium!(domain3D, domain3D.F_smooth; verbose = false)
+
+fig  = Figure(size = (1200, 700))
+ax   = LScene(fig[1, 1], scenekw = (camera = cam3d!, show_axis = true))
+info = Label(fig[1, 2], ""; tellheight = false, tellwidth = true,
+             halign = :left, justification = :left,
+             fontsize = 14, font = "DejaVu Sans Mono") # with info as in Example 6
+colsize!(fig.layout, 2, Relative(0.5))
+plotMesh(ax, domain3D; field = :T, inspect = true, label = info)
+DataInspector(fig)
+fig
+```
+
+The resulting temperature field shows a bright hot cap at the north pole, a dark cold cap at the south, and a nearly isothermal bulk throughout most of the sphere — as expected when a small hot source and a small cold sink are embedded in a highly concave enclosure.
+
+## Machine-precision agreement with the analytical limit
+
+For equal-area hot and cold caps on a sphere, the symmetry of the geometry forces every equilibrium triangle to see the hot and cold caps in the same proportion. The equilibrium temperature is therefore the same everywhere in the bulk, set by the `T⁴`-averaged balance between the two caps:
+
+$$
+T_{\text{limit}} = \left(\frac{T_{\text{hot}}^4 + T_{\text{cold}}^4}{2}\right)^{1/4}
+$$
+
+For `T_hot = 1000 K` and `T_cold = 0 K`, this gives `T_limit ≈ 840.896 K`.
+
+Because `icosphere_mesh` is parameterised by subdivision level, the full pipeline can be run at multiple resolutions to check the computed equator temperature against this limit:
+
+```{julia}
+T_hot   = 1000.0                                    # hot-cap temperature [K]
+T_cold  =    0.0                                    # cold-cap temperature [K]
+T_limit = ((T_hot^4 + T_cold^4) / 2)^(1/4)          # analytical temperature of every equilibrium triangle, ≈ 840.896 K
+
+levels = 0:3                                        # subdivision levels: 20, 80, 320 and 1280 triangles
+n_cap  = 6                                          # triangles per cap
+Ndim   = 1                                          # one element per triangle
+
+for level in levels
+    points, faces = icosphere_mesh(level)
+    n_tri = size(faces, 1)
+    n_cap_effective = min(n_cap, n_tri ÷ 4)         # never more than a quarter of the triangles per cap (matters at level 0)
+
+    # caps: the triangles with the highest and the lowest centroids, as in Step 1
+    centroids   = [vec(sum(points[faces[i, :], :], dims = 1)) ./ 3 for i in 1:n_tri]
+    z_centroids = [c[3] for c in centroids]
+    hot_ids  = partialsortperm(z_centroids, 1:n_cap_effective, rev = true)
+    cold_ids = partialsortperm(z_centroids, 1:n_cap_effective)
+
+    # boundary conditions: black surfaces, prescribed caps, everything else in radiative equilibrium
+    epsilon = ones(n_tri)
+    q_in_w  = zeros(n_tri)
+    T_in_w  = fill(-1.0, n_tri)
+    T_in_w[hot_ids]  .= T_hot
+    T_in_w[cold_ids] .= T_cold
+
+    # the four workflow steps
+    domain = ViewFactorDomain3D(points, faces, Ndim, q_in_w, T_in_w, epsilon)   # mesh
+    domain(; parallel = true, verbose = false)                                  # view factors for every pair of triangles
+    stats = smooth!(domain, verbose = false)                                    # enforce reciprocity; returns diagnostics
+    δ_raw    = stats.delta_raw[1]                   # reciprocity defect of F_raw (entry 1: a grey domain has a single "bin")
+    δ_smooth = stats.delta_smooth[1]                # certified bound on the defect of F_smooth
+    solveEquilibrium!(domain, domain.F_smooth; verbose = false)                 # solve
+
+    # temperature of the equilibrium triangle closest to the equator, against the analytical limit
+    equilibrium_ids = setdiff(1:n_tri, hot_ids, cold_ids)                       # all triangles outside the two caps
+    equator_id = equilibrium_ids[argmin(abs.(z_centroids[equilibrium_ids]))]    # the one whose centroid has the smallest |z|
+    T_equator  = domain.facesMesh[equator_id].subFaces[1].T_w                   # its single element (Ndim = 1) and that element's temperature
+    T_error    = abs(T_limit - T_equator)
+
+    println("Level $level: $n_tri triangles → δ_R(F_raw) = $(round(δ_raw, sigdigits=3)), "*
+            "δ_R(F_smooth) = $(round(δ_smooth, sigdigits=3)), error = $(round(T_error, sigdigits = 3)) K")
+end
+```
+
+| Level | Triangles | δ_R (F_raw) | δ_R (F_smooth) | \|T_equator − T_limit\| (K) |
+|:-----:|:---------:|:-----------:|:--------------:|:---------------------------:|
+|   0   |     20    |   1.7e-15   |    1.3e-15     |         6.8e-2              |
+|   1   |     80    |   3.9e-14   |    2.0e-15     |         1.1e-13             |
+|   2   |    320    |   3.7e-01   |    8.0e-16     |         1.7e-11             |
+|   3   |   1280    |   1.6e+00   |    2.7e-15     |         4.3e-11             |
+
+δ_R is the reciprocity defect of the view factor matrix — the same initial quantity `smooth!` reports in its log:
+
+$$
+\delta_R(F) =
+\sqrt{
+  \sum_{i \lt j}
+  \frac{(w_i F_{ij} - w_j F_{ji})^2}
+       {w_i^2 + w_j^2}
+}
+$$
+
+where $w_i$ is the element weight (surface area in 3D). It is a sum over pairs, not a percentage, so it grows with element count too.
+
+At level 0 the 5+5 caps cover over half the sphere, leaving only 10 equilibrium triangles, so the symmetry argument doesn't hold cleanly. From level 1 onward the equator temperature matches the analytical limit to within 10⁻¹¹ K.
+
+The δ_R column is why smoothing exists. The view factor integral is ill-conditioned for polygons sharing an edge, and is evaluated on a slightly perturbed geometry. On the cube this barely matters — most adjacent pairs are coplanar with a true view factor of zero. On a sphere every face sees every other, so all three neighbours of every triangle carry a perturbed, nonzero view factor. Rows are normalised on assembly, so energy conservation holds regardless; reciprocity is what breaks. Smoothing drives δ_R to machine precision at every level.
+
+## Reference
+
+Narayanaswamy, A. (2015). An analytic expression for radiation view factor between two arbitrarily oriented planar polygons. *International Journal of Heat and Mass Transfer*, 91, 841–847.

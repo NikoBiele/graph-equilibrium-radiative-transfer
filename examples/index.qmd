@@ -10,12 +10,12 @@ These examples show RayTraceHeatTransfer.jl at work, from a first grey problem t
 - [Example 2 — Spectral Greenhouse Atmosphere](example-02.qmd): a spectral problem with adaptive spectral bins.
 - [Example 3 — Line Spectrum vs Line-by-Line Reference](example-03.qmd): a synthetic line spectrum against an independent line-by-line solution.
 - [Example 4 — Anisotropic Scattering vs a Discrete-Ordinates Reference](example-04.qmd): directional scattering and reflection on angular bins.
-- [Example 5 — Circular Enclosure from Triangular Elements](https://github.com/NikoBiele/RayTraceHeatTransfer.jl#example-5--circular-enclosure-from-triangular-elements): curved geometry built from triangles.
+- [Example 5 — Circular Enclosure from Triangular Elements](example-05.qmd): curved geometry built from triangles.
 
 ## Surfaces in 3D
 
-- [Example 6 — 3D Surface Enclosure](https://github.com/NikoBiele/RayTraceHeatTransfer.jl#example-6--3d-surface-enclosure): analytical view factors in a cube.
-- [Example 7 — Triangulated Icosphere](https://github.com/NikoBiele/RayTraceHeatTransfer.jl#example-7--triangulated-icosphere): convergence on a sphere built from triangles.
+- [Example 6 — 3D Surface Enclosure](example-06.qmd): analytical view factors in a cube.
+- [Example 7 — Triangulated Icosphere](example-07.qmd): convergence on a sphere built from triangles.
 - [Example 8 — Mixed Triangular and Quadrilateral Faces](https://github.com/NikoBiele/RayTraceHeatTransfer.jl#example-8--mixed-triangular-and-quadrilateral-faces): meshes mixing both element shapes.
 - [Example 9 — Non-Convex Enclosure: an L-Shaped Duct](https://github.com/NikoBiele/RayTraceHeatTransfer.jl#example-9--non-convex-enclosure-an-l-shaped-duct): ray tracing where surfaces shadow each other.
 
