@@ -1,0 +1,179 @@
+---
+title: "Example 4 — Anisotropic Scattering vs a Discrete-Ordinates Reference"
+---
+
+A grey slab between two black plates at 1000 K and 500 K, optical thickness 1, scattering albedo 0.8, with Henyey–Greenstein scattering. Forward scattering carries radiation through the slab instead of returning it: at g = 0.8 the net flux is 37 % higher than for isotropic scattering and the gas next to the hot plate is 26 K colder. The default solvers cannot see this — they redistribute scattered power isotropically. With a `directional_model` the exchange factors are resolved by ray direction from the same pathlength trace, and each element redistributes what it scatters or reflects over the direction bins according to its `phase` and `reflection`.
+
+The result is checked against an independent deterministic solution of the same slab: 1D discrete ordinates on double-Gauss quadrature, the azimuthally averaged Henyey–Greenstein kernel from its Legendre series, a cell-constant source with exact attenuation along every ordinate, and radiative equilibrium solved as one linear system. It reproduces Heaslet & Warming (1965) at g = 0 and the grey line-by-line reference of [Example 3](example-03.qmd). The reference lives in `examples/anisotropic_slab_reference.jl` in the package repository and is exercised by the test suite.
+
+The phase function is that of [Henyey & Greenstein (1941)](https://doi.org/10.1086/144246); the grey benchmark values are those of [Heaslet & Warming (1965)](https://doi.org/10.1016/0017-9310(65)90083-9).
+
+## Step 1: Reference solutions
+
+```{julia}
+using RayTraceHeatTransfer
+using GeometryBasics, StaticArrays, Printf
+include(joinpath(pkgdir(RayTraceHeatTransfer), "examples", "anisotropic_slab_reference.jl"))
+
+T1, T2 = 1000.0, 500.0                        # hot and cold plate temperatures [K]
+κ, σ_s = 0.2, 0.8                             # absorption and scattering coefficients [1/m]: extinction 1, albedo 0.8
+NX = 32                                       # number of cells across the slab
+gs = (0.0, 0.5, 0.8)                          # asymmetry factors: isotropic, moderate, strongly forward
+
+ψ(q) = q / (ASLAB_σ * (T1^4 - T2^4))          # net flux normalised by the black-plate exchange σ(T1⁴ − T2⁴)
+
+T_ref = Dict{Float64,Vector{Float64}}()       # reference temperature profile for every g
+ψ_ref = Dict{Float64,Float64}()               # reference normalised flux for every g
+for g in gs
+    T, q = anisotropic_slab_equilibrium(κ, σ_s, g, 1.0, T1, T2; Nx = NX)   # slab of thickness 1 m
+    T_ref[g] = T
+    ψ_ref[g] = ψ(q)
+end
+```
+
+## Step 2: Slab as a narrow cavity with mirror sides
+
+Specular adiabatic side walls make a cavity of any width equivalent to the infinite slab by symmetry, so a narrow one suffices. Their emissivity cannot be zero for a radiative-equilibrium surface; 0.01 leaves 1 % of their interaction diffuse. Descriptors are inherited by the fine mesh, so they are set on the face before meshing, like `epsilon` and `kappa_g`.
+
+```{julia}
+W, NX_H = 2.0, 4
+verts = SVector(Point2(0.0, 0.0), Point2(W, 0.0), Point2(W, 1.0), Point2(0.0, 1.0))
+face  = PolyVolume2D{Float64}(verts, SVector(true, true, true, true), 1, κ, σ_s)
+face.epsilon    = [1.0, 0.01, 1.0, 0.01]
+face.T_in_w     = [T1, -1.0, T2, -1.0]        # bottom T1, top T2, sides adiabatic
+face.q_in_w     = zeros(4)
+face.T_in_g     = -1.0
+face.q_in_g     = 0.0
+face.phase      = HenyeyGreenstein(0.8)
+face.reflection = [DiffuseReflection(), SpecularReflection(1.0), DiffuseReflection(), SpecularReflection(1.0)]
+
+mesh = RayTracingDomain2D([face], [(NX_H, NX)]; verbose = false)
+mesh.directional_model = AngularBins(16, 4);  # 16 azimuthal × 4 out-of-plane direction bins
+```
+
+## Step 3: Trace once, smooth, solve
+
+The angular exchange factors and their smoothing depend on the geometry and the extinction only — not on the phase function — so one trace and one smoothing serve every g.
+
+```{julia}
+mesh(4 * 10^7; method = :pathlength, chunk_rays = 4 * 10^7, verbose = false)   # paths kept (≈ 4 GB), re-binnable
+smooth!(mesh; verbose = false)                                                 # G_smooth, and F_smooth as its sum over bins
+
+# The cavity emulates a 1D slab, so its four columns of cells are four copies of
+# the same temperature profile. `slab_result` averages them into one temperature
+# per row, and reads the net heat flux off the hot plate.
+function slab_result(mesh)
+    T_sum   = zeros(NX)                          # summed gas temperature of each row of cells
+    n_cells = zeros(Int, NX)                     # number of cells in each row (one per column)
+    for cell in mesh.fine_mesh[1]                # all cells of the first (and only) coarse face
+        y   = cell.midPoint[2]                   # height of the cell centre, 0 < y < 1
+        row = clamp(floor(Int, y * NX) + 1, 1, NX)   # row index, 1 at the hot plate, NX at the cold plate
+        T_sum[row]   += cell.T_g                 # T_g: gas temperature written by the solver
+        n_cells[row] += 1
+    end
+    T_profile = T_sum ./ n_cells                 # column-averaged temperature of every row
+
+    q_hot = 0.0                                  # net radiative power leaving the hot plate [W per m depth]
+    width = 0.0                                  # length of the hot plate [m]
+    # surface_mapping lists every solid wall element as (coarse face, cell, wall of that cell)
+    for ((i_face, i_cell, i_wall), _) in mesh.surface_mapping
+        cell = mesh.fine_mesh[i_face][i_cell]
+        p1 = cell.vertices[i_wall]                                   # wall i_wall runs from this vertex ...
+        p2 = cell.vertices[mod1(i_wall + 1, length(cell.vertices))]  # ... to the next one, cyclically
+        if p1[2] < 1e-9 && p2[2] < 1e-9          # both ends at y = 0: this element belongs to the hot plate
+            q_hot += cell.q_w[i_wall]            # q_w: net radiative power of the wall element [W]
+            width += cell.area[i_wall]           # area: its length, per unit depth in 2D
+        end
+    end
+    return T_profile, ψ(q_hot / width)           # temperature profile and normalised net flux
+end
+
+# Solve the same domain for another asymmetry factor. The phase function enters only
+# the solve, so the exchange factors and their smoothing are reused as they are.
+function solve_for(mesh, g)
+    for cell in mesh.fine_mesh[1]                # after meshing, the descriptors live on the fine cells
+        cell.phase = g == 0 ? IsotropicScattering() : HenyeyGreenstein(g)
+    end
+    solveEquilibrium!(mesh, mesh.F_smooth; verbose = false)
+    return slab_result(mesh)
+end
+
+T_pkg = Dict{Float64,Vector{Float64}}()       # package temperature profile for every g
+ψ_pkg = Dict{Float64,Float64}()               # package normalised flux for every g
+for g in gs
+    T_pkg[g], ψ_pkg[g] = solve_for(mesh, g)
+end
+```
+
+The angular solution is kept on the domain: `mesh.J[i, b]` is the power leaving element `i` in direction bin `b`, and its sum over `b` is the radiosity written to the faces.
+
+## Step 4: Angular convergence
+
+The number of direction bins is the convergence parameter. The kept paths are re-binned without tracing again:
+
+```{julia}
+bins = ((8, 2), (16, 4), (32, 8))             # (azimuthal, out-of-plane) bin counts: 16, 64 and 256 directions
+flux_error = Dict(g => Float64[] for g in gs) # signed relative flux error for every g, one entry per resolution
+max_dT     = Float64[]                        # largest temperature difference at g = 0.8, one entry per resolution
+
+for (n_azimuth, n_polar) in bins
+    mesh.directional_model = AngularBins(n_azimuth, n_polar)   # change the angular resolution ...
+    exchangeFactors!(mesh; verbose = false)                    # ... and re-bin the kept ray paths, no new trace
+    smooth!(mesh; k_ap = 50_000, verbose = false)              # finer bins need more smoothing iterations
+    for g in gs
+        T_now, ψ_now = solve_for(mesh, g)
+        push!(flux_error[g], (ψ_now - ψ_ref[g]) / ψ_ref[g])    # relative flux error, with its sign
+        g == 0.8 && push!(max_dT, maximum(abs.(T_now .- T_ref[g])))
+    end
+end
+```
+
+## Step 5: Compare
+
+```{julia}
+using Plots
+
+colours = Dict(0.0 => :black, 0.5 => :blue, 0.8 => :red)      # one colour per asymmetry factor
+
+# Temperature profiles, reference as lines and package as markers
+x_cells = ((1:NX) .- 0.5) ./ NX                                # cell-centre positions x / L
+p1 = Plots.plot(; xlabel = "x / L", ylabel = "Temperature / K", title = "Slab temperature profile")
+for g in gs
+    Plots.plot!(p1, x_cells, T_ref[g]; color = colours[g], linewidth = 2, label = "reference, g = $g")
+    Plots.scatter!(p1, x_cells, T_pkg[g]; color = colours[g], markersize = 3, label = "16×4 bins, g = $g")
+end
+display(p1)
+```
+
+```{julia}
+# Size of the flux error against the number of direction bins, on logarithmic axes
+n_directions = [n_azimuth * n_polar for (n_azimuth, n_polar) in bins]
+p2 = Plots.plot(; xscale = :log10, yscale = :log10, xlabel = "direction bins", ylabel = "|Δψ| / ψ",
+                  title = "Flux error vs angular resolution", legend = :bottomleft)
+for g in gs
+    Plots.plot!(p2, n_directions, abs.(flux_error[g]); color = colours[g], marker = :circle, label = "g = $g")
+end
+display(p2)
+```
+
+Relative flux error against the reference, from one trace of 4 × 10⁷ rays (reference ψ = 0.5535, 0.6639, 0.7576 for g = 0, 0.5, 0.8):
+
+```{julia}
+#| echo: false
+#| output: asis
+println("| bins | g = 0 | g = 0.5 | g = 0.8 | max ΔT at g = 0.8 |")
+println("|------|------:|--------:|--------:|------------------:|")
+for (k, (n_azimuth, n_polar)) in enumerate(bins)
+    errors = join((@sprintf("%+.2f %%", 100 * flux_error[g][k]) for g in gs), " | ")
+    println("| $(n_azimuth)×$(n_polar) | ", errors, " | ", @sprintf("%.2f K", max_dT[k]), " |")
+end
+```
+
+The error falls by about 2.5× per refinement and keeps its sign: binned kernels are slightly too diffuse. The g = 0 column is not zero because the mirror side walls are themselves an angular model — it is the error of emulating the slab, and it converges with the rest. The spatial discretisation is common to both solutions and does not appear here.
+
+Notes on directional domains:
+
+- `phase` and `reflection` accept one descriptor, or a vector with one per spectral bin; `TabulatedScattering` and `TabulatedReflection` take a table at the domain's angular resolution, which is checked for conservation and detailed balance.
+- Spectral domains with a `directional_model` use a dense solver limited to 6000 unknowns (elements × direction bins) per spectral bin.
+- Smoothing the angular exchange factors takes more alternating-projection iterations as the bins are refined; raise `k_ap` for finer grids.
+- To combine `J` with the angular exchange factors, note that they carry the emission shares: the power incident in bin `b` is `G[b]' * (J[:, b] ./ S)` with `S = vec(sum(G[b], dims = 2))`. With `F` it is simply `F' * J`.

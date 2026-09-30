@@ -9,7 +9,7 @@ These examples show RayTraceHeatTransfer.jl at work, from a first grey problem t
 - [Example 1 — 2D Grey Participating Medium](example-01.qmd): the basic workflow, validated against Crosbie and Schrenker.
 - [Example 2 — Spectral Greenhouse Atmosphere](example-02.qmd): a spectral problem with adaptive spectral bins.
 - [Example 3 — Line Spectrum vs Line-by-Line Reference](example-03.qmd): a synthetic line spectrum against an independent line-by-line solution.
-- [Example 4 — Anisotropic Scattering vs a Discrete-Ordinates Reference](https://github.com/NikoBiele/RayTraceHeatTransfer.jl#example-4--anisotropic-scattering-vs-a-discrete-ordinates-reference): directional scattering and reflection on angular bins.
+- [Example 4 — Anisotropic Scattering vs a Discrete-Ordinates Reference](example-04.qmd): directional scattering and reflection on angular bins.
 - [Example 5 — Circular Enclosure from Triangular Elements](https://github.com/NikoBiele/RayTraceHeatTransfer.jl#example-5--circular-enclosure-from-triangular-elements): curved geometry built from triangles.
 
 ## Surfaces in 3D
