@@ -1,5 +1,7 @@
 ---
 title: "Example 9 — Non-Convex Enclosure: an L-Shaped Duct"
+execute:
+  warning: false
 ---
 
 The reentrant corner of an L-shaped duct shadows one arm from the other. View factors have no occlusion test, so this geometry requires ray tracing.

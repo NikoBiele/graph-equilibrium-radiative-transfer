@@ -1,5 +1,7 @@
 ---
 title: "Example 1 — 2D Grey Participating Medium"
+execute:
+  warning: false
 ---
 
 This example solves radiative equilibrium in a 1 × 1 m square enclosure filled with an absorbing gas (absorption coefficient κ = 1 m⁻¹, no scattering: σₛ = 0 m⁻¹). The bottom wall is held at 1000 K and all other walls are at 0 K; all surfaces are black (ε = 1). The gas temperature field is found by solving the GERT system after computing exchange factors by ray tracing.

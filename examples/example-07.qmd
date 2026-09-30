@@ -1,5 +1,7 @@
 ---
 title: "Example 7 — Triangulated Icosphere"
+execute:
+  warning: false
 ---
 
 This example extends [Example 6](example-06.qmd) from axis-aligned quads to an arbitrary convex triangulated geometry: a unit sphere approximated by recursively subdividing a regular icosahedron. A small hot cap of triangles is placed at the north pole and a matching cold cap at the south pole; all remaining triangles are in radiative equilibrium.

@@ -1,5 +1,7 @@
 ---
 title: "Example 6 — 3D Surface Enclosure"
+execute:
+  warning: false
 ---
 
 This example solves radiative equilibrium in a unit cube with transparent (non-participating) media. Two opposing faces have prescribed temperatures (1000 K and 0 K); the four side walls are in radiative equilibrium (unknown temperature, zero net heat flux). All surfaces are black (ε = 1). View factors are computed semi-analytically using the formulation of Narayanaswamy (2015), which means no ray tracing is needed.

@@ -14,5 +14,5 @@ The methods are implemented in [RayTraceHeatTransfer.jl](https://github.com/Niko
 ## Where to go next
 
 - [Papers](papers.qmd): the theory, with proofs, published as preprints on arXiv.
-- [Examples](examples/index.qmd): worked problems with the package, each validated against an independent reference.
+- [Examples](examples/index.qmd): worked problems with the package, most of them validated against an independent reference.
 - [About](about.qmd): the author and the software.

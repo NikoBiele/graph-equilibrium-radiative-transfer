@@ -2,7 +2,7 @@
 title: "Papers"
 ---
 
-The methods behind GERT and RayTraceHeatTransfer.jl are published as preprints on arXiv. Each paper is self-contained and cites the version of the package that reproduces its results.
+The methods behind GERT and RayTraceHeatTransfer.jl are published as preprints on arXiv. Each paper is self-contained, and its results can be reproduced with the package.
 
 ## A Radiation Exchange Factor Formulation with Proven Non-Negativity and Unconditional Energy Conservation
 
@@ -13,11 +13,11 @@ The foundational paper. It presents a matrix formulation of radiative energy bal
 [Abstract](https://arxiv.org/abs/2512.22157) · [PDF](https://arxiv.org/pdf/2512.22157)
 
 ```bibtex
-@misc{bielefeld2025formulation,
+@misc{bielefeld2026formulation,
   title         = {A Radiation Exchange Factor Formulation with Proven Non-Negativity
                    and Unconditional Energy Conservation},
   author        = {Bielefeld, Nikolaj Maack},
-  year          = {2025},
+  year          = {2026},
   eprint        = {2512.22157},
   archivePrefix = {arXiv},
   primaryClass  = {physics.comp-ph}

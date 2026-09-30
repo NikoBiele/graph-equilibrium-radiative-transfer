@@ -1,5 +1,7 @@
 ---
 title: "Example 8 — Mixed Triangular and Quadrilateral Faces"
+execute:
+  warning: false
 ---
 
 [Examples 6](example-06.qmd) and [7](example-07.qmd) are single-topology: the cube is all quadrilaterals, the icosphere all triangles. A 3D domain can mix the two.
