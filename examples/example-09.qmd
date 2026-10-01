@@ -60,7 +60,7 @@ fig
 
 Rays are traced to first intersection only; reflections are handled by the solver, so `F_raw` is geometry alone. Smoothing starts from a reciprocity defect of order 10⁻² rather than [Example 6](example-06.qmd)'s 10⁻¹³ — sampling breaks reciprocity at the noise level, not at roundoff — and reaches 10⁻¹⁵ either way.
 
-The trace uses all threads by default, and the result does not depend on how many: it is fixed by the geometry, the ray count and `seeds`, a single integer selecting the realisation. Runs with different integers are statistically independent (see [Sampling and reproducibility](https://github.com/NikoBiele/RayTraceHeatTransfer.jl#sampling-and-reproducibility)).
+The trace uses all threads by default, and the result does not depend on how many: it is fixed by the geometry, the ray count and `seeds`, a single integer selecting the realisation. Runs with different integers are statistically independent (see [Sampling and reproducibility](../workflow.qmd#sampling-and-reproducibility)).
 
 A ray either reaches a facet or it does not, so occlusion appears as exact structural zeros. The analytical method returns a substantial value for the same pair, having no notion of what lies between two polygons. Analytical view factors are exact and converge for free but cannot see around corners; ray tracing pays for every digit and has no geometric restriction. [Example 6](example-06.qmd) shows the two agreeing on a cube, which is what licenses trusting the tracer here.
 

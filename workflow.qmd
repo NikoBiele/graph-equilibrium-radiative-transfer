@@ -1,0 +1,40 @@
+---
+title: "Workflow"
+---
+
+## The four steps
+
+Every problem follows the same four steps:
+
+1. **Mesh** — build the geometry and set boundary conditions.
+2. **Exchange factors** — quasi-Monte Carlo ray tracing (2D participating media, 3D surface enclosures) or analytical view factors (3D convex surface enclosures), producing exchange factor matrix `F_raw`.
+3. **Smooth** — `smooth!(domain)` projects the exchange factor matrix `F_raw` onto the nearest matrix satisfying reciprocity and energy conservation, producing `F_smooth` and returning convergence diagnostics.
+4. **Solve** — `solveEquilibrium!(domain, domain.F_smooth)` yields the steady state.
+
+Step 3 is separate because it is a distinct computation with its own cost and diagnostics, and because how much work it does varies enormously between problems. `F_raw` arrives violating reciprocity: in 2D from sampling noise, in 3D because the view factor formula is ill-conditioned for polygons that share an edge and must be evaluated on a slightly perturbed geometry. On a triangulated sphere, where every pair of adjacent faces has a nonzero view factor, the raw reciprocity defect becomes significant; smoothing brings it to 10⁻¹⁵ (see [Example 7](examples/example-07.qmd)). Both matrices remain available on the domain, so `F_raw` can be inspected or exported, but `F_smooth` is what should be passed to the solver.
+
+Smoothing is cheap relative to the tracing step, so `F_raw` can be traced once and smoothed repeatedly with different settings.
+
+## Spectral and directional models
+
+Spectral problems trace once with `mesh(n; method = :pathlength)`, which builds `F_raw` for every bin from the recorded paths; with `chunk_rays = n` the paths are kept and `exchangeFactors!(mesh)` rebuilds `F_raw` for new coefficients or bins without retracing ([Example 3](examples/example-03.qmd)). With a `directional_model` set, the same trace also resolves the exchange factors by ray direction (`G_raw`, `G_smooth`), and the solver redistributes scattered and reflected power over the direction bins according to each element's `phase` and `reflection` ([Example 4](examples/example-04.qmd)). Every solve stores its solution on the domain as `J`.
+
+On a 2D domain the spectral model and the directional model are independent settings and combine freely; `solveEquilibrium!` selects the solver from what is set:
+
+|                        | no `directional_model`                                                          | `directional_model` set                          |
+|------------------------|---------------------------------------------------------------------------------|--------------------------------------------------|
+| grey                   | grey solver ([Example 1](examples/example-01.qmd))                              | grey directional ([Example 4](examples/example-04.qmd)) |
+| `spectral_model` set   | spectral solver (Examples [2](examples/example-02.qmd), [3](examples/example-03.qmd)) | spectral directional                     |
+
+In the combined case the faces are built with their spectral bins as in Example 3 and carry `phase` and `reflection` as in Example 4, optionally one descriptor per spectral bin; one pathlength trace resolves the exchange factors by bin and by direction, and the solution is `J[k][i, b]`. That solver is currently limited in size (see the notes at the end of [Example 4](examples/example-04.qmd)).
+
+## Sampling and reproducibility
+
+The ray tracers draw emission positions and directions from Sobol sequences (quasi-Monte Carlo) by default. Every emitter owns one sequence, digitally shifted by a random mask derived from `seeds`, so the estimate is unbiased and the stratification of the sequence is kept. At the same ray count the exchange factors come out quieter than with pseudorandom sampling by 2–3× at 4096 rays per emitter, and the gain grows with the ray count, reaching 10× at 65 536 rays per emitter for the pathlength tracer: the same accuracy from up to a hundred times fewer rays.
+
+Two keywords control it, on the 2D domain functor and on `RayTracingDomain3D_surfaces`:
+
+- `sampler` — `:sobol`, the default wherever every ray consumes a fixed number of random numbers (`:exchange`, `:pathlength`, the 3D surface tracer), or `:random`, one pseudorandom stream per thread. The `:direct` tracer follows random walks and always samples pseudorandomly.
+- `seeds` — with `:sobol`, a single integer selecting the realisation (default 1); runs with different integers are statistically independent. With `:random`, one seed per thread, or a single integer selecting a block of per-thread seeds.
+
+With the default sampler the result depends only on the geometry, the ray count and `seeds`: not on the number of threads, and for `:pathlength` not on `chunk_rays`. Rays per emitter that are powers of two make the best use of the sequence; other counts work and lose roughly 10–20 % of the gain. Passing `rngs`, or several seeds, together with the Sobol sampler is an error whose message names the fix.

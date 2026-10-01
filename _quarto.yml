@@ -5,6 +5,7 @@ project:
     - index.qmd
     - papers.qmd
     - about.qmd
+    - workflow.qmd
     - examples/index.qmd
     - examples/example-01.qmd
     - examples/example-02.qmd
@@ -31,6 +32,8 @@ website:
         text: Home
       - href: papers.qmd
         text: Papers
+      - href: workflow.qmd
+        text: Workflow
       - href: examples/index.qmd
         text: Examples
       - href: about.qmd
