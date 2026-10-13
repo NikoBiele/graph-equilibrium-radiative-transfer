@@ -2,6 +2,13 @@
 title: "Example 4 — Anisotropic Scattering vs a Discrete-Ordinates Reference"
 ---
 
+```{julia}
+#| echo: false
+#| output: asis
+using RayTraceHeatTransfer                         # needed here for its version number
+println("*Rendered with RayTraceHeatTransfer.jl v", pkgversion(RayTraceHeatTransfer), " and Julia ", VERSION, ".*")
+```
+
 A grey slab between two black plates at 1000 K and 500 K, optical thickness 1, scattering albedo 0.8, with Henyey–Greenstein scattering. Forward scattering carries radiation through the slab instead of returning it: at g = 0.8 the net flux is 37 % higher than for isotropic scattering and the gas next to the hot plate is 26 K colder. The default solvers cannot see this — they redistribute scattered power isotropically. With a `directional_model` the exchange factors are resolved by ray direction from the same pathlength trace, and each element redistributes what it scatters or reflects over the direction bins according to its `phase` and `reflection`.
 
 The result is checked against an independent deterministic solution of the same slab: 1D discrete ordinates on double-Gauss quadrature, the azimuthally averaged Henyey–Greenstein kernel from its Legendre series, a cell-constant source with exact attenuation along every ordinate, and radiative equilibrium solved as one linear system. It reproduces Heaslet & Warming (1965) at g = 0 and the grey line-by-line reference of [Example 3](example-03.qmd). The reference lives in `examples/anisotropic_slab_reference.jl` in the package repository and is exercised by the test suite.

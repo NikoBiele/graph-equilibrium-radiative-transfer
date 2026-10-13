@@ -10,6 +10,10 @@ GERT and its software are developed by Nikolaj Maack Bielefeld, an independent c
 
 ## Software
 
+Software developed by the author. RayTraceHeatTransfer.jl implements the methods on this site and uses ConvolutionInterpolations.jl; the other packages are independent of GERT.
+
 - [RayTraceHeatTransfer.jl](https://github.com/NikoBiele/RayTraceHeatTransfer.jl): a registered Julia package for radiative heat transfer, and the implementation of the methods described on this site. It traces exchange factors by Monte Carlo, smooths them, and solves grey, spectral and directional problems in 2D participating media and 3D enclosures.
 - [ConvolutionInterpolations.jl](https://github.com/NikoBiele/ConvolutionInterpolations.jl): a registered Julia package for high-order interpolation on uniform and nonuniform grids in any dimension, with exact derivatives and integrals.
 - [convinterp](https://convinterp.org): a Python port of ConvolutionInterpolations.jl with a Rust core, available on PyPI.
+- [DiscreteTensorDerivatives.jl](https://github.com/NikoBiele/DiscreteTensorDerivatives.jl): a registered Julia package for derivatives of scalar, vector and tensor fields on scattered points, without a mesh.
+- [tensorderiv](https://tensorderiv.org): a Python port of DiscreteTensorDerivatives.jl with a Rust core, available on PyPI.

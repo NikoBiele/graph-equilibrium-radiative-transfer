@@ -2,6 +2,13 @@
 title: "Example 3 — Line Spectrum vs Line-by-Line Reference"
 ---
 
+```{julia}
+#| echo: false
+#| output: asis
+using RayTraceHeatTransfer                         # needed here for its version number
+println("*Rendered with RayTraceHeatTransfer.jl v", pkgversion(RayTraceHeatTransfer), " and Julia ", VERSION, ".*")
+```
+
 A slab of gas between two black plates at 1000 K and 500 K, with a synthetic line spectrum: 400 Lorentzian lines on a weak continuum, absorption coefficients spanning five decades, from optically thin to thick across the 1 m slab. Fixed wavelength bands cannot resolve such a spectrum — a band straddling a line averages opaque and transparent wavelengths into a meaningless mean. Adaptive binning groups wavelengths by κ instead, so line cores, wings and continuum land in bins of their own regardless of where they sit in the spectrum, and one pathlength trace serves every bin.
 
 The result is checked against an independent line-by-line solution of the same slab: exact exponential-integral quadrature at every wavelength, radiative equilibrium by Newton on the cell temperatures, itself verified against Heaslet & Warming (1965) in the grey limit. The reference lives in `examples/lbl_slab_reference.jl` in the package repository and is exercised by the test suite.
@@ -56,7 +63,7 @@ K = length(model.κ_ref)                       # number of bins
 
 ## Step 3: Slab as a wide cavity
 
-The 2D solver has no plane-parallel mode, so the slab is a cavity 100,000 times wider than tall with cold, nearly non-reflecting sides; the centre column is the 1D solution.
+The 2D solver has no plane-parallel mode, so the slab is a cavity 100,000 times wider than tall with cold, non-reflecting sides; the centre column is the 1D solution.
 
 ```{julia}
 W, NX_H = 100_000.0, 5                        # cavity width [m] and number of columns of cells

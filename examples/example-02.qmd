@@ -2,6 +2,13 @@
 title: "Example 2 — Spectral Greenhouse Atmosphere"
 ---
 
+```{julia}
+#| echo: false
+#| output: asis
+using RayTraceHeatTransfer                         # needed here for its version number
+println("*Rendered with RayTraceHeatTransfer.jl v", pkgversion(RayTraceHeatTransfer), " and Julia ", VERSION, ".*")
+```
+
 This example models a simplified planetary atmosphere to demonstrate the spectral solver. The atmosphere is transparent in the visible and opaque in the infrared, producing a greenhouse effect: solar radiation penetrates to the surface, while thermal emission from the warm surface is trapped by the absorbing gas. The equilibrium surface temperature, which is not prescribed, emerges far above the value for a transparent atmosphere.
 
 The geometry is a vertical stack of 20 sub-enclosures representing atmospheric layers, each with spectrally distinct absorption. A thin volume at the top emits at solar temperature, acting as the radiation source. The domain is wide relative to its height, approximating a 1D atmosphere.

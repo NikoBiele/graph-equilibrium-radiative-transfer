@@ -1,45 +1,47 @@
 ---
-title: "Example 7 — Triangulated Icosphere"
+title: "Example 7 — 3D Surface Enclosure"
 execute:
   warning: false
 ---
 
-This example extends [Example 6](example-06.qmd) from axis-aligned quads to an arbitrary convex triangulated geometry: a unit sphere approximated by recursively subdividing a regular icosahedron. A small hot cap of triangles is placed at the north pole and a matching cold cap at the south pole; all remaining triangles are in radiative equilibrium.
+```{julia}
+#| echo: false
+#| output: asis
+using RayTraceHeatTransfer                         # needed here for its version number
+println("*Rendered with RayTraceHeatTransfer.jl v", pkgversion(RayTraceHeatTransfer), " and Julia ", VERSION, ".*")
+```
 
-This example demonstrates three features of the package: arbitrary triangulated geometry (view factors are computed via Narayanaswamy (2015) for any closed convex polyhedron built from planar triangles), the separate mesh / view factor / smooth / solve steps that let the user inspect the mesh before committing to the expensive view factor computation, and — as the subdivision level rises — the clearest demonstration of what the smoothing step is for.
+This example solves radiative equilibrium in a unit cube with transparent (non-participating) media. Two opposing faces have prescribed temperatures (1000 K and 0 K); the four side walls are in radiative equilibrium (unknown temperature, zero net heat flux). All surfaces are black (ε = 1). View factors are computed semi-analytically using the formulation of Narayanaswamy (2015), which means no ray tracing is needed.
 
-## Step 1: Build and inspect the mesh
-
-The icosphere is constructed by a helper function `icosphere_mesh(level)` that returns `(points, faces)` at the requested subdivision level. The mesh is then passed to `ViewFactorDomain3D` along with boundary conditions: at this point the domain holds the geometry and boundary conditions but not yet any view factors.
+## Step 1: Define the cube geometry
 
 ```{julia}
 using RayTraceHeatTransfer
 using GLMakie
-using LinearAlgebra
 
-include(joinpath(pkgdir(RayTraceHeatTransfer), "examples", "icosphere_mesh.jl"))   # defines icosphere_mesh
+# Cube vertices
+points = [
+    0.0 0.0 0.0;  # 1
+    0.0 0.0 1.0;  # 2
+    0.0 1.0 0.0;  # 3
+    0.0 1.0 1.0;  # 4
+    1.0 0.0 0.0;  # 5
+    1.0 0.0 1.0;  # 6
+    1.0 1.0 0.0;  # 7
+    1.0 1.0 1.0   # 8
+]
 
-subdivision_level = 2                               # 0 → 20 triangles, 1 → 80, 2 → 320, 3 → 1280
-points, faces = icosphere_mesh(subdivision_level)   # points: one row (x, y, z) per vertex; faces: three vertex indices per triangle
-n_tri = size(faces, 1)                              # number of triangles
-
-# Hot cap at the north pole and cold cap at the south pole:
-# the n_cap triangles whose centroids lie highest and lowest in z
-n_cap = 6
-centroids   = [vec(sum(points[faces[i, :], :], dims = 1)) ./ 3 for i in 1:n_tri]   # centroid of triangle i: mean of its three vertices
-z_centroids = [c[3] for c in centroids]                                             # height of every centroid
-hot_ids  = partialsortperm(z_centroids, 1:n_cap, rev = true)                        # indices of the n_cap highest triangles
-cold_ids = partialsortperm(z_centroids, 1:n_cap)                                    # indices of the n_cap lowest triangles
-
-# boundary conditions, one entry per triangle
-epsilon = ones(n_tri)                               # black surfaces
-q_in_w  = zeros(n_tri)                              # zero net source wherever the temperature is unknown
-T_in_w  = fill(-1.0, n_tri)                         # negative: temperature unknown, i.e. radiative equilibrium
-T_in_w[hot_ids]  .= 1000.0                          # hot cap [K]
-T_in_w[cold_ids] .=    0.0                          # cold cap [K]
-
-Ndim = 1                                            # subdivisions per triangle edge; 1 keeps every triangle as one element
-domain3D = ViewFactorDomain3D(points, faces, Ndim, q_in_w, T_in_w, epsilon);   # geometry and boundary conditions, no view factors yet
+# Six faces. Winding does not matter: the constructor orients all faces
+# consistently and fixes the global sign from the enclosed volume, so the
+# same face list works for convex and non-convex enclosures alike.
+faces = [
+    1 2 4 3;  # Face 1 (x = 0) — hot
+    5 6 8 7;  # Face 2 (x = 1) — cold
+    1 5 7 3;  # Face 3 (z = 0)
+    2 6 8 4;  # Face 4 (z = 1)
+    3 4 8 7;  # Face 5 (y = 1)
+    1 2 6 5   # Face 6 (y = 0)
+]
 ```
 
 ```{julia}
@@ -47,137 +49,101 @@ domain3D = ViewFactorDomain3D(points, faces, Ndim, q_in_w, T_in_w, epsilon);   #
 Makie.inline!(true)   # draw figures into the page rather than a window
 ```
 
-With `Ndim = 1` each triangle is a single element, so element `k` is triangle `k` of the `faces` matrix. Hovering is the direct way to confirm the caps landed where intended; it works in an interactive Julia session, while on this page the figure is a static image:
+## Step 2: Set boundary conditions and mesh the domain
+
+```{julia}
+Ndim = 11  # 11 × 11 subdivisions per face
+
+epsilon = ones(size(faces, 1))                     # black surfaces
+q_in_w  = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]           # zero net heat flux on sides
+T_in_w  = [1000.0, 0.0, -1.0, -1.0, -1.0, -1.0]    # hot, cold, four unknown
+
+domain3D = ViewFactorDomain3D(points, faces, Ndim, q_in_w, T_in_w, epsilon); # mesh domain
+```
+
+Faces 1 and 2 are the hot and cold walls at opposing ends of the cube. The four side faces have `T_in_w = -1.0` (unknown) and `q_in_w = 0.0` (radiative equilibrium), so their temperature distributions emerge from the solution.
+
+## Step 3: Visualise the domain and identify elements
+
+Each subface is one element: a row and column of the exchange factor matrix and one entry of the solution vectors. The mesh is drawn as a single surface built in exactly that order, so elements can be identified by hovering over them. Pass `inspect = true` and add a `DataInspector`; the hovered element is outlined and named in a tooltip, and if a `Label` is supplied its full property list is written there. Hovering works in an interactive Julia session; on this page the figure is a static image.
 
 ```{julia}
 fig  = Figure(size = (1200, 700))
 ax   = LScene(fig[1, 1], scenekw = (camera = cam3d!, show_axis = true))
 info = Label(fig[1, 2], ""; tellheight = false, tellwidth = true,
              halign = :left, justification = :left,
-             fontsize = 14, font = "DejaVu Sans Mono") # with info as in Example 6
+             fontsize = 14, font = "DejaVu Sans Mono")
 colsize!(fig.layout, 2, Relative(0.5))
+
 plotMesh(ax, domain3D; inspect = true, label = info)
 DataInspector(fig)
 fig
 ```
 
-Inspecting the mesh before committing to the view factor computation is especially valuable for triangulated geometries, where the subcell count scales as `n_triangles²`, i.e. it grows quadratically with the number of geometric triangle elements.
+The panel reports the element's global index and its superface, its area and midpoint, its boundary conditions, and — once the domain has been solved — its temperature, net heat flux and radiosity. Before the solve those fields read `—`.
 
-## Step 2: Compute view factors
+Elements are numbered superface by superface. With `Ndim = 11` each quadrilateral face contributes 121 subfaces, so the hot face is elements 1–121 and the cold face 122–242. Hovering across the edge between two faces shows the index jumping between blocks. Triangular superfaces contribute blocks of a different length ([Example 8](example-08.qmd)), but the ordering rule is the same. These are the indices used in `domain3D.F_smooth` and in the system matrices.
 
-Once the mesh looks right, view factors are computed by calling the domain as a functor:
+The scene can be zoomed and entered, so elements can be inspected from inside the enclosure — which can be useful in a non-convex geometry ([Example 10](example-10.qmd)).
+
+## Step 4: Compute view factors
+
+View factors are computed directly on the mesh object (requires a convex domain). Rows are normalised on assembly, so `F_raw` conserves energy exactly:
 
 ```{julia}
 domain3D(; parallel = true, verbose = false)
 ```
 
-This computes a view factor for every pair of subcells and is typically the most expensive step in the workflow. Rows are normalised on assembly, so `F_raw` conserves energy exactly; its reciprocity, as shown below, is another matter.
-
-## Step 3: Smooth
+## Step 5: Smooth
 
 ```{julia}
-smooth!(domain3D; verbose = false);
+smooth!(domain3D; verbose = false);  # enforce reciprocity and energy conservation
 ```
 
-## Step 4: Solve and visualise
+Energy conservation is exact by construction, so what smoothing recovers here is reciprocity. How much work that is depends on the geometry. The contour integral is ill-conditioned for polygons sharing an edge, and the implementation evaluates such pairs on a slightly perturbed geometry. On the cube most adjacent pairs are the coplanar ones within a single face, whose true view factor is zero and which the perturbation therefore cannot corrupt; only the subcells meeting along the twelve cube edges are affected. The raw reciprocity defect is correspondingly small, around 10⁻¹³. [Example 8](example-08.qmd) shows the opposite case.
+
+## Step 6: Solve and visualise
+
+Passing `inspect = true` to `plotField` gives the same hover on the solved field, now with every property populated:
 
 ```{julia}
 solveEquilibrium!(domain3D, domain3D.F_smooth; verbose = false)
-
 fig  = Figure(size = (1200, 700))
 ax   = LScene(fig[1, 1], scenekw = (camera = cam3d!, show_axis = true))
 info = Label(fig[1, 2], ""; tellheight = false, tellwidth = true,
              halign = :left, justification = :left,
-             fontsize = 14, font = "DejaVu Sans Mono") # with info as in Example 6
+             fontsize = 14, font = "DejaVu Sans Mono")
 colsize!(fig.layout, 2, Relative(0.5))
-plotMesh(ax, domain3D; field = :T, inspect = true, label = info)
+
+plotField(ax, domain3D; field = :T, inspect = true, label = info)
 DataInspector(fig)
 fig
 ```
 
-The resulting temperature field shows a bright hot cap at the north pole, a dark cold cap at the south, and a nearly isothermal bulk throughout most of the sphere — as expected when a small hot source and a small cold sink are embedded in a highly concave enclosure.
+This is the quickest check that a solution is what it should be: on a prescribed-temperature face, `T` equals `T_in` and `q` is whatever flux maintains it; on an equilibrium face, `T_in` reads `unknown` and `q` sits at the noise floor.
 
-## Machine-precision agreement with the analytical limit
+The temperature field shows a smooth gradient from the hot face (1000 K) to the cold face (0 K), with the side walls at intermediate temperatures determined by radiative equilibrium. The analytical view factors ensure exact geometric accuracy without statistical noise.
 
-For equal-area hot and cold caps on a sphere, the symmetry of the geometry forces every equilibrium triangle to see the hot and cold caps in the same proportion. The equilibrium temperature is therefore the same everywhere in the bulk, set by the `T⁴`-averaged balance between the two caps:
+## Step 7: Cross-validation against ray tracing
 
-$$
-T_{\text{limit}} = \left(\frac{T_{\text{hot}}^4 + T_{\text{cold}}^4}{2}\right)^{1/4}
-$$
-
-For `T_hot = 1000 K` and `T_cold = 0 K`, this gives `T_limit ≈ 840.896 K`.
-
-Because `icosphere_mesh` is parameterised by subdivision level, the full pipeline can be run at multiple resolutions to check the computed equator temperature against this limit:
+The same enclosure can be solved by tracing rays instead of evaluating view factors analytically. Both produce an exchange factor matrix, so everything downstream is identical:
 
 ```{julia}
-T_hot   = 1000.0                                    # hot-cap temperature [K]
-T_cold  =    0.0                                    # cold-cap temperature [K]
-T_limit = ((T_hot^4 + T_cold^4) / 2)^(1/4)          # analytical temperature of every equilibrium triangle, ≈ 840.896 K
+domainMC = RayTracingDomain3D_surfaces(points, faces, Ndim, q_in_w, T_in_w, epsilon)
+domainMC(10^8; verbose = false)                  # total rays, split across emitters
+smooth!(domainMC; verbose = false)
+solveEquilibrium!(domainMC, domainMC.F_smooth; verbose = false)
 
-levels = 0:3                                        # subdivision levels: 20, 80, 320 and 1280 triangles
-n_cap  = 6                                          # triangles per cap
-Ndim   = 1                                          # one element per triangle
+T_MC = [sf.T_w for f in domainMC.facesMesh for sf in f.subFaces]
+T_VF = [sf.T_w for f in domain3D.facesMesh  for sf in f.subFaces]
+free = findall(sf -> sf.T_in_w < 0, [sf for f in domainMC.facesMesh for sf in f.subFaces])
 
-for level in levels
-    points, faces = icosphere_mesh(level)
-    n_tri = size(faces, 1)
-    n_cap_effective = min(n_cap, n_tri ÷ 4)         # never more than a quarter of the triangles per cap (matters at level 0)
-
-    # caps: the triangles with the highest and the lowest centroids, as in Step 1
-    centroids   = [vec(sum(points[faces[i, :], :], dims = 1)) ./ 3 for i in 1:n_tri]
-    z_centroids = [c[3] for c in centroids]
-    hot_ids  = partialsortperm(z_centroids, 1:n_cap_effective, rev = true)
-    cold_ids = partialsortperm(z_centroids, 1:n_cap_effective)
-
-    # boundary conditions: black surfaces, prescribed caps, everything else in radiative equilibrium
-    epsilon = ones(n_tri)
-    q_in_w  = zeros(n_tri)
-    T_in_w  = fill(-1.0, n_tri)
-    T_in_w[hot_ids]  .= T_hot
-    T_in_w[cold_ids] .= T_cold
-
-    # the four workflow steps
-    domain = ViewFactorDomain3D(points, faces, Ndim, q_in_w, T_in_w, epsilon)   # mesh
-    domain(; parallel = true, verbose = false)                                  # view factors for every pair of triangles
-    stats = smooth!(domain, verbose = false)                                    # enforce reciprocity; returns diagnostics
-    δ_raw    = stats.delta_raw[1]                   # reciprocity defect of F_raw (entry 1: a grey domain has a single "bin")
-    δ_smooth = stats.delta_smooth[1]                # certified bound on the defect of F_smooth
-    solveEquilibrium!(domain, domain.F_smooth; verbose = false)                 # solve
-
-    # temperature of the equilibrium triangle closest to the equator, against the analytical limit
-    equilibrium_ids = setdiff(1:n_tri, hot_ids, cold_ids)                       # all triangles outside the two caps
-    equator_id = equilibrium_ids[argmin(abs.(z_centroids[equilibrium_ids]))]    # the one whose centroid has the smallest |z|
-    T_equator  = domain.facesMesh[equator_id].subFaces[1].T_w                   # its single element (Ndim = 1) and that element's temperature
-    T_error    = abs(T_limit - T_equator)
-
-    println("Level $level: $n_tri triangles → δ_R(F_raw) = $(round(δ_raw, sigdigits=3)), "*
-            "δ_R(F_smooth) = $(round(δ_smooth, sigdigits=3)), error = $(round(T_error, sigdigits = 3)) K")
-end
+println("rms |T_MC - T_VF| = ", sqrt(sum(abs2, T_MC[free] - T_VF[free]) / length(free)))
 ```
 
-| Level | Triangles | δ_R (F_raw) | δ_R (F_smooth) | \|T_equator − T_limit\| (K) |
-|:-----:|:---------:|:-----------:|:--------------:|:---------------------------:|
-|   0   |     20    |   1.7e-15   |    1.3e-15     |         6.8e-2              |
-|   1   |     80    |   3.9e-14   |    2.0e-15     |         1.1e-13             |
-|   2   |    320    |   3.7e-01   |    8.0e-16     |         1.7e-11             |
-|   3   |   1280    |   1.6e+00   |    2.7e-15     |         4.3e-11             |
+The two agree to an rms of 0.09 K on the side walls at this ray count, about 1 × 10⁻⁴ of their temperature, and the deviation keeps falling with the number of rays. That is the essential trade: view factors are machine precision and cost nothing to converge, while ray tracing pays for every digit.
 
-δ_R is the reciprocity defect of the view factor matrix — the same initial quantity `smooth!` reports in its log:
-
-$$
-\delta_R(F) =
-\sqrt{
-  \sum_{i \lt j}
-  \frac{(w_i F_{ij} - w_j F_{ji})^2}
-       {w_i^2 + w_j^2}
-}
-$$
-
-where $w_i$ is the element weight (surface area in 3D). It is a sum over pairs, not a percentage, so it grows with element count too.
-
-At level 0 the 5+5 caps cover over half the sphere, leaving only 10 equilibrium triangles, so the symmetry argument doesn't hold cleanly. From level 1 onward the equator temperature matches the analytical limit to within 10⁻¹¹ K.
-
-The δ_R column is why smoothing exists. The view factor integral is ill-conditioned for polygons sharing an edge, and is evaluated on a slightly perturbed geometry. On the cube this barely matters — most adjacent pairs are coplanar with a true view factor of zero. On a sphere every face sees every other, so all three neighbours of every triangle carry a perturbed, nonzero view factor. Rows are normalised on assembly, so energy conservation holds regardless; reciprocity is what breaks. Smoothing drives δ_R to machine precision at every level.
+Ray tracing earns its cost where view factors cannot go at all: enclosures that are not convex, where surfaces shadow one another. See [Example 10](example-10.qmd).
 
 ## Reference
 

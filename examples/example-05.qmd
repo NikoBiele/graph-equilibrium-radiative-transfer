@@ -2,9 +2,16 @@
 title: "Example 5 — Circular Enclosure from Triangular Elements"
 ---
 
+```{julia}
+#| echo: false
+#| output: asis
+using RayTraceHeatTransfer                         # needed here for its version number
+println("*Rendered with RayTraceHeatTransfer.jl v", pkgversion(RayTraceHeatTransfer), " and Julia ", VERSION, ".*")
+```
+
 The meshing in RayTraceHeatTransfer.jl is not limited to rectangles: domains can be assembled from arbitrary triangular and quadrilateral elements, with any wall of any element declared either solid (radiatively active) or open (transparent to radiation, used to join elements). This example builds a circular enclosure of radius R = 1 m from 16 triangular wedges sharing a centre vertex, fills it with an absorbing gas (κ = 1 m⁻¹, no scattering), and heats half the rim to 1000 K while the other half is held at 0 K. All surfaces are black (ε = 1).
 
-At the centre of the circle, symmetry provides an analytical limit to validate against: the centre element sees the hot and cold half-rims with equal view factors, so in radiative equilibrium its temperature satisfies T⁴ = (T_hot⁴ + T_cold⁴)/2, giving T ≈ 840.90 K. This is the same symmetry argument — and the same formula — as the polar-cap limit in the triangulated icosphere of [Example 7](example-07.qmd); the two examples are 2D and 3D counterparts of one another.
+At the centre of the circle, symmetry provides an analytical limit to validate against: the centre element sees the hot and cold half-rims with equal view factors, so in radiative equilibrium its temperature satisfies T⁴ = (T_hot⁴ + T_cold⁴)/2, giving T ≈ 840.90 K. This is the same symmetry argument — and the same formula — as the polar-cap limit in the triangulated icosphere of [Example 8](example-08.qmd); the two examples are 2D and 3D counterparts of one another.
 
 ## Step 1: Build the circle from triangular wedges
 
@@ -56,7 +63,7 @@ solveEquilibrium!(mesh, mesh.F_smooth; verbose = false)   # solve the GERT syste
 using Plots
 using StatsBase
 
-plotField(mesh; field = :T)
+display(plotField(mesh; field = :T))               # show the temperature field; the cell ends with printed output
 
 # Centre-limit validation: gas elements adjacent to the centre vertex.
 # The GERT system is linear in emissive power, so swapping the hot and cold half-rims maps
@@ -70,6 +77,6 @@ println("computed T⁴-mean        : ", round(T_mean4, digits = 4), " K")
 println("difference              : ", round(abs(T_limit - T_mean4), sigdigits = 2), " K")
 ```
 
-The temperature field shows the smooth gradient from the hot to the cold half, and the computed centre temperature agrees with the analytical limit to about 9 × 10⁻³ K at 10⁷ rays (840.888 K computed vs 840.8964 K analytical). The symmetry argument holds on any mesh, so this deviation is sampling noise alone, and it shrinks as the number of rays grows. Unlike the deterministic view factors of Examples [6](example-06.qmd) and [7](example-07.qmd), the 2D exchange factors here are ray-traced, so the comparison carries a statistical component; another `seeds` value gives a deviation of similar size.
+The temperature field shows the smooth gradient from the hot to the cold half, and the computed centre temperature agrees with the analytical limit to about 9 × 10⁻³ K at 10⁷ rays (840.888 K computed vs 840.8964 K analytical). The symmetry argument holds on any mesh, so this deviation is sampling noise alone, and it shrinks as the number of rays grows. Unlike the deterministic view factors of Examples [7](example-06.qmd) and [8](example-07.qmd), the 2D exchange factors here are ray-traced, so the comparison carries a statistical component; another `seeds` value gives a deviation of similar size.
 
 The package test suite additionally verifies the isothermal limit on this geometry: with the entire rim at a single temperature, the solved gas field reproduces that temperature everywhere to within 10⁻³ K — a strong global check that the curved, open-spoke meshing introduces no artifacts.

@@ -4,6 +4,13 @@ execute:
   warning: false
 ---
 
+```{julia}
+#| echo: false
+#| output: asis
+using RayTraceHeatTransfer                         # needed here for its version number
+println("*Rendered with RayTraceHeatTransfer.jl v", pkgversion(RayTraceHeatTransfer), " and Julia ", VERSION, ".*")
+```
+
 This example solves radiative equilibrium in a 1 × 1 m square enclosure filled with an absorbing gas (absorption coefficient κ = 1 m⁻¹, no scattering: σₛ = 0 m⁻¹). The bottom wall is held at 1000 K and all other walls are at 0 K; all surfaces are black (ε = 1). The gas temperature field is found by solving the GERT system after computing exchange factors by ray tracing.
 
 ## Step 1: Define the geometry and mesh
@@ -108,6 +115,7 @@ p1 = plotField(mesh1; field = :T, transparent_interfaces = true)
 Plots.xlabel!(p1, "Position / m")
 Plots.ylabel!(p1, "Position / m")
 Plots.title!(p1, "Temperature distribution")
+display(p1)                                        # show the field now; the cell itself returns the validation panel
 
 # Extract the centreline temperatures. The cells are stored row by row from the bottom (left to
 # right within a row), so reshaping into an Ndim × Ndim matrix gives Tg_matrix[column, row].
@@ -172,7 +180,7 @@ println("Deviation from Crosbie & Schrenker: rms = ", round(rms_dev; sigdigits =
         ", max = ", round(max_dev; sigdigits = 2))                          # both in units of S, which runs from 0.09 to 0.63
 ```
 
-For 10⁷ rays on the 11 × 11 mesh the rms deviation is 5.1 × 10⁻⁴ and the maximum 1.2 × 10⁻³, on a source function that runs from 0.09 to 0.63. It is largest in the first row above the hot wall, where the source function changes most steeply. At this number of rays the deviation comes mostly from the mesh, not from the rays: each cell carries a single temperature. [Example 10](example-10.qmd) separates the two and shows the deviation shrinking at close to second order as the mesh is refined. The reference is tabulated to four decimals, so deviations below about 10⁻⁴ cannot be resolved by this comparison.
+For 10⁷ rays on the 11 × 11 mesh the rms deviation is 5.1 × 10⁻⁴ and the maximum 1.2 × 10⁻³, on a source function that runs from 0.09 to 0.63. It is largest in the first row above the hot wall, where the source function changes most steeply. At this number of rays the deviation comes mostly from the mesh, not from the rays: each cell carries a single temperature. [Example 11](example-11.qmd) separates the two and shows the deviation shrinking at close to second order as the mesh is refined. The reference is tabulated to four decimals, so deviations below about 10⁻⁴ cannot be resolved by this comparison.
 
 ## Step 6: Energy conservation, and why it is not the same as accuracy
 
