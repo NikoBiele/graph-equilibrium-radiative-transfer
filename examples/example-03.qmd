@@ -11,9 +11,9 @@ println("*Rendered with RayTraceHeatTransfer.jl v", pkgversion(RayTraceHeatTrans
 
 A slab of gas between two black plates at 1000 K and 500 K, with a synthetic line spectrum: 400 Lorentzian lines on a weak continuum, absorption coefficients spanning five decades, from optically thin to thick across the 1 m slab. Fixed wavelength bands cannot resolve such a spectrum — a band straddling a line averages opaque and transparent wavelengths into a meaningless mean. Adaptive binning groups wavelengths by κ instead, so line cores, wings and continuum land in bins of their own regardless of where they sit in the spectrum, and one pathlength trace serves every bin.
 
-The result is checked against an independent line-by-line solution of the same slab: exact exponential-integral quadrature at every wavelength, radiative equilibrium by Newton on the cell temperatures, itself verified against Heaslet & Warming (1965) in the grey limit. The reference lives in `examples/lbl_slab_reference.jl` in the package repository and is exercised by the test suite.
+The result is checked against an independent line-by-line solution of the same slab: exact exponential-integral quadrature at every wavelength, radiative equilibrium by Newton on the cell temperatures, itself verified against @HeasletWarming1965 in the grey limit. The reference lives in `examples/lbl_slab_reference.jl` in the package repository and is exercised by the test suite.
 
-The formulation follows [Modest & Mazumder (2022)](https://doi.org/10.1016/C2018-0-03206-5), *Radiative Heat Transfer*, 4th ed., Ch. 13, with the grey benchmark values of [Heaslet & Warming (1965)](https://doi.org/10.1016/0017-9310(65)90083-9), Table 13.1 therein.
+The formulation follows @ModestMazumder2022 [ch. 13], with the grey benchmark values of @HeasletWarming1965 as tabulated in Table 13.1 of the same book.
 
 ## Step 1: Spectrum and reference solution
 

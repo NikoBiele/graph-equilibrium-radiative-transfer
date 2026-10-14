@@ -11,7 +11,7 @@ using RayTraceHeatTransfer                         # needed here for its version
 println("*Rendered with RayTraceHeatTransfer.jl v", pkgversion(RayTraceHeatTransfer), " and Julia ", VERSION, ".*")
 ```
 
-[Examples 7](example-07.qmd) and [8](example-07.qmd) are single-topology: the cube is all quadrilaterals, the icosphere all triangles. A 3D domain can mix the two.
+[Examples 7](example-07.qmd) and [8](example-08.qmd) are single-topology: the cube is all quadrilaterals, the icosphere all triangles. A 3D domain can mix the two.
 
 Since `faces` is a matrix, every row has the same width — a triangle is written as a four-vertex row with one vertex repeated. The repeated pair is detected at mesh time and the face is routed to the triangular mesher.
 
@@ -68,4 +68,4 @@ The two topologies give different subcell counts at the same `Ndim`: a quadrilat
 
 Because block lengths differ, an element's superface can no longer be worked out arithmetically from its index. Hovering reports it directly, in an interactive Julia session: the floor is elements 1–49, and the first gable starts at 148.
 
-From here the domain proceeds exactly as in [Examples 7](example-07.qmd) and [8](example-07.qmd) — view factors, smoothing, then solve.
+From here the domain proceeds exactly as in [Examples 7](example-07.qmd) and [8](example-08.qmd) — view factors, then solve.

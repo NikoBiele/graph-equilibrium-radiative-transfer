@@ -11,7 +11,7 @@ using RayTraceHeatTransfer                         # needed here for its version
 println("*Rendered with RayTraceHeatTransfer.jl v", pkgversion(RayTraceHeatTransfer), " and Julia ", VERSION, ".*")
 ```
 
-This example solves radiative equilibrium in a 1 × 1 m square enclosure filled with an absorbing gas (absorption coefficient κ = 1 m⁻¹, no scattering: σₛ = 0 m⁻¹). The bottom wall is held at 1000 K and all other walls are at 0 K; all surfaces are black (ε = 1). The gas temperature field is found by solving the GERT system after computing exchange factors by ray tracing.
+This example solves radiative equilibrium in a 1 × 1 m square enclosure filled with an absorbing gas (absorption coefficient κ = 1 m⁻¹, no scattering: σₛ = 0 m⁻¹). The bottom wall is held at 1000 K and all other walls are at 0 K; all surfaces are black (ε = 1). The gas temperature field is found by solving the GERT system [@Bielefeld2026] after computing exchange factors by ray tracing.
 
 ## Step 1: Define the geometry and mesh
 
@@ -105,7 +105,7 @@ solveEquilibrium!(mesh1, mesh1.F_smooth; verbose = false)   # solve the GERT sys
 
 ## Step 5: Validate against Crosbie & Schrenker (1984)
 
-The analytical solution for the dimensionless source function S(τ) = (T/T_hot)⁴ along the centreline of this problem is given by Crosbie & Schrenker (1984). Extracting the centreline temperatures from the solved mesh and comparing:
+The analytical solution for the dimensionless source function S(τ) = (T/T_hot)⁴ along the centreline of this problem is given by @CrosbieSchrenker1984. Extracting the centreline temperatures from the solved mesh and comparing:
 
 ```{julia}
 using Plots
@@ -180,7 +180,7 @@ println("Deviation from Crosbie & Schrenker: rms = ", round(rms_dev; sigdigits =
         ", max = ", round(max_dev; sigdigits = 2))                          # both in units of S, which runs from 0.09 to 0.63
 ```
 
-For 10⁷ rays on the 11 × 11 mesh the rms deviation is 5.1 × 10⁻⁴ and the maximum 1.2 × 10⁻³, on a source function that runs from 0.09 to 0.63. It is largest in the first row above the hot wall, where the source function changes most steeply. At this number of rays the deviation comes mostly from the mesh, not from the rays: each cell carries a single temperature. [Example 11](example-11.qmd) separates the two and shows the deviation shrinking at close to second order as the mesh is refined. The reference is tabulated to four decimals, so deviations below about 10⁻⁴ cannot be resolved by this comparison.
+The deviations are small compared with the source function, which runs from 0.09 to 0.63, and they are largest in the first row above the hot wall, where the source function changes most steeply. At this number of rays the deviation comes mostly from the mesh, not from the rays: each cell carries a single temperature. [Example 11](example-11.qmd) separates the two and shows the deviation shrinking at close to second order as the mesh is refined. The reference is tabulated to four decimals, so deviations below about 10⁻⁴ cannot be resolved by this comparison.
 
 ## Step 6: Energy conservation, and why it is not the same as accuracy
 
@@ -211,16 +211,4 @@ solveEquilibrium!(few, few.F_raw; verbose = false)       # solve again, now with
 println("raw factors:      energy error = ", few.energy_error, ", rms deviation = ", centreline_rms(few))
 ```
 
-| rays | factors | energy conservation error | rms deviation from reference |
-|---|---|---|---|
-| 10⁷ | smoothed | 6.3 × 10⁻¹⁷ | 5.1 × 10⁻⁴ |
-| 10⁴ | smoothed | 7.9 × 10⁻¹⁷ | 3.1 × 10⁻² |
-| 10⁴ | raw | 7.5 × 10⁻¹⁶ | 8.1 × 10⁻² |
-
-Energy conservation is guaranteed by the formulation, so every GERT solution has it, the noisy ones included. How accurate a solution is, is a separate question: that depends on the number of rays, and it benefits from smoothing, which enforces reciprocity and here reduces the deviation by a factor of 2.6. A solution that conserves energy is therefore not automatically an accurate one, but an accurate GERT solution never has to be paid for with an energy imbalance.
-
-## References
-
-Crosbie, A. L. & Schrenker, R. G. (1984). Radiative transfer in a two-dimensional rectangular medium exposed to diffuse radiation. *Journal of Quantitative Spectroscopy and Radiative Transfer*, 31(4), 339–372.
-
-Bielefeld, N. M. (2026). A Radiation Exchange Factor Formulation with Proven Non-Negativity and Unconditional Energy Conservation. *arXiv preprint*, [arXiv:2512.22157](https://arxiv.org/abs/2512.22157).
+Energy conservation is guaranteed by the formulation, so every GERT solution has it, the noisy ones included. How accurate a solution is, is a separate question: that depends on the number of rays, and it benefits from smoothing, which enforces reciprocity and here reduces the deviation markedly, as the two printed lines show. A solution that conserves energy is therefore not automatically an accurate one, but an accurate GERT solution never has to be paid for with an energy imbalance.

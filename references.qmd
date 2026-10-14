@@ -1,4 +1,43 @@
-# References {.unnumbered}
+---
+title: "References"
+bibliography: references.bib
+nocite: |
+  @*
+---
+
+## The method
+
+The fundamental method is presented in @Bielefeld2026.
+
+## The zone method
+
+For reciprocal exchange factors, the method reproduces the zone method of Hottel [@HottelCohen1958; @HottelSarofim1967], in the explicit matrix form of Noble [@Noble1975].
+
+## The exchange factor method
+
+The method builds on the exchange factor method of Larsen and Howell [@Larsen1983; @LarsenHowell1985].
+
+## View factors and ray tracing
+
+Analytical view factors are evaluated from the expression of @Narayanaswamy2015, in a translation of the implementation by Kerkhoff and Wagner [@KerkhoffWagner2021; @KerkhoffWagnerViewFactor]. Rays are intersected with triangles by the method of @MollerTrumbore1997, accelerated by bounding volume hierarchies built after @Wald2007.
+
+## Sampling
+
+Ray emission is sampled from Sobol sequences [@Sobol1967; @JoeKuo2008], as provided by Sobol.jl [@SobolJl].
+
+## Smoothing
+
+Ray-traced exchange factors are smoothed by projection onto reciprocity and energy conservation, using Dykstra's algorithm [@Dykstra1983]; least-squares smoothing of direct exchange areas goes back to @LarsenHowell1986.
+
+## Physics and validation
+
+The examples are validated against @CrosbieSchrenker1984, @HeasletWarming1965 and the Henyey–Greenstein phase function [@HenyeyGreenstein1941], with background from @Howell2021 and @ModestMazumder2022.
+
+## Software
+
+The package is written in Julia [@Bezanson2017Julia] and uses ConvolutionInterpolations.jl [@ConvolutionInterpolationsJl] for spectral binning and the Planck tables; figures are drawn with Makie.jl [@DanischKrumbiegel2021] and Plots.jl [@Christ2023].
+
+## Bibliography
 
 ::: {#refs}
 :::

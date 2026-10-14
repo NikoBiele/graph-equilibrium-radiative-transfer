@@ -13,7 +13,7 @@ println("*Rendered with RayTraceHeatTransfer.jl v", pkgversion(RayTraceHeatTrans
 
 This example extends [Example 7](example-07.qmd) from axis-aligned quads to an arbitrary convex triangulated geometry: a unit sphere approximated by recursively subdividing a regular icosahedron. A small hot cap of triangles is placed at the north pole and a matching cold cap at the south pole; all remaining triangles are in radiative equilibrium.
 
-This example demonstrates three features of the package: arbitrary triangulated geometry (view factors are computed via Narayanaswamy (2015) for any closed convex polyhedron built from planar triangles), the separate mesh / view factor / smooth / solve steps that let the user inspect the mesh before committing to the expensive view factor computation, and — as the subdivision level rises — the clearest demonstration of what the smoothing step is for.
+This example demonstrates three features of the package: arbitrary triangulated geometry (view factors are computed analytically via @Narayanaswamy2015 for any closed convex polyhedron built from planar triangles), the separate mesh / view factor / solve steps that let the user inspect the mesh before committing to the expensive view factor computation, and analytical view factors that are exact to working precision, in Float64 or in any higher precision, so that no smoothing is needed.
 
 ## Step 1: Build and inspect the mesh
 
@@ -78,18 +78,12 @@ Once the mesh looks right, view factors are computed by calling the domain as a 
 domain3D(; parallel = true, verbose = false)
 ```
 
-This computes a view factor for every pair of subcells and is typically the most expensive step in the workflow. Rows are normalised on assembly, so `F_raw` conserves energy exactly; its reciprocity, as shown below, is another matter.
+This computes a view factor for every pair of subcells and is typically the most expensive step in the workflow. Rows are normalised on assembly, so `F_raw` conserves energy exactly. The analytical view factors are also reciprocal to round-off, as shown below, so they are used directly, without smoothing.
 
-## Step 3: Smooth
-
-```{julia}
-smooth!(domain3D; verbose = false);
-```
-
-## Step 4: Solve and visualise
+## Step 3: Solve and visualise
 
 ```{julia}
-solveEquilibrium!(domain3D, domain3D.F_smooth; verbose = false)
+solveEquilibrium!(domain3D, domain3D.F_raw; verbose = false)
 
 fig  = Figure(size = (1200, 700))
 ax   = LScene(fig[1, 1], scenekw = (camera = cam3d!, show_axis = true))
@@ -97,79 +91,24 @@ info = Label(fig[1, 2], ""; tellheight = false, tellwidth = true,
              halign = :left, justification = :left,
              fontsize = 14, font = "DejaVu Sans Mono") # with info as in Example 7
 colsize!(fig.layout, 2, Relative(0.5))
-plotMesh(ax, domain3D; field = :T, inspect = true, label = info)
+plotField(ax, domain3D; field = :T, inspect = true, label = info)
 DataInspector(fig)
 fig
 ```
 
 The resulting temperature field shows a bright hot cap at the north pole, a dark cold cap at the south, and a nearly isothermal bulk throughout most of the sphere — as expected when a small hot source and a small cold sink are embedded in a highly concave enclosure.
 
-## Machine-precision agreement with the analytical limit
+## Machine-precision symmetry
 
-For equal-area hot and cold caps on a sphere, the symmetry of the geometry forces every equilibrium triangle to see the hot and cold caps in the same proportion. The equilibrium temperature is therefore the same everywhere in the bulk, set by the `T⁴`-averaged balance between the two caps:
+The icosphere is centrally symmetric, and the two caps are exact antipodes of each other. Swapping the cap temperatures therefore maps the problem onto itself, with every triangle exchanged for its opposite triangle. The equations are linear in the emissive powers, so adding the original solution and the swapped one gives the solution in which both caps have the emissive power of T_hot⁴ + T_cold⁴; in a black enclosure that solution is uniform. Every triangle in radiative equilibrium and its antipode therefore satisfy
 
 $$
-T_{\text{limit}} = \left(\frac{T_{\text{hot}}^4 + T_{\text{cold}}^4}{2}\right)^{1/4}
+T_k^4 + T_{-k}^4 = T_{\text{hot}}^4 + T_{\text{cold}}^4
 $$
 
-For `T_hot = 1000 K` and `T_cold = 0 K`, this gives `T_limit ≈ 840.896 K`.
+exactly. The identity holds for the discretised sphere itself at every subdivision level, not only in the limit of a fine mesh, so any deviation from it is numerical error.
 
-Because `icosphere_mesh` is parameterised by subdivision level, the full pipeline can be run at multiple resolutions to check the computed equator temperature against this limit:
-
-```{julia}
-T_hot   = 1000.0                                    # hot-cap temperature [K]
-T_cold  =    0.0                                    # cold-cap temperature [K]
-T_limit = ((T_hot^4 + T_cold^4) / 2)^(1/4)          # analytical temperature of every equilibrium triangle, ≈ 840.896 K
-
-levels = 0:3                                        # subdivision levels: 20, 80, 320 and 1280 triangles
-n_cap  = 6                                          # triangles per cap
-Ndim   = 1                                          # one element per triangle
-
-for level in levels
-    points, faces = icosphere_mesh(level)
-    n_tri = size(faces, 1)
-    n_cap_effective = min(n_cap, n_tri ÷ 4)         # never more than a quarter of the triangles per cap (matters at level 0)
-
-    # caps: the triangles with the highest and the lowest centroids, as in Step 1
-    centroids   = [vec(sum(points[faces[i, :], :], dims = 1)) ./ 3 for i in 1:n_tri]
-    z_centroids = [c[3] for c in centroids]
-    hot_ids  = partialsortperm(z_centroids, 1:n_cap_effective, rev = true)
-    cold_ids = partialsortperm(z_centroids, 1:n_cap_effective)
-
-    # boundary conditions: black surfaces, prescribed caps, everything else in radiative equilibrium
-    epsilon = ones(n_tri)
-    q_in_w  = zeros(n_tri)
-    T_in_w  = fill(-1.0, n_tri)
-    T_in_w[hot_ids]  .= T_hot
-    T_in_w[cold_ids] .= T_cold
-
-    # the four workflow steps
-    domain = ViewFactorDomain3D(points, faces, Ndim, q_in_w, T_in_w, epsilon)   # mesh
-    domain(; parallel = true, verbose = false)                                  # view factors for every pair of triangles
-    stats = smooth!(domain, verbose = false)                                    # enforce reciprocity; returns diagnostics
-    δ_raw    = stats.delta_raw[1]                   # reciprocity defect of F_raw (entry 1: a grey domain has a single "bin")
-    δ_smooth = stats.delta_smooth[1]                # certified bound on the defect of F_smooth
-    solveEquilibrium!(domain, domain.F_smooth; verbose = false)                 # solve
-
-    # temperature of the equilibrium triangle closest to the equator, against the analytical limit
-    equilibrium_ids = setdiff(1:n_tri, hot_ids, cold_ids)                       # all triangles outside the two caps
-    equator_id = equilibrium_ids[argmin(abs.(z_centroids[equilibrium_ids]))]    # the one whose centroid has the smallest |z|
-    T_equator  = domain.facesMesh[equator_id].subFaces[1].T_w                   # its single element (Ndim = 1) and that element's temperature
-    T_error    = abs(T_limit - T_equator)
-
-    println("Level $level: $n_tri triangles → δ_R(F_raw) = $(round(δ_raw, sigdigits=3)), "*
-            "δ_R(F_smooth) = $(round(δ_smooth, sigdigits=3)), error = $(round(T_error, sigdigits = 3)) K")
-end
-```
-
-| Level | Triangles | δ_R (F_raw) | δ_R (F_smooth) | \|T_equator − T_limit\| (K) |
-|:-----:|:---------:|:-----------:|:--------------:|:---------------------------:|
-|   0   |     20    |   1.7e-15   |    1.3e-15     |         6.8e-2              |
-|   1   |     80    |   3.9e-14   |    2.0e-15     |         1.1e-13             |
-|   2   |    320    |   3.7e-01   |    8.0e-16     |         1.7e-11             |
-|   3   |   1280    |   1.6e+00   |    2.7e-15     |         4.3e-11             |
-
-δ_R is the reciprocity defect of the view factor matrix — the same initial quantity `smooth!` reports in its log:
+Alongside the symmetry check, the function below reports the reciprocity defect of the view factors,
 
 $$
 \delta_R(F) =
@@ -180,12 +119,79 @@ $$
 }
 $$
 
-where $w_i$ is the element weight (surface area in 3D). It is a sum over pairs, not a percentage, so it grows with element count too.
+where $w_i$ is the element weight (surface area in 3D). It is a sum over pairs, not a percentage, so it grows with element count too. The whole pipeline is written as one function of the floating-point type `T`, so the same code runs in higher precision further below:
 
-At level 0 the 5+5 caps cover over half the sphere, leaving only 10 equilibrium triangles, so the symmetry argument doesn't hold cleanly. From level 1 onward the equator temperature matches the analytical limit to within 10⁻¹¹ K.
+```{julia}
+# reciprocity defect δ_R of a view factor matrix F with element weights w, as defined above
+function reciprocity_defect(F, w)
+    s = zero(eltype(F))                             # running sum, in the precision of F
+    for i in 1:size(F, 1), j in (i + 1):size(F, 2)  # every pair i < j once
+        s += (w[i] * F[i, j] - w[j] * F[j, i])^2 / (w[i]^2 + w[j]^2)
+    end
+    return sqrt(s)
+end
 
-The δ_R column is why smoothing exists. The view factor integral is ill-conditioned for polygons sharing an edge, and is evaluated on a slightly perturbed geometry. On the cube this barely matters — most adjacent pairs are coplanar with a true view factor of zero. On a sphere every face sees every other, so all three neighbours of every triangle carry a perturbed, nonzero view factor. Rows are normalised on assembly, so energy conservation holds regardless; reciprocity is what breaks. Smoothing drives δ_R to machine precision at every level.
+# the full pipeline on one icosphere level, in the floating-point type T
+function solve_icosphere(::Type{T}, level; n_cap = 6) where {T}
+    points, faces = icosphere_mesh(T, level)        # the sphere, built in T
+    n_tri = size(faces, 1)                          # number of triangles
 
-## Reference
+    # caps: the triangles with the highest and the lowest centroids, as in Step 1
+    centroids   = [vec(sum(points[faces[i, :], :], dims = 1)) ./ 3 for i in 1:n_tri]
+    z_centroids = [c[3] for c in centroids]
+    hot_ids  = partialsortperm(z_centroids, 1:n_cap, rev = true)
+    cold_ids = partialsortperm(z_centroids, 1:n_cap)
 
-Narayanaswamy, A. (2015). An analytic expression for radiation view factor between two arbitrarily oriented planar polygons. *International Journal of Heat and Mass Transfer*, 91, 841–847.
+    # each triangle's antipode: the triangle whose centroid is closest to the mirrored centroid
+    antipode = [argmin([sum(abs2, centroids[j] .+ centroids[i]) for j in 1:n_tri]) for i in 1:n_tri]
+    Set(antipode[hot_ids]) == Set(cold_ids) ||      # the identity needs exactly antipodal caps
+        error("level $level: the hot and cold caps are not antipodal; choose another cap size")
+
+    # boundary conditions in T: black surfaces, prescribed caps, everything else in radiative equilibrium
+    T_hot, T_cold = T(1000), T(0)                   # cap temperatures [K]
+    epsilon = ones(T, n_tri)
+    q_in_w  = zeros(T, n_tri)
+    T_in_w  = fill(-one(T), n_tri)
+    T_in_w[hot_ids]  .= T_hot
+    T_in_w[cold_ids] .= T_cold
+
+    # the three workflow steps
+    domain = ViewFactorDomain3D(points, faces, 1, q_in_w, T_in_w, epsilon)   # mesh, one element per triangle
+    domain(; parallel = true, verbose = false)                               # view factors for every pair of triangles
+    solveEquilibrium!(domain, domain.F_raw; verbose = false)                 # solve, on the view factors as computed
+
+    # reciprocity defect of F_raw, with the element areas as weights
+    areas = [sf.area for f in domain.facesMesh for sf in f.subFaces]         # element areas, in the order of F
+    δ_raw = reciprocity_defect(domain.F_raw, areas)
+
+    # largest relative deviation from the symmetry identity over all equilibrium triangles
+    Tw   = [domain.facesMesh[i].subFaces[1].T_w for i in 1:n_tri]            # temperature of every triangle [K]
+    free = setdiff(1:n_tri, hot_ids, cold_ids)                               # the triangles in radiative equilibrium
+    deviation = maximum(abs.(Tw[free] .^ 4 .+ Tw[antipode[free]] .^ 4 .- (T_hot^4 + T_cold^4))) / T_hot^4
+
+    return n_tri, δ_raw, deviation, domain.energy_error
+end
+
+# Float64 at three subdivision levels: 80, 320 and 1280 triangles (level 0 has no antipodal 6-triangle caps)
+for level in 1:3
+    n_tri, δ_raw, deviation, _ = solve_icosphere(Float64, level)
+    println("Level $level: $n_tri triangles → δ_R(F_raw) = $(round(δ_raw, sigdigits = 3)), ",
+            "symmetry deviation = $(round(deviation, sigdigits = 3))")
+end
+```
+
+Both quantities stay at round-off level at every subdivision. The view factors are evaluated from Narayanaswamy's analytical expression, with the Clausen function in it summed to full precision, so `F_raw` is reciprocal to working precision and smoothing has nothing to correct. Smoothing remains essential for ray-traced exchange factors, where Monte Carlo noise breaks reciprocity.
+
+## Arbitrary precision
+
+That the remaining deviation is round-off, and not a property of the method, can be checked directly. The view factors and the grey solve run in any floating-point type, so the same pipeline can be repeated in 128-bit arithmetic, which carries about 38 significant digits instead of 16:
+
+```{julia}
+setprecision(BigFloat, 128)                         # 128-bit BigFloat arithmetic
+n_tri, δ_raw, deviation, energy_error = solve_icosphere(BigFloat, 2)   # level 2: 320 triangles
+println("Level 2 in 128 bits: $n_tri triangles → δ_R(F_raw) = $(round(Float64(δ_raw), sigdigits = 3)), ",
+        "symmetry deviation = $(round(Float64(deviation), sigdigits = 3)), ",
+        "energy error = $(round(Float64(energy_error), sigdigits = 3))")
+```
+
+Every error falls by about 22 orders of magnitude relative to the Float64 run at the same level, which is the ratio of the two machine precisions. The deviations in Float64 are therefore pure round-off, and energy is conserved to the working precision in either arithmetic.

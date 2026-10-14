@@ -4,16 +4,20 @@ title: "Workflow"
 
 ## The four steps
 
-Every problem follows the same four steps:
+Every problem follows the same steps:
 
 1. **Mesh** — build the geometry and set boundary conditions.
 2. **Exchange factors** — quasi-Monte Carlo ray tracing (2D participating media, 3D surface enclosures) or analytical view factors (3D convex surface enclosures), producing exchange factor matrix `F_raw`.
-3. **Smooth** — `smooth!(domain)` projects the exchange factor matrix `F_raw` onto the nearest matrix satisfying reciprocity and energy conservation, producing `F_smooth` and returning convergence diagnostics.
-4. **Solve** — `solveEquilibrium!(domain, domain.F_smooth)` yields the steady state.
+3. **Smooth** — for ray-traced exchange factors, `smooth!(domain)` projects `F_raw` onto the nearest matrix satisfying reciprocity and energy conservation, producing `F_smooth` and returning convergence diagnostics. Analytical view factors are already reciprocal to round-off and skip this step.
+4. **Solve** — `solveEquilibrium!(domain, domain.F_smooth)`, or `domain.F_raw` for analytical view factors, yields the steady state.
 
-Step 3 is separate because it is a distinct computation with its own cost and diagnostics, and because how much work it does varies enormously between problems. `F_raw` arrives violating reciprocity: in 2D from sampling noise, in 3D because the view factor formula is ill-conditioned for polygons that share an edge and must be evaluated on a slightly perturbed geometry. On a triangulated sphere, where every pair of adjacent faces has a nonzero view factor, the raw reciprocity defect becomes significant; smoothing brings it to 10⁻¹⁵ (see [Example 8](examples/example-08.qmd)). Both matrices remain available on the domain, so `F_raw` can be inspected or exported, but `F_smooth` is what should be passed to the solver.
+Step 3 is separate because it is a distinct computation with its own cost and diagnostics. Ray-traced exchange factors arrive violating reciprocity at the level of the sampling noise, and smoothing, a least-squares projection in the tradition of @LarsenHowell1986, restores it to round-off ([Example 10](examples/example-10.qmd)). Analytical view factors are exact: their `F_raw` is already reciprocal to working precision, so it is passed to the solver directly ([Examples 7–9](examples/example-07.qmd)). Both matrices remain available on a ray-traced domain, so `F_raw` can be inspected or exported, but `F_smooth` is what should be passed to the solver.
 
 Smoothing is cheap relative to the tracing step, so `F_raw` can be traced once and smoothed repeatedly with different settings.
+
+## Precision
+
+Analytical view factors and the grey 3D solve run in any floating-point type: after `setprecision(BigFloat, bits)`, a `ViewFactorDomain3D` built from `BigFloat` geometry and boundary conditions carries that precision through the view factors, the solve and the result. Reciprocity, energy conservation and the solved temperatures then all follow the working precision, which shows that the remaining deviations in Float64 are round-off ([Example 8](examples/example-08.qmd)).
 
 ## Spectral and directional models
 
@@ -30,7 +34,7 @@ In the combined case the faces are built with their spectral bins as in Example 
 
 ## Sampling and reproducibility
 
-The ray tracers draw emission positions and directions from Sobol sequences (quasi-Monte Carlo) by default. Every emitter owns one sequence, digitally shifted by a random mask derived from `seeds`, so the estimate is unbiased and the stratification of the sequence is kept. At the same ray count the exchange factors come out quieter than with pseudorandom sampling by 2–3× at 4096 rays per emitter, and the gain grows with the ray count, reaching 10× at 65 536 rays per emitter for the pathlength tracer: the same accuracy from up to a hundred times fewer rays.
+The ray tracers draw emission positions and directions from Sobol sequences [@Sobol1967; @JoeKuo2008] (quasi-Monte Carlo) by default. Every emitter owns one sequence, digitally shifted by a random mask derived from `seeds`, so the estimate is unbiased and the stratification of the sequence is kept. At the same ray count the exchange factors come out quieter than with pseudorandom sampling by 2–3× at 4096 rays per emitter, and the gain grows with the ray count, reaching 10× at 65 536 rays per emitter for the pathlength tracer: the same accuracy from up to a hundred times fewer rays.
 
 Two keywords control it, on the 2D domain functor and on `RayTracingDomain3D_surfaces`:
 

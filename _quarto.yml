@@ -6,6 +6,7 @@ project:
     - papers.qmd
     - about.qmd
     - workflow.qmd
+    - references.qmd
     - examples/index.qmd
     - examples/example-01.qmd
     - examples/example-02.qmd
@@ -39,6 +40,8 @@ website:
         text: Examples
       - href: about.qmd
         text: About
+      - href: references.qmd
+        text: References
     right:
       - icon: github
         href: https://github.com/NikoBiele/RayTraceHeatTransfer.jl

@@ -17,7 +17,7 @@ Together the two studies trace about 7 × 10⁸ rays, most of them on the finest
 
 ## From Example 1
 
-The mesh builder and the row-averaged Crosbie & Schrenker reference are those of [Example 1](example-01.qmd), repeated here so that this page runs on its own.
+The mesh builder and the row-averaged reference of @CrosbieSchrenker1984 are those of [Example 1](example-01.qmd), repeated here so that this page runs on its own.
 
 ```{julia}
 using RayTraceHeatTransfer
@@ -155,4 +155,4 @@ Plots.plot!(p2, meshes, mesh_guide; linestyle = :dash, color = :gray, label = "�
 display(p2)
 ```
 
-On the 11 × 11 mesh (left), pseudorandom sampling converges as N^(−1/2), the textbook Monte Carlo rate, while Sobol sampling converges faster. Both Sobol configurations level off at about 3.4 × 10⁻⁴ from 2¹⁴ to 2¹⁶ rays per emitter onward: that is the discretisation error of the mesh, which more rays cannot reduce. The pathlength tracer reaches it first. Refining the mesh (right) lowers that level. With the pathlength tracer the deviation falls from 7.6 × 10⁻⁴ on 7 × 7 to 1.1 × 10⁻⁴ on 21 × 21, close to second order in the cell size h. Pseudorandom sampling stays two to five times higher on every mesh, because its noise rather than the mesh sets its error. Near 10⁻⁴ the comparison approaches its own limit, since the reference is tabulated to four decimals.
+On the 11 × 11 mesh (first figure), pseudorandom sampling converges as N^(−1/2), the textbook Monte Carlo rate, while Sobol sampling converges faster. Both Sobol configurations level off once the rays per emitter are large enough: that plateau is the discretisation error of the mesh, which more rays cannot reduce. The pathlength tracer reaches it first. Refining the mesh (second figure) lowers that level. With the pathlength tracer the deviation falls close to second order in the cell size h, along the dashed guide. Pseudorandom sampling stays higher on every mesh, because its noise rather than the mesh sets its error. Near 10⁻⁴ the comparison approaches its own limit, since the reference is tabulated to four decimals.

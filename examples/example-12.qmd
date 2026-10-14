@@ -13,7 +13,7 @@ println("*Rendered with RayTraceHeatTransfer.jl v", pkgversion(RayTraceHeatTrans
 This example traces a billion rays through a million cells. It took about two minutes on the machine listed at the end of the example, and needs a lot of memory.
 :::
 
-The last example is a reward for reading this far. It is the diffusion benchmark of the GERT formulation paper ([Bielefeld, arXiv:2512.22157](https://arxiv.org/abs/2512.22157), Fig. 1), taken to a million elements: a 1000 m × 1 m rectangle with κ = 100 m⁻¹, a hot wall along one long side and cold walls elsewhere. The long walls are 1 m apart, so across the gap the optical thickness is τ_L = 100, and far from the short ends the medium behaves as an infinite slab. The mesh has 1001 × 1001 cells, which makes 1,006,005 elements, so the exchange factor matrix has 10¹² entries. At this optical thickness a ray is absorbed close to where it starts, so the matrix is sparse and fits in memory. Deep inside an optically thick medium the diffusion approximation is accurate, which gives an analytical reference for the centreline.
+The last example is a reward for reading this far. It is the diffusion benchmark of the GERT formulation paper [@Bielefeld2026], taken to a million elements: a 1000 m × 1 m rectangle with κ = 100 m⁻¹, a hot wall along one long side and cold walls elsewhere. The long walls are 1 m apart, so across the gap the optical thickness is τ_L = 100, and far from the short ends the medium behaves as an infinite slab. The mesh has 1001 × 1001 cells, which makes 1,006,005 elements, so the exchange factor matrix has 10¹² entries. At this optical thickness a ray is absorbed close to where it starts, so the matrix is sparse and fits in memory. Deep inside an optically thick medium the diffusion approximation is accurate, which gives an analytical reference for the centreline.
 
 ## Step 1: The mesh
 
@@ -64,7 +64,7 @@ S_smooth    = centreline_S(big, Nlarge);                                       #
 
 ## Step 4: The diffusion reference
 
-Between two parallel walls, the diffusion approximation gives an emissive power that falls linearly across the medium, with a jump at each wall (Howell, Mengüç, Daun & Siegel, 2021). Because the profile is linear, its average over a cell equals its value at the cell centre, so it compares directly with the solution. The smoother is given only reciprocity and energy conservation; it knows nothing of the diffusion solution.
+Between two parallel walls, the diffusion approximation gives an emissive power that falls linearly across the medium, with a jump at each wall [@Howell2021]. Because the profile is linear, its average over a cell equals its value at the cell centre, so it compares directly with the solution. The smoother is given only reciprocity and energy conservation; it knows nothing of the diffusion solution.
 
 ```{julia}
 # Emissive power in the diffusion approximation between two parallel grey walls:
@@ -101,19 +101,6 @@ Plots.plot!(p; xlabel = "Optical depth τ/τ_L", ylabel = "Source function S = (
 display(p)
 ```
 
-With about a thousand rays per element, the raw factors leave the centreline scattered around the diffusion line, with an rms deviation of 3.1 × 10⁻². Smoothing brings it onto the line across the whole gap, down to 7.7 × 10⁻⁴: 97.5 % of the deviation is removed by enforcing nothing but reciprocity and energy conservation. Because the matrix is sparse, the smoother uses alternating projection alone, which preserves the sparsity; the orthogonal projection would fill every one of its 10¹² entries.
+With about a thousand rays per element, the raw factors leave the centreline scattered around the diffusion line. Smoothing brings it onto the line across the whole gap, and the printed reduction shows how much of the deviation is removed by enforcing nothing but reciprocity and energy conservation. Because the matrix is sparse, the smoother uses alternating projection alone, which preserves the sparsity; the orthogonal projection would fill every one of its 10¹² entries.
 
-| Step | Time |
-|---|---|
-| Building the mesh | 8.0 s |
-| Tracing 1.03 × 10⁹ rays | 29.2 s |
-| Smoothing | 9.7 s |
-| Solving with the smoothed factors | 70.5 s |
-| **End to end** | **~2 min** |
-| Solving with the raw factors (comparison only) | 63.8 s |
-
-The timings were measured on an Intel Core i7-14700KF (20 cores, 28 threads) with 64 GB of RAM, running Windows 11 and Julia 1.13 on 28 threads.
-
-## Reference
-
-Howell, J. R., Mengüç, M. P., Daun, K. & Siegel, R. (2021). *Thermal Radiation Heat Transfer*, 7th ed. CRC Press.
+The printed timings were measured on an Intel Core i7-14700KF (20 cores, 28 threads) with 64 GB of RAM, running Windows 11 and Julia 1.13 on 28 threads.
