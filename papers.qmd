@@ -4,18 +4,18 @@ title: "Papers"
 
 The methods behind GERT and RayTraceHeatTransfer.jl are published as preprints on arXiv. Each paper is self-contained, and its results can be reproduced with the package.
 
-## A Sparsity-Preserving Radiation Exchange Factor Formulation with Proven Non-Negativity, Non-Singularity and Energy Conservation
+## Non-Negativity, Non-Singularity and Energy Conservation of the Zonal Method with Non-Reciprocal Exchange Factors
 
 Nikolaj Maack Bielefeld · arXiv:2512.22157
 
-The foundational paper. It presents a matrix formulation of radiative energy balance on general domains, for media ranging from transparent to absorbing, emitting and scattering, and boundaries ranging from absorbing to reflecting. Starting from a first-interaction exchange factor matrix, the formulation separates what is absorbed from what is reflected or scattered at each step, and builds one linear system for any mix of prescribed temperatures and prescribed sources. The paper proves that this system has a unique, non-negative solution, and that energy is conserved to machine precision as an algebraic identity. It reproduces the textbook results for parallel plates and concentric cylinders exactly, agrees with the diffusion approximation and with Crosbie and Schrenker, and, for reciprocal exchange factors, agrees exactly with Noble's formulation of Hottel's zonal method.
+The foundational paper. It writes the zonal balances of Hottel's method in power variables, for a first-interaction exchange factor matrix, as one linear system for any mix of prescribed temperatures and prescribed sources, on general domains with media ranging from transparent to absorbing, emitting and scattering, and boundaries ranging from absorbing to reflecting. The paper proves that this system has a unique, non-negative solution, and that energy is conserved to machine precision as an algebraic identity, with no assumption of reciprocity: the guarantees hold for Monte Carlo exchange factors as traced, without smoothing. The proofs rest on a single minimum principle and are machine-checked in Lean 4. It reproduces the textbook results for parallel plates and concentric cylinders exactly, agrees with the diffusion approximation and with Crosbie and Schrenker, and agrees exactly with Noble's formulation of Hottel's zonal method.
 
 [Abstract](https://arxiv.org/abs/2512.22157) · [PDF](https://arxiv.org/pdf/2512.22157)
 
 ```bibtex
-@misc{bielefeld2026formulation,
-  title         = {A Sparsity-Preserving Radiation Exchange Factor Formulation with
-                  Proven Non-Negativity, Non-Singularity and Energy Conservation},
+@misc{bielefeld2026zonal,
+  title         = {Non-Negativity, Non-Singularity and Energy Conservation of the
+                  Zonal Method with Non-Reciprocal Exchange Factors},
   author        = {Bielefeld, Nikolaj Maack},
   year          = {2026},
   eprint        = {2512.22157},
